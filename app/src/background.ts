@@ -30,13 +30,14 @@ chrome.runtime.onMessage.addListener(
             tabId: message.tabId,
           });
         });
+
+      return true;
     };
 
     switch (message.message) {
       case "openSidePanel":
-        handleAsyncMessage(() => openSidePanel(message));
-        // 비동기 응답을 위해 true 반환
-        return true;
+        return handleAsyncMessage(() => openSidePanel(message));
+      // 비동기 응답을 위해 true 반환
       default:
         throw new Error(`처리 되지 않은 메시지 입니다. ${message}`);
     }
