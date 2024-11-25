@@ -1,3 +1,7 @@
+import { ReferenceSaveButton } from "@/features/dom/ui";
+import styles from "./pages.module.css";
+import { Button } from "@/shared/ui";
+
 export const Popup = () => {
   const handleOpenSidePanel = async () => {
     const [tab] = await chrome.tabs.query({
@@ -16,7 +20,10 @@ export const Popup = () => {
     <div>
       <h1>Popup</h1>
       <p>Popup page content</p>
-      <button onClick={handleOpenSidePanel}>Open Side Panel</button>
+      <div className={styles.rowFlexBox}>
+        <Button onClick={handleOpenSidePanel}>Open Side Panel</Button>
+        <ReferenceSaveButton />
+      </div>
     </div>
   );
 };
