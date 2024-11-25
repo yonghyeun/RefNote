@@ -1,18 +1,22 @@
-import { useEffect } from 'react';
-import "./Popup.css";
+export const Popup = () => {
+  const handleOpenSidePanel = async () => {
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
 
-export default function() {
-  useEffect(() => {
-    console.log("Hello from the popup!");
-  }, []);
+    if (!tab || !tab.id) {
+      return;
+    }
+
+    chrome.runtime.sendMessage({ message: "openSidePanel", tabId: tab.id });
+  };
 
   return (
     <div>
-      <img src="/icon-with-shadow.svg" />
-      <h1>vite-plugin-web-extension</h1>
-      <p>
-        Template: <code>react-ts</code>
-      </p>
+      <h1>Popup</h1>
+      <p>Popup page content</p>
+      <button onClick={handleOpenSidePanel}>Open Side Panel</button>
     </div>
-  )
-}
+  );
+};

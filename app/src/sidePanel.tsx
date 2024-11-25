@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { Popup } from "./pages";
+import { SidePanelPage } from "./pages";
 import "./styles.css";
 
 ReactDOM.createRoot(document.body).render(
   <React.StrictMode>
-    <Popup />
+    <SidePanelPage />
   </React.StrictMode>
 );
