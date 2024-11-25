@@ -1,18 +1,9 @@
-import { useEffect } from 'react';
-import "./Popup.css";
-
-export default function() {
-  useEffect(() => {
-    console.log("Hello from the popup!");
-  }, []);
-
+export const Popup = () => {
   return (
     <div>
-      <img src="/icon-with-shadow.svg" />
-      <h1>vite-plugin-web-extension</h1>
-      <p>
-        Template: <code>react-ts</code>
-      </p>
+      <h1>Popup</h1>
+      <p>Popup page content</p>
+      <button>Open Side Panel</button>
     </div>
-  )
-}
+  );
+};
