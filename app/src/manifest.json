@@ -1,4 +1,8 @@
 {
+  "name": "RefNote",
+  "version": "1.0.0",
+  "description": "블로깅 시 사용 가능 한 레퍼런스 노트",
+  "minimum_chrome_version": "116",
   "{{chrome}}.manifest_version": 3,
   "{{firefox}}.manifest_version": 2,
   "icons": {
@@ -9,16 +13,17 @@
     "128": "icon/128.png"
   },
   "side_panel": {
-    "default_path": "side_panel.html"
+    "default_path": "src/side_panel.html"
   },
   "{{chrome}}.action": {
-    "default_popup": "popup.html"
+    "default_popup": "src/popup.html"
   },
   "{{firefox}}.browser_action": {
-    "default_popup": "popup.html"
+    "default_popup": "src/popup.html"
   },
   "background": {
-    "{{chrome}}.service_worker": "background.ts",
-    "{{firefox}}.scripts": ["background.ts"]
-  }
+    "{{chrome}}.service_worker": "src/background.ts",
+    "{{firefox}}.scripts": ["src/background.ts"]
+  },
+  "permissions": ["sidePanel"]
 }
