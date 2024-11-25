@@ -9,12 +9,7 @@ export const Popup = () => {
       return;
     }
 
-    chrome.runtime.sendMessage(
-      { message: "openSidePanel", tabId: tab.id },
-      (response) => {
-        console.log(response);
-      }
-    );
+    chrome.runtime.sendMessage({ message: "openSidePanel", tabId: tab.id });
   };
 
   return (
