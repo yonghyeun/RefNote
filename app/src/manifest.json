@@ -8,14 +8,17 @@
     "96": "icon/96.png",
     "128": "icon/128.png"
   },
+  "side_panel": {
+    "default_path": "side_panel.html"
+  },
   "{{chrome}}.action": {
-    "default_popup": "src/popup.html"
+    "default_popup": "popup.html"
   },
   "{{firefox}}.browser_action": {
-    "default_popup": "src/popup.html"
+    "default_popup": "popup.html"
   },
   "background": {
-    "{{chrome}}.service_worker": "src/background.ts",
-    "{{firefox}}.scripts": ["src/background.ts"]
+    "{{chrome}}.service_worker": "background.ts",
+    "{{firefox}}.scripts": ["background.ts"]
   }
 }
