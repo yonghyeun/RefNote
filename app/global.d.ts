@@ -1,8 +1,13 @@
 export {};
 
 declare global {
-  interface Message {
+  interface RequestMessage {
     message: string;
+    tabId: number;
+  }
+
+  interface ResponseMessage {
+    status: "ok" | Error;
     tabId: number;
   }
 }
