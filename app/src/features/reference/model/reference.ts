@@ -32,7 +32,7 @@ export const saveReferenceOnTab = async (
   const oldValue = await chrome.storage.sync.get(null);
   const changedReferenceData = {
     ...oldValue.referenceData,
-    [newReferenceData.date]: newReferenceData,
+    [newReferenceData.title]: newReferenceData,
   };
 
   // referenceData를 저장합니다.
