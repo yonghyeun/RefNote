@@ -1,0 +1,31 @@
+.button {
+  background-color: #f9fafb; /* bg-grey-0 */
+  color: #1f2937; /* text-grey-900 */
+  border: 0.0625rem solid #1f2937; /* border-grey-900 */
+  padding: 0 1.5rem;
+}
+
+.button:hover {
+  background-color: #f3f4f6; /* hover:bg-grey-50 */
+  color: #1f2937; /* hover:text-grey-900 */
+  border-color: #1f2937; /* hover:border-grey-900 */
+}
+
+.button:focus-visible {
+  background-color: #f3f4f6; /* focus-visible:bg-grey-50 */
+  color: #1f2937; /* focus-visible:text-grey-900 */
+  border-color: #1f2937; /* focus-visible:border-grey-900 */
+}
+
+.button:active {
+  background-color: #e5e7eb; /* active:bg-grey-100 */
+  color: #1f2937; /* active:text-grey-900 */
+  border-color: #1f2937; /* active:border-grey-900 */
+}
+
+.button:disabled {
+  pointer-events: none; /* disabled:pointer-events-none */
+  background-color: #f9fafb; /* disabled:bg-grey-0 */
+  color: #d1d5db; /* disabled:text-grey-300 */
+  border-color: #d1d5db; /* disabled:border-grey-300 */
+}

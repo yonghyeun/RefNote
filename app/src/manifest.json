@@ -22,8 +22,8 @@
     "default_popup": "src/popup.html"
   },
   "background": {
-    "{{chrome}}.service_worker": "src/background.ts",
-    "{{firefox}}.scripts": ["src/background.ts"]
+    "service_worker": "src/background.ts"
   },
-  "permissions": ["sidePanel"]
+  "permissions": ["sidePanel", "scripting", "activeTab", "storage"],
+  "host_permissions": ["<all_urls>"]
 }
