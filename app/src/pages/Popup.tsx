@@ -1,4 +1,4 @@
-import { ReferenceSaveButton } from "@/features/dom/ui";
+import { ReferenceSaveButton } from "@/features/reference/ui";
 import styles from "./pages.module.css";
 import { Button } from "@/shared/ui";
 
