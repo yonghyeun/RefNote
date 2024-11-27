@@ -28,7 +28,7 @@ chrome.runtime.onMessage.addListener(
       handler()
         .then(() => {
           sendResponse({
-            message: "ok",
+            message: data,
             tabId: message.tabId,
           });
         })
