@@ -56,14 +56,3 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
-
-// chrome.storage.onChanged 이벤트는 storage에 저장된 데이터가 변경될 때 발생합니다.
-// 이 때 change 객체에 변경된 데이터가 포함되어 있습니다.
-// areaName 은 변경된 storage의 이름이며, changes는 변경된 데이터를 포함합니다.
-chrome.storage.onChanged.addListener((change, areaName) => {
-  if (process.env.NODE_ENV === "development") {
-    console.group(`chrome.storage.onChanged at ${areaName}`);
-    console.dir(change);
-    console.groupEnd();
-  }
-});
