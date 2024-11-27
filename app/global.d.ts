@@ -18,4 +18,13 @@ declare global {
     date: number;
     isPicked: boolean;
   }
+
+  interface UnPickedReferenceData extends ReferenceData {
+    isPicked: false;
+  }
+
+  interface PickedReferenceDate extends ReferenceData {
+    isPicked: true;
+    id: number;
+  }
 }
