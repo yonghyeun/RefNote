@@ -4,7 +4,15 @@ import { openSidePanel } from "./sidePanel/model";
 console.log("Hello from the background!");
 
 browser.runtime.onInstalled.addListener((details) => {
-  console.log("Extension installed:", details);
+  if (process.env.NODE_ENV === "development") {
+    console.group("browser.runtime.onInstalled");
+    console.dir(details);
+    console.groupEnd();
+
+    console.group("manifest.json information");
+    console.dir(browser.runtime.getManifest());
+    console.groupEnd();
+  }
 });
 
 chrome.runtime.onMessage.addListener(
