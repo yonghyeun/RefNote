@@ -16,5 +16,6 @@ declare global {
     url: string;
     faviconUrl: string;
     date: number;
+    isPicked: boolean;
   }
 }
