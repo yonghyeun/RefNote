@@ -2,7 +2,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0;
   gap: 0.3rem;
   border-bottom: 1px dashed #e0e0e0;
 }
@@ -17,7 +16,7 @@
 .content {
   flex-grow: 1;
   cursor: pointer;
-  height: 2rem;
+  min-height: 2.5rem;
   display: flex;
   align-items: center;
 }
@@ -47,6 +46,7 @@
 .writtenId {
   font-size: 0.8rem;
   color: #a0a0a0;
+  margin: auto 0;
 }
 
 .button {
