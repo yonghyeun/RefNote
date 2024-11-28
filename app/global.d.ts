@@ -15,7 +15,6 @@ declare global {
     title: string;
     url: string;
     faviconUrl: string;
-    date: number;
     isWritten: boolean;
   }
 
