@@ -1,8 +1,11 @@
 import { ReferenceSaveButton } from "@/features/reference/ui";
-import styles from "./pages.module.css";
+import { useChromeStorage } from "@/shared/store/chromeStorage";
 import { Button } from "@/shared/ui";
+import styles from "./pages.module.css";
 
 export const Popup = () => {
+  const { chromeStorage } = useChromeStorage();
+
   const handleOpenSidePanel = async () => {
     const [tab] = await chrome.tabs.query({
       active: true,
@@ -24,6 +27,19 @@ export const Popup = () => {
         <Button onClick={handleOpenSidePanel}>Open Side Panel</Button>
         <ReferenceSaveButton />
       </div>
+      <main>
+        <h2>References</h2>
+        <ul>
+          {chromeStorage.reference.map((reference) => (
+            <li key={reference.url}>
+              <img src={reference.faviconUrl} />
+              <a href={reference.url} target="_blank" rel="noreferrer">
+                {reference.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </main>
     </div>
   );
 };
