@@ -38,6 +38,9 @@ main {
   flex-grow: 1;
 }
 
+button {
+  border: none;
+}
 button:hover {
   background-color: #f3f4f6; /* hover:bg-grey-50 */
   color: #1f2937; /* hover:text-grey-900 */
