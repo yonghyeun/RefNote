@@ -12,14 +12,11 @@
     "96": "icon/96.png",
     "128": "icon/128.png"
   },
+  "action": {
+    "default_title": "RefNote"
+  },
   "side_panel": {
     "default_path": "src/side_panel.html"
-  },
-  "{{chrome}}.action": {
-    "default_popup": "src/popup.html"
-  },
-  "{{firefox}}.browser_action": {
-    "default_popup": "src/popup.html"
   },
   "background": {
     "service_worker": "src/background.ts"
