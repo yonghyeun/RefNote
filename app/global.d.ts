@@ -11,25 +11,25 @@ declare global {
     tabId: number;
   }
 
-  interface ReferenceData {
+  interface UnWrittenReferenceData {
     title: string;
     url: string;
     faviconUrl: string;
-    date: number;
-    isPicked: boolean;
+    isWritten: false;
   }
 
-  interface UnPickedReferenceData extends ReferenceData {
-    isPicked: false;
-  }
-
-  interface PickedReferenceDate extends ReferenceData {
-    isPicked: true;
+  interface WrittenReferenceData {
+    title: string;
+    url: string;
+    faviconUrl: string;
+    isWritten: true;
     id: number;
   }
 
+  type ReferenceData = UnWrittenReferenceData | WrittenReferenceData;
+
   interface ChromeStorage {
-    reference: (UnPickedReferenceData | PickedReferenceDate)[];
+    reference: ReferenceData[];
   }
 
   interface ChromeStorageChangeEvent {

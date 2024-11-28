@@ -3,14 +3,13 @@ export const getReferenceData = async (
 ) => {
   const [reference] = await chrome.scripting.executeScript({
     target: { tabId },
-    func: (): UnPickedReferenceData => ({
+    func: (): ReferenceData => ({
       title: document.title,
       url: document.URL,
       faviconUrl: (
         document.querySelector('link[rel="icon"]') as HTMLLinkElement
       )?.href,
-      date: new Date().getTime(),
-      isPicked: false,
+      isWritten: false,
     }),
   });
 
