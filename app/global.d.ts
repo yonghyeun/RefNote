@@ -27,4 +27,13 @@ declare global {
     isPicked: true;
     id: number;
   }
+
+  interface ChromeStorage {
+    reference: Record<ReferenceData["title"], ReferenceData>;
+  }
+
+  interface ChromeStorageChangeEvent {
+    [key in typeof ChromeStorage
+    ]: { oldValue: ChromeStorage[key], newValue: ChromeStorage[key] };
+  }
 }

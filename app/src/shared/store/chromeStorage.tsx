@@ -11,7 +11,10 @@ const chromeStorageInitialValue: ChromeStorage = {
 };
 
 const ChromeStorageContext = createContext<{
-  chromeStorage: ChromeStorage | null;
+  chromeStorage: ChromeStorage;
+  setChromeStorage: (
+    updater: (prevStorage: ChromeStorage) => ChromeStorage
+  ) => void;
 } | null>(null);
 
 // ChromeStorageProvider 는 오로지 readonly 형태인 chrome.storage.sync 데이터를 메모리에 저장한 chromeStorage 객체만을 반환합니다.
@@ -21,18 +24,25 @@ export const ChromeStorageProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [chromeStorage, setChromeStorage] = useState<ChromeStorage>(
+  const [chromeStorage, _syncChromeStorage] = useState<ChromeStorage>(
     chromeStorageInitialValue
   );
+
+  const setChromeStorage = (
+    updater: (prevStorage: ChromeStorage) => ChromeStorage
+  ) => {
+    const updatedChromeStorage = updater(chromeStorage);
+    chrome.storage.sync.set(updatedChromeStorage);
+  };
 
   useEffect(() => {
     // chrome.storage.sync.get 을 통해 chrome.storage.sync 의 데이터를 가져옵니다.
     chrome.storage.sync.get(null, (chromeStorage) => {
-      setChromeStorage(chromeStorage as ChromeStorage);
+      _syncChromeStorage(chromeStorage as ChromeStorage);
     });
 
     // chrome.storage.onChanged.addListener 를 통해 chrome.storage.sync 의 데이터를 실시간으로 감지합니다.
-    const synchronizeChromeStorage = (change: chrome.storage.StorageChange) => {
+    const synchronizeChromeStorage = (change: ChromeStorageChangeEvent) => {
       // 구글 크롬 스토리지의 onChange 이벤트의 changeEvent 는 다음과 같이 생겼습니다.
       // {[key in string] : {oldValue: any, newValue: any}}
       // newValue 만을 이용해 해당 스토리지의 데이터를 변경합니다.
@@ -46,7 +56,7 @@ export const ChromeStorageProvider = ({
         {} as ChromeStorage
       );
 
-      setChromeStorage(updatedChromeStorage);
+      _syncChromeStorage(updatedChromeStorage);
 
       if (process.env.NODE_ENV === "development") {
         console.group("chrome.storage.onChange");
@@ -62,7 +72,12 @@ export const ChromeStorageProvider = ({
   }, []);
 
   return (
-    <ChromeStorageContext.Provider value={{ chromeStorage }}>
+    <ChromeStorageContext.Provider
+      value={{
+        chromeStorage,
+        setChromeStorage,
+      }}
+    >
       {children}
     </ChromeStorageContext.Provider>
   );
