@@ -54,6 +54,10 @@
 /* 주의를 줄 수 있는 옅은 빨간색 */
 .resetButton {
   background-color: #ffcccc;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .resetButton:hover {
