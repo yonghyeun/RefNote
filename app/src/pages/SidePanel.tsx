@@ -30,7 +30,7 @@ export const SidePanelPage = () => {
       </header>
       <main>
         <section className={styles.referenceContainer}>
-          <h2>UnWritten Reference</h2>
+          <h2>Pending Reference</h2>
           <ul>
             {reference
               .filter((data): data is UnWrittenReferenceData => !data.isWritten)
@@ -42,7 +42,7 @@ export const SidePanelPage = () => {
           </ul>
         </section>
         <section className={styles.referenceContainer}>
-          <h2>Written Reference</h2>
+          <h2>Saved Reference</h2>
           <ul>
             {reference
               .filter((data): data is WrittenReferenceData => data.isWritten)
