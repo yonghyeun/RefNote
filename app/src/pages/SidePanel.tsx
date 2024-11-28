@@ -1,4 +1,4 @@
-import { ReferenceSaveButton } from "@/features/reference/ui";
+import { ReferenceItem, ReferenceSaveButton } from "@/features/reference/ui";
 import { useChromeStorage } from "@/shared/store/chromeStorage";
 import { Button } from "@/shared/ui";
 import styles from "./pages.module.css";
@@ -30,12 +30,9 @@ export const SidePanelPage = () => {
       <main>
         <h2>References</h2>
         <ul>
-          {chromeStorage.reference.map((reference) => (
-            <li key={reference.url}>
-              <img src={reference.faviconUrl} />
-              <a href={reference.url} target="_blank" rel="noreferrer">
-                {reference.title}
-              </a>
+          {chromeStorage.reference.map((reference, idx) => (
+            <li key={idx}>
+              <ReferenceItem {...reference} />
             </li>
           ))}
         </ul>
