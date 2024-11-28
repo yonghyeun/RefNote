@@ -5,8 +5,8 @@ import {
   ResetReferenceButton,
 } from "@/features/reference/ui";
 import { useChromeStorage } from "@/shared/store/chromeStorage";
-import styles from "./pages.module.css";
 import { IsMarkdownToggle } from "@/features/reference/ui/IsMarkdownToggle";
+import styles from "./pages.module.css";
 
 export const SidePanelPage = () => {
   const { chromeStorage } = useChromeStorage();
@@ -14,12 +14,9 @@ export const SidePanelPage = () => {
 
   return (
     <>
-      <header>
-        <h1>RefNote</h1>
-        <div className={styles.headerButtonContainer}>
-          <ReferenceSaveButton />
-          <IsMarkdownToggle />
-        </div>
+      <header className={styles.headerButtonContainer}>
+        <ReferenceSaveButton />
+        <IsMarkdownToggle />
       </header>
       <main>
         <section className={styles.referenceContainer}>
