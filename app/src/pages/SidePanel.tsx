@@ -5,6 +5,7 @@ import {
 } from "@/features/reference/ui";
 import { useChromeStorage } from "@/shared/store/chromeStorage";
 import styles from "./pages.module.css";
+import { IsMarkdownToggle } from "@/features/reference/ui/IsMarkdownToggle";
 
 export const SidePanelPage = () => {
   const { chromeStorage } = useChromeStorage();
@@ -14,9 +15,9 @@ export const SidePanelPage = () => {
     <>
       <header>
         <h1>RefNote</h1>
-        <div className={styles.rowFlexBox}>
-          <ResetReferenceButton />
+        <div className={styles.headerButtonContainer}>
           <ReferenceSaveButton />
+          <IsMarkdownToggle />
         </div>
       </header>
       <main>
@@ -46,6 +47,9 @@ export const SidePanelPage = () => {
           </ul>
         </section>
       </main>
+      <footer>
+        <ResetReferenceButton />
+      </footer>
     </>
   );
 };
