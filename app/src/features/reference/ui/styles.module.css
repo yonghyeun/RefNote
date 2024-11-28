@@ -38,6 +38,17 @@
   text-overflow: ellipsis;
 }
 
+.writtenTitleContainer {
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.writtenId {
+  font-size: 0.8rem;
+  color: #a0a0a0;
+}
+
 .button {
   padding: 0.5rem;
   display: flex;

@@ -30,7 +30,7 @@ const Content = ({
   </div>
 );
 
-const Title = ({ children }: { children: string }) => {
+const Title = ({ children }: { children: React.ReactNode }) => {
   const [isEllipsis, setIsEllipsis] = useState<boolean>(true);
 
   return (
@@ -43,10 +43,7 @@ const Title = ({ children }: { children: string }) => {
   );
 };
 
-const WriteButton = ({
-  url,
-  title,
-}: Pick<UnWrittenReferenceData, "url" | "title">) => {
+const WriteButton = ({ title }: Pick<UnWrittenReferenceData, "title">) => {
   const { setChromeStorage } = useChromeStorage();
 
   const handleWriteReference = () => {
@@ -55,7 +52,7 @@ const WriteButton = ({
       return {
         ...prev,
         reference: prev.reference.map((data) =>
-          data.url !== url ? data : { ...data, isWritten: true, id }
+          data.title !== title ? data : { ...data, isWritten: true, id }
         ),
       };
     });
@@ -97,15 +94,7 @@ const EraseButton = ({
       return {
         ...prev,
         reference: prev.reference.map((data) => {
-          if (!data.isWritten) {
-            return data;
-          }
-          if (data.id === id) {
-            // id 키는 제거하고 반환
-            const { id, ...rest } = data;
-            return { ...rest, isWritten: false } as UnWrittenReferenceData;
-          }
-          if (data.id > id) {
+          if (data.isWritten && data.id > id) {
             return { ...data, id: data.id - 1 };
           }
           return data;
@@ -180,17 +169,32 @@ export const ReferenceItem = ({
   isWritten,
   id,
 }: ReferenceData & { id?: number }) => {
+  if (isWritten) {
+    return (
+      <Container>
+        <Content url={url}>
+          {faviconUrl ? (
+            <Favicon faviconUrl={faviconUrl} />
+          ) : (
+            <DefaultFavicon />
+          )}
+          <div className={styles.writtenTitleContainer}>
+            <Title>{title}</Title>
+            <span className={styles.writtenId}>[{id}]</span>
+          </div>
+        </Content>
+        <EraseButton title={title} id={id} />
+        <RemoveButton title={title} />
+      </Container>
+    );
+  }
   return (
     <Container>
       <Content url={url}>
         {faviconUrl ? <Favicon faviconUrl={faviconUrl} /> : <DefaultFavicon />}
         <Title>{title}</Title>
       </Content>
-      {isWritten ? (
-        <EraseButton title={title} id={id} />
-      ) : (
-        <WriteButton url={url} title={title} />
-      )}
+      <WriteButton title={title} />
       <RemoveButton title={title} />
     </Container>
   );
