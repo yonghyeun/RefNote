@@ -30,12 +30,6 @@ declare global {
 
   interface ChromeStorage {
     reference: ReferenceData[];
-  }
-
-  interface ChromeStorageChangeEvent {
-    [key in typeof ChromeStorage]: {
-      oldValue: ChromeStorage[key] | undefined;
-      newValue: ChromeStorage[key];
-    };
+    isMarkdown: boolean;
   }
 }
