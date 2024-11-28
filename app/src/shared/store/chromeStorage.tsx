@@ -1,13 +1,7 @@
 import { useState, useEffect, createContext, useContext } from "react";
 
-type ReferenceDataInStorage = UnPickedReferenceData | PickedReferenceDate;
-
-interface ChromeStorage {
-  reference: Record<ReferenceDataInStorage["title"], ReferenceDataInStorage>;
-}
-
 const chromeStorageInitialValue: ChromeStorage = {
-  reference: {},
+  reference: [],
 };
 
 const ChromeStorageContext = createContext<{

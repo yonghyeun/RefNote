@@ -18,10 +18,7 @@ export const ReferenceSaveButton = () => {
 
     setChromeStorage((prevStorage) => ({
       ...prevStorage,
-      reference: {
-        ...prevStorage.reference,
-        [referenceData.title]: referenceData,
-      },
+      reference: [...(prevStorage.reference || []), referenceData],
     }));
   };
 

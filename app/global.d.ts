@@ -29,11 +29,13 @@ declare global {
   }
 
   interface ChromeStorage {
-    reference: Record<ReferenceData["title"], ReferenceData>;
+    reference: (UnPickedReferenceData | PickedReferenceDate)[];
   }
 
   interface ChromeStorageChangeEvent {
-    [key in typeof ChromeStorage
-    ]: { oldValue: ChromeStorage[key], newValue: ChromeStorage[key] };
+    [key in typeof ChromeStorage]: {
+      oldValue: ChromeStorage[key] | undefined;
+      newValue: ChromeStorage[key];
+    };
   }
 }
