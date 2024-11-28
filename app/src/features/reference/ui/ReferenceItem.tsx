@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./styles.module.css";
 import { useChromeStorage } from "@/shared/store/chromeStorage";
-import { IconButton } from "@/shared/ui";
+import { IconButton } from "@/shared/ui/button";
 
 const Favicon = ({
   faviconUrl,

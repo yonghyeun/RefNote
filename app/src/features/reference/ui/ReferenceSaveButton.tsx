@@ -1,7 +1,7 @@
 import { sendMessage } from "@/shared/lib";
 import { getCurrentTab } from "@/shared/model";
 import { useChromeStorage } from "@/shared/store/chromeStorage";
-import { Button } from "@/shared/ui";
+import { Button } from "@/shared/ui/button";
 
 // TODO : 로딩 처리 하기
 export const ReferenceSaveButton = () => {
