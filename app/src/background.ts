@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 import { openSidePanel } from "./sidePanel/model";
-import { saveReferenceOnTab } from "./features/reference/model";
+import { getReferenceData } from "./features/reference/model";
 
 console.log("Hello from the background!");
 
@@ -45,9 +45,8 @@ chrome.runtime.onMessage.addListener(
     switch (message.message) {
       case "openSidePanel":
         return handleAsyncMessage(() => openSidePanel(message));
-      // 비동기 응답을 위해 true 반환
-      case "saveReference":
-        return handleAsyncMessage(() => saveReferenceOnTab(message.tabId));
+      case "getReferenceData":
+        return handleAsyncMessage(() => getReferenceData(message.tabId));
       default:
         if (process.env.NODE_ENV === "development") {
           throw new Error(`처리 되지 않은 메시지 입니다. ${message.message}`);
