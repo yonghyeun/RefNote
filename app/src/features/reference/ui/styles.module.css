@@ -32,6 +32,7 @@
 .ellipsis {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -50,16 +51,71 @@
   margin: auto 0;
 }
 
-.button {
-  padding: 0.5rem;
+/* 주의를 줄 수 있는 옅은 빨간색 */
+.resetButton {
+  background-color: #ffcccc;
+  width: 100%;
   display: flex;
+  justify-content: center;
   align-items: center;
-  border: none;
-  background-color: #f0f0f0;
-  border-radius: 2rem;
-  cursor: pointer;
 }
 
-.button:hover {
-  background-color: #e0e0e0;
+.resetButton:hover {
+  background-color: #ff9999;
+}
+.resetButton:active {
+  background-color: #ff6666;
+}
+
+/* 토글 */
+
+.toggleSwitch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.checkBox {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggleSlider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.toggleSlider:before {
+  position: absolute;
+  content: "T";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.checkBox:checked + .toggleSlider {
+  background-color: #2196f3;
+}
+
+.checkBox:checked + .toggleSlider:before {
+  transform: translateX(26px);
+  content: "M";
 }

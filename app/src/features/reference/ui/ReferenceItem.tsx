@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "./styles.module.css";
 import { useChromeStorage } from "@/shared/store/chromeStorage";
+import { IconButton } from "@/shared/ui/button";
 
 const Favicon = ({
   faviconUrl,
@@ -59,8 +60,7 @@ const WriteButton = ({ title }: Pick<UnWrittenReferenceData, "title">) => {
   };
 
   return (
-    <button
-      className={styles.button}
+    <IconButton
       aria-label={`${title}에 대한 레퍼런스 사용하기`}
       onClick={handleWriteReference}
     >
@@ -79,7 +79,7 @@ const WriteButton = ({ title }: Pick<UnWrittenReferenceData, "title">) => {
           stroke-linejoin="round"
         />
       </svg>
-    </button>
+    </IconButton>
   );
 };
 
@@ -108,8 +108,7 @@ const EraseButton = ({
   };
 
   return (
-    <button
-      className={styles.button}
+    <IconButton
       aria-label={`${title}에 대한 레퍼런스 사용하지 않기`}
       onClick={handleEraseReference}
     >
@@ -135,7 +134,7 @@ const EraseButton = ({
           />
         </g>
       </svg>
-    </button>
+    </IconButton>
   );
 };
 
@@ -167,8 +166,7 @@ const RemoveButton = ({ title }: Pick<ReferenceData, "title">) => {
   };
 
   return (
-    <button
-      className={styles.button}
+    <IconButton
       aria-label={`${title}에 대한 레퍼런스 기록 삭제 하기`}
       onClick={handleRemoveReference}
     >
@@ -187,7 +185,7 @@ const RemoveButton = ({ title }: Pick<ReferenceData, "title">) => {
           stroke-linejoin="round"
         />
       </svg>
-    </button>
+    </IconButton>
   );
 };
 

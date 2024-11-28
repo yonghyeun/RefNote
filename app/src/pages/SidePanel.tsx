@@ -1,5 +1,11 @@
-import { ReferenceItem, ReferenceSaveButton } from "@/features/reference/ui";
+import {
+  CopyReferenceListButton,
+  ReferenceItem,
+  ReferenceSaveButton,
+  ResetReferenceButton,
+} from "@/features/reference/ui";
 import { useChromeStorage } from "@/shared/store/chromeStorage";
+import { IsMarkdownToggle } from "@/features/reference/ui/IsMarkdownToggle";
 import styles from "./pages.module.css";
 
 export const SidePanelPage = () => {
@@ -8,15 +14,13 @@ export const SidePanelPage = () => {
 
   return (
     <>
-      <header>
-        <h1>RefNote</h1>
-        <div className={styles.rowFlexBox}>
-          <ReferenceSaveButton />
-        </div>
+      <header className={styles.headerButtonContainer}>
+        <ReferenceSaveButton />
+        <IsMarkdownToggle />
       </header>
       <main>
         <section className={styles.referenceContainer}>
-          <h2>Pending Reference</h2>
+          <h2>UnAttached References</h2>
           <ul>
             {reference
               .filter((data): data is UnWrittenReferenceData => !data.isWritten)
@@ -28,7 +32,10 @@ export const SidePanelPage = () => {
           </ul>
         </section>
         <section className={styles.referenceContainer}>
-          <h2>Saved Reference</h2>
+          <h2>Attached References</h2>
+          <div>
+            <CopyReferenceListButton />
+          </div>
           <ul>
             {reference
               .filter((data): data is WrittenReferenceData => data.isWritten)
@@ -41,6 +48,9 @@ export const SidePanelPage = () => {
           </ul>
         </section>
       </main>
+      <footer>
+        <ResetReferenceButton />
+      </footer>
     </>
   );
 };

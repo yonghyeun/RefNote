@@ -1,0 +1,16 @@
+.button {
+  background-color: #f9fafb; /* bg-grey-0 */
+  color: #1f2937; /* text-grey-900 */
+  border: 0.0625rem solid #1f2937; /* border-grey-900 */
+  padding: 0 1.5rem;
+}
+
+.iconButton {
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 2rem;
+  cursor: pointer;
+}
