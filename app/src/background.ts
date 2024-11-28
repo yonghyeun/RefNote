@@ -44,7 +44,7 @@ chrome.runtime.onMessage.addListener(
 
     switch (message.message) {
       case "openSidePanel":
-        return handleAsyncMessage(() => openSidePanel(message));
+        return handleAsyncMessage(() => openSidePanel(message.tabId));
       case "getReferenceData":
         return handleAsyncMessage(() => getReferenceData(message.tabId));
       default:
@@ -55,3 +55,9 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
+
+chrome.action.onClicked.addListener((tab) => {
+  if (tab.id !== undefined) {
+    openSidePanel(tab.id);
+  }
+});
