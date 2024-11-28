@@ -1,4 +1,8 @@
-import { ReferenceItem, ReferenceSaveButton } from "@/features/reference/ui";
+import {
+  ReferenceItem,
+  ReferenceSaveButton,
+  ResetReferenceButton,
+} from "@/features/reference/ui";
 import { useChromeStorage } from "@/shared/store/chromeStorage";
 import styles from "./pages.module.css";
 
@@ -11,6 +15,7 @@ export const SidePanelPage = () => {
       <header>
         <h1>RefNote</h1>
         <div className={styles.rowFlexBox}>
+          <ResetReferenceButton />
           <ReferenceSaveButton />
         </div>
       </header>

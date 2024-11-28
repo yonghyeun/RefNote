@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext, useContext } from "react";
 
-const chromeStorageInitialValue: ChromeStorage = {
+export const chromeStorageInitialValue: ChromeStorage = {
   reference: [],
 };
 
@@ -32,7 +32,9 @@ export const ChromeStorageProvider = ({
   useEffect(() => {
     // chrome.storage.sync.get 을 통해 chrome.storage.sync 의 데이터를 가져옵니다.
     chrome.storage.sync.get(null, (chromeStorage) => {
-      _syncChromeStorage(chromeStorage as ChromeStorage);
+      if (Object.keys(chromeStorage).length > 0) {
+        _syncChromeStorage(chromeStorage as ChromeStorage);
+      }
     });
 
     // chrome.storage.onChanged.addListener 를 통해 chrome.storage.sync 의 데이터를 실시간으로 감지합니다.

@@ -10,3 +10,11 @@ export const Button = ({ children, ...props }: ButtonProps) => {
     </button>
   );
 };
+
+export const IconButton = ({ children, ...props }: ButtonProps) => {
+  return (
+    <button className={styles.iconButton} {...props}>
+      {children}
+    </button>
+  );
+};
