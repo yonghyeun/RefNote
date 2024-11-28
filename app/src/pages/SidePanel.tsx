@@ -1,4 +1,5 @@
 import {
+  CopyReferenceListButton,
   ReferenceItem,
   ReferenceSaveButton,
   ResetReferenceButton,
@@ -35,6 +36,9 @@ export const SidePanelPage = () => {
         </section>
         <section className={styles.referenceContainer}>
           <h2>Attached References</h2>
+          <div>
+            <CopyReferenceListButton />
+          </div>
           <ul>
             {reference
               .filter((data): data is WrittenReferenceData => data.isWritten)
