@@ -10,7 +10,7 @@ export const getReferenceData = async (
         document.querySelector('link[rel="icon"]') as HTMLLinkElement
       )?.href,
       date: new Date().getTime(),
-      isPicked: false,
+      isWritten: false,
     }),
   });
 

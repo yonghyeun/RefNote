@@ -66,6 +66,7 @@ const WriteButton = ({ url, title }: ReferenceButtonProps) => (
     </svg>
   </button>
 );
+
 const EraseButton = ({ url, title }: ReferenceButtonProps) => (
   <button
     className={styles.button}
@@ -127,7 +128,7 @@ export const ReferenceItem = ({
   title,
   faviconUrl,
   url,
-  isPicked,
+  isWritten,
 }: ReferenceData) => {
   return (
     <Container>
@@ -135,7 +136,7 @@ export const ReferenceItem = ({
         {faviconUrl ? <Favicon faviconUrl={faviconUrl} /> : <DefaultFavicon />}
         <Title>{title}</Title>
       </Content>
-      {isPicked ? (
+      {isWritten ? (
         <EraseButton url={url} title={title} />
       ) : (
         <WriteButton url={url} title={title} />

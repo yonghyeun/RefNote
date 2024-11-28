@@ -16,15 +16,15 @@ declare global {
     url: string;
     faviconUrl: string;
     date: number;
-    isPicked: boolean;
+    isWritten: boolean;
   }
 
   interface UnPickedReferenceData extends ReferenceData {
-    isPicked: false;
+    isWritten: false;
   }
 
   interface PickedReferenceDate extends ReferenceData {
-    isPicked: true;
+    isWritten: true;
     id: number;
   }
 
