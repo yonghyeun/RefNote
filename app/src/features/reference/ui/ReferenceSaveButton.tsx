@@ -11,7 +11,7 @@ export const ReferenceSaveButton = () => {
     // tabId 를 가져 옵니다.
     const tab = await getCurrentTab();
     // 해당 tabId를 이용해 document 정보를 받아 옵니다.
-    const referenceData = await sendMessage<ReferenceData>({
+    const referenceData = await sendMessage<UnWrittenReferenceData>({
       message: "getReferenceData",
       tabId: tab.id,
     });

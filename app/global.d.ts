@@ -11,12 +11,22 @@ declare global {
     tabId: number;
   }
 
-  interface ReferenceData {
+  interface UnWrittenReferenceData {
     title: string;
     url: string;
     faviconUrl: string;
-    isWritten: boolean;
+    isWritten: false;
   }
+
+  interface WrittenReferenceData {
+    title: string;
+    url: string;
+    faviconUrl: string;
+    isWritten: true;
+    id: number;
+  }
+
+  type ReferenceData = UnWrittenReferenceData | WrittenReferenceData;
 
   interface ChromeStorage {
     reference: ReferenceData[];
