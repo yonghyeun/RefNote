@@ -19,17 +19,8 @@ declare global {
     isWritten: boolean;
   }
 
-  interface UnPickedReferenceData extends ReferenceData {
-    isWritten: false;
-  }
-
-  interface PickedReferenceDate extends ReferenceData {
-    isWritten: true;
-    id: number;
-  }
-
   interface ChromeStorage {
-    reference: (UnPickedReferenceData | PickedReferenceDate)[];
+    reference: ReferenceData[];
   }
 
   interface ChromeStorageChangeEvent {

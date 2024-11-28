@@ -4,7 +4,7 @@ import styles from "./styles.module.css";
 const Favicon = ({
   faviconUrl,
 }: {
-  faviconUrl: NonNullable<UnPickedReferenceData["faviconUrl"]>;
+  faviconUrl: NonNullable<ReferenceData["faviconUrl"]>;
 }) => <img className={styles.favicon} src={faviconUrl} />;
 
 // TODO 적절한 파비콘 아이콘 선택 하기
