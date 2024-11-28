@@ -50,3 +50,15 @@
   color: #a0a0a0;
   margin: auto 0;
 }
+
+/* 주의를 줄 수 있는 옅은 빨간색 */
+.resetButton {
+  background-color: #ffcccc;
+}
+
+.resetButton:hover {
+  background-color: #ff9999;
+}
+.resetButton:active {
+  background-color: #ff6666;
+}

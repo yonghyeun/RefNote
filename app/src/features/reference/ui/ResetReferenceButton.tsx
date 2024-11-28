@@ -1,13 +1,19 @@
 import { chromeStorageInitialValue } from "@/shared/store/chromeStorage";
+import { IconButton } from "@/shared/ui/button";
+import styles from "./styles.module.css";
 
 export const ResetReferenceButton = () => {
   const handleResetReference = () => {
     chrome.storage.sync.set(chromeStorageInitialValue);
   };
 
+  // 색상으로 약간 주의를 줄 수 있는 빨간색 아이콘 버튼을 만들어주세요.
+
   return (
-    <button aria-label="Reset reference" onClick={handleResetReference}
-      className=""
+    <IconButton
+      aria-label="Reset reference"
+      className={styles.resetButton}
+      onClick={handleResetReference}
     >
       <svg
         fill="#000000"
@@ -25,6 +31,6 @@ export const ResetReferenceButton = () => {
           strokeLinejoin="round"
         />
       </svg>
-    </button>
+    </IconButton>
   );
 };
