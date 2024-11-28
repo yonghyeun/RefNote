@@ -21,36 +21,40 @@ export const SidePanelPage = () => {
   };
 
   return (
-    <div>
-      <h1>SidePanel</h1>
-      <p>SidePanel page content</p>
-      <div className={styles.rowFlexBox}>
-        <Button onClick={handleOpenSidePanel}>Open Side Panel</Button>
-        <ReferenceSaveButton />
-      </div>
+    <>
+      <header>
+        <h1>RefNote</h1>
+        <div className={styles.rowFlexBox}>
+          <ReferenceSaveButton />
+        </div>
+      </header>
       <main>
-        <h2>UnWritten Reference</h2>
-        <ul>
-          {reference
-            .filter((data): data is UnWrittenReferenceData => !data.isWritten)
-            .map((reference, idx) => (
-              <li key={idx}>
-                <ReferenceItem {...reference} />
-              </li>
-            ))}
-        </ul>
-        <h2>Written Reference</h2>
-        <ul>
-          {reference
-            .filter((data): data is WrittenReferenceData => data.isWritten)
-            .sort((prev, cur) => prev.id - cur.id)
-            .map((reference, idx) => (
-              <li key={idx}>
-                <ReferenceItem {...reference} />
-              </li>
-            ))}
-        </ul>
+        <section className={styles.referenceContainer}>
+          <h2>UnWritten Reference</h2>
+          <ul>
+            {reference
+              .filter((data): data is UnWrittenReferenceData => !data.isWritten)
+              .map((reference, idx) => (
+                <li key={idx}>
+                  <ReferenceItem {...reference} />
+                </li>
+              ))}
+          </ul>
+        </section>
+        <section className={styles.referenceContainer}>
+          <h2>Written Reference</h2>
+          <ul>
+            {reference
+              .filter((data): data is WrittenReferenceData => data.isWritten)
+              .sort((prev, cur) => prev.id - cur.id)
+              .map((reference, idx) => (
+                <li key={idx}>
+                  <ReferenceItem {...reference} />
+                </li>
+              ))}
+          </ul>
+        </section>
       </main>
-    </div>
+    </>
   );
 };

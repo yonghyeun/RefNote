@@ -3,6 +3,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /* 스크롤 눈에 안보이게 제거 하기 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
 }
 
 @font-face {
@@ -12,11 +16,23 @@
   font-weight: 400;
   font-style: normal;
 }
+
 body {
   font-family: "Pretendard-Regular", sans-serif;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0.3rem;
 }
 
-html {
-  min-width: 16rem;
-  padding: 0.3rem;
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+main {
+  flex-grow: 1;
 }
