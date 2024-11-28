@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "./styles.module.css";
+import { useChromeStorage } from "@/shared/store/chromeStorage";
 
 const Favicon = ({
   faviconUrl,
@@ -42,62 +43,110 @@ const Title = ({ children }: { children: string }) => {
   );
 };
 
-interface ReferenceButtonProps extends Pick<ReferenceData, "url" | "title"> {}
+const WriteButton = ({
+  url,
+  title,
+}: Pick<UnWrittenReferenceData, "url" | "title">) => {
+  const { setChromeStorage } = useChromeStorage();
 
-const WriteButton = ({ url, title }: ReferenceButtonProps) => (
-  <button
-    className={styles.button}
-    aria-label={`${title}에 대한 레퍼런스 사용하기`}
-  >
-    <svg
-      width="1rem"
-      height="1rem"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M15.4998 5.50067L18.3282 8.3291M13 21H21M3 21.0004L3.04745 20.6683C3.21536 19.4929 3.29932 18.9052 3.49029 18.3565C3.65975 17.8697 3.89124 17.4067 4.17906 16.979C4.50341 16.497 4.92319 16.0772 5.76274 15.2377L17.4107 3.58969C18.1918 2.80865 19.4581 2.80864 20.2392 3.58969C21.0202 4.37074 21.0202 5.63707 20.2392 6.41812L8.37744 18.2798C7.61579 19.0415 7.23497 19.4223 6.8012 19.7252C6.41618 19.994 6.00093 20.2167 5.56398 20.3887C5.07171 20.5824 4.54375 20.6889 3.48793 20.902L3 21.0004Z"
-        stroke="#000000"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
-  </button>
-);
+  const handleWriteReference = () => {
+    setChromeStorage((prev) => {
+      const id = prev.reference.filter(({ isWritten }) => isWritten).length + 1;
+      return {
+        ...prev,
+        reference: prev.reference.map((data) =>
+          data.url !== url ? data : { ...data, isWritten: true, id }
+        ),
+      };
+    });
+  };
 
-const EraseButton = ({ url, title }: ReferenceButtonProps) => (
-  <button
-    className={styles.button}
-    aria-label={`${title}에 대한 레퍼런스 사용하지 않기`}
-  >
-    <svg
-      fill="#000000"
-      width="1rem"
-      height="1rem"
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 612.002 612.002"
+  return (
+    <button
+      className={styles.button}
+      aria-label={`${title}에 대한 레퍼런스 사용하기`}
+      onClick={handleWriteReference}
     >
-      <g>
+      <svg
+        width="1rem"
+        height="1rem"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <path
-          d="M594.464,534.414H344.219L606.866,271.77c6.848-6.851,6.848-17.953,0-24.8L407.547,47.65
-		c-3.291-3.288-7.749-5.135-12.401-5.135c-4.65,0-9.11,1.847-12.398,5.135L5.138,425.262c-6.851,6.848-6.851,17.95,0,24.8
-		l114.29,114.287c3.288,3.291,7.749,5.138,12.398,5.138h462.638c9.684,0,17.536-7.852,17.536-17.536
-		C612,542.265,604.148,534.414,594.464,534.414z M395.145,84.851L569.664,259.37L363.27,465.763L188.753,291.245L395.145,84.851z
-		 M294.618,534.414H139.09L42.336,437.66l121.617-121.617l174.519,174.519L294.618,534.414z"
+          d="M15.4998 5.50067L18.3282 8.3291M13 21H21M3 21.0004L3.04745 20.6683C3.21536 19.4929 3.29932 18.9052 3.49029 18.3565C3.65975 17.8697 3.89124 17.4067 4.17906 16.979C4.50341 16.497 4.92319 16.0772 5.76274 15.2377L17.4107 3.58969C18.1918 2.80865 19.4581 2.80864 20.2392 3.58969C21.0202 4.37074 21.0202 5.63707 20.2392 6.41812L8.37744 18.2798C7.61579 19.0415 7.23497 19.4223 6.8012 19.7252C6.41618 19.994 6.00093 20.2167 5.56398 20.3887C5.07171 20.5824 4.54375 20.6889 3.48793 20.902L3 21.0004Z"
           stroke="#000000"
           stroke-width="2"
           stroke-linecap="round"
           stroke-linejoin="round"
         />
-      </g>
-    </svg>
-  </button>
-);
+      </svg>
+    </button>
+  );
+};
 
-const RemoveButton = ({ url, title }: ReferenceButtonProps) => (
+const EraseButton = ({
+  title,
+  id,
+}: Pick<WrittenReferenceData, "title" | "id">) => {
+  const { setChromeStorage } = useChromeStorage();
+
+  const handleEraseReference = () => {
+    setChromeStorage((prev) => {
+      return {
+        ...prev,
+        reference: prev.reference.map((data) => {
+          if (!data.isWritten) {
+            return data;
+          }
+          if (data.id === id) {
+            // id 키는 제거하고 반환
+            const { id, ...rest } = data;
+            return { ...rest, isWritten: false } as UnWrittenReferenceData;
+          }
+          if (data.id > id) {
+            return { ...data, id: data.id - 1 };
+          }
+          return data;
+        }),
+      };
+    });
+  };
+
+  return (
+    <button
+      className={styles.button}
+      aria-label={`${title}에 대한 레퍼런스 사용하지 않기`}
+      onClick={handleEraseReference}
+    >
+      <svg
+        fill="#000000"
+        width="1rem"
+        height="1rem"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 612.002 612.002"
+      >
+        <g>
+          <path
+            d="M594.464,534.414H344.219L606.866,271.77c6.848-6.851,6.848-17.953,0-24.8L407.547,47.65
+      c-3.291-3.288-7.749-5.135-12.401-5.135c-4.65,0-9.11,1.847-12.398,5.135L5.138,425.262c-6.851,6.848-6.851,17.95,0,24.8
+      l114.29,114.287c3.288,3.291,7.749,5.138,12.398,5.138h462.638c9.684,0,17.536-7.852,17.536-17.536
+      C612,542.265,604.148,534.414,594.464,534.414z M395.145,84.851L569.664,259.37L363.27,465.763L188.753,291.245L395.145,84.851z
+       M294.618,534.414H139.09L42.336,437.66l121.617-121.617l174.519,174.519L294.618,534.414z"
+            stroke="#000000"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+      </svg>
+    </button>
+  );
+};
+
+const RemoveButton = ({ title }: Pick<ReferenceData, "title">) => (
   <button
     className={styles.button}
     aria-label={`${title}에 대한 레퍼런스 기록 삭제 하기`}
@@ -129,7 +178,8 @@ export const ReferenceItem = ({
   faviconUrl,
   url,
   isWritten,
-}: ReferenceData) => {
+  id,
+}: ReferenceData & { id?: number }) => {
   return (
     <Container>
       <Content url={url}>
@@ -137,11 +187,11 @@ export const ReferenceItem = ({
         <Title>{title}</Title>
       </Content>
       {isWritten ? (
-        <EraseButton url={url} title={title} />
+        <EraseButton title={title} id={id} />
       ) : (
         <WriteButton url={url} title={title} />
       )}
-      <RemoveButton url={url} title={title} />
+      <RemoveButton title={title} />
     </Container>
   );
 };
