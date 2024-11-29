@@ -1,4 +1,5 @@
 import {
+  ConvertToMarkdownButton,
   CopyReferenceListButton,
   ReferenceItem,
   ReferenceSaveButton,
@@ -33,8 +34,9 @@ export const SidePanelPage = () => {
         </section>
         <section className={styles.referenceContainer}>
           <h2>Attached References</h2>
-          <div>
+          <div className={styles.headerButtonContainer}>
             <CopyReferenceListButton />
+            <ConvertToMarkdownButton />
           </div>
           <ul>
             {reference
