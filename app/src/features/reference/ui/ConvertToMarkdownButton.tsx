@@ -1,5 +1,9 @@
+import { useChromeStorage } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 
 export const ConvertToMarkdownButton = () => {
-  return <Button>Convert to Markdown</Button>;
+  const { chromeStorage } = useChromeStorage();
+  const { isMarkdown } = chromeStorage;
+
+  return <Button disabled={!isMarkdown}>Convert to Markdown</Button>;
 };
