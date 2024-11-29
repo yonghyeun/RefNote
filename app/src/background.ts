@@ -1,6 +1,10 @@
 import browser from "webextension-polyfill";
 import { openSidePanel } from "./sidePanel/model";
-import { getReferenceData } from "./features/reference/model";
+import {
+  convertToMarkdown,
+  getReferenceData,
+} from "./features/reference/model";
+import { ConvertToMarkdownButton } from "./features/reference/ui";
 
 console.log("Hello from the background!");
 
@@ -29,8 +33,9 @@ chrome.runtime.onMessage.addListener(
       handler()
         .then((data) => {
           sendResponse({
-            message: data,
+            message: "ok",
             tabId: message.tabId,
+            data,
           });
         })
         .catch((error) => {
@@ -47,6 +52,13 @@ chrome.runtime.onMessage.addListener(
         return handleAsyncMessage(() => openSidePanel(message.tabId));
       case "getReferenceData":
         return handleAsyncMessage(() => getReferenceData(message.tabId));
+      case "convertToMarkdown":
+        return handleAsyncMessage(async () =>
+          convertToMarkdown(
+            message.tabId,
+            message.data as WrittenReferenceData[]
+          )
+        );
       default:
         if (process.env.NODE_ENV === "development") {
           throw new Error(`처리 되지 않은 메시지 입니다. ${message.message}`);

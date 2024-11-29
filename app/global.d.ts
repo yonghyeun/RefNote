@@ -1,14 +1,16 @@
 export {};
 
 declare global {
-  interface RequestMessage {
+  interface RequestMessage<T = unknown> {
     message: string;
     tabId: number;
+    data?: T;
   }
 
-  interface ResponseMessage {
+  interface ResponseMessage<R = unknown> {
     status: "ok" | Error;
     tabId: number;
+    data: R;
   }
 
   interface UnWrittenReferenceData {
