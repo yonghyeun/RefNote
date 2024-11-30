@@ -56,7 +56,7 @@ chrome.runtime.onMessage.addListener(
         return handleAsyncMessage(async () =>
           convertToMarkdown(
             message.tabId,
-            message.data as WrittenReferenceData[]
+            message.data as AttachedReferenceData[]
           )
         );
       default:

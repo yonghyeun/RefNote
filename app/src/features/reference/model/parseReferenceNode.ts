@@ -3,7 +3,7 @@ type DoubleBracket = `[[${number}]]`;
 type BracketWithUrl = `[[${number}]](${string})`;
 type Url = `(${string})`;
 
-interface WrittenReferenceInfo {
+export interface WrittenReferenceInfo {
   bracketOnlyMatch: {
     singleBracketMatch: Set<SingleBracket>;
     doubleBracketMatch: Set<DoubleBracket>;

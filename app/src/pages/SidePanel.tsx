@@ -24,7 +24,9 @@ export const SidePanelPage = () => {
           <h2>UnAttached References</h2>
           <ul>
             {reference
-              .filter((data): data is UnWrittenReferenceData => !data.isWritten)
+              .filter(
+                (data): data is UnAttachedReferenceData => !data.isWritten
+              )
               .map((reference, idx) => (
                 <li key={idx}>
                   <ReferenceItem {...reference} />
@@ -40,7 +42,7 @@ export const SidePanelPage = () => {
           </div>
           <ul>
             {reference
-              .filter((data): data is WrittenReferenceData => data.isWritten)
+              .filter((data): data is AttachedReferenceData => data.isWritten)
               .sort((prev, cur) => prev.id - cur.id)
               .map((reference, idx) => (
                 <li key={idx}>

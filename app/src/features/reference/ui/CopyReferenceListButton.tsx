@@ -6,7 +6,7 @@ export const CopyReferenceListButton = () => {
 
   const handleCopyReferenceList = () => {
     const attachedReferences = reference.filter(
-      (data): data is WrittenReferenceData => data.isWritten
+      (data): data is AttachedReferenceData => data.isWritten
     );
 
     // 마크다운 모드라면 마크다운 문법에 맞게 anchor tag를 만들어줍니다.

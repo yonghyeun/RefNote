@@ -13,14 +13,14 @@ declare global {
     data: R;
   }
 
-  interface UnWrittenReferenceData {
+  interface UnAttachedReferenceData {
     title: string;
     url: string;
     faviconUrl: string;
     isWritten: false;
   }
 
-  interface WrittenReferenceData {
+  interface AttachedReferenceData {
     title: string;
     url: string;
     faviconUrl: string;
@@ -28,7 +28,7 @@ declare global {
     id: number;
   }
 
-  type ReferenceData = UnWrittenReferenceData | WrittenReferenceData;
+  type ReferenceData = UnAttachedReferenceData | AttachedReferenceData;
 
   interface ChromeStorage {
     reference: ReferenceData[];
