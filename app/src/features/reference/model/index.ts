@@ -1,2 +1,2 @@
 export * from "./getReferenceData";
-export * from "./parseBracketInfo";
+export * from "./parseReferenceNode";
