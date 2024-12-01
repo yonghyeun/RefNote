@@ -3,13 +3,13 @@ export {};
 declare global {
   interface RequestMessage<T = unknown> {
     message: string;
-    tabId: number;
+    tab: Tab;
     data?: T;
   }
 
   interface ResponseMessage<R = unknown> {
     status: "ok" | Error;
-    tabId: number;
+    tab: Tab;
     data: R;
   }
 
@@ -33,5 +33,10 @@ declare global {
   interface ChromeStorage {
     reference: ReferenceData[];
     isMarkdown: boolean;
+  }
+
+  interface Tab extends chrome.tabs.Tab {
+    id: NonNullable<chrome.tabs.Tab["id"]>;
+    url: NonNullable<chrome.tabs.Tab["url"]>;
   }
 }

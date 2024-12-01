@@ -13,7 +13,7 @@ export const ReferenceSaveButton = () => {
     // 해당 tabId를 이용해 document 정보를 받아 옵니다.
     const { data } = await sendMessage<UnAttachedReferenceData>({
       message: "getReferenceData",
-      tabId: tab.id,
+      tab,
     });
 
     setChromeStorage((prevStorage) => ({
