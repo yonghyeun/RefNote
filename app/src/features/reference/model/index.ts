@@ -1,2 +1,2 @@
 export * from "./getReferenceData";
-export * from "./parseReferenceNode";
+export * from "./convertToMarkdown";
