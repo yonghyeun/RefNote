@@ -32,6 +32,7 @@ declare global {
 
   interface ChromeStorage {
     reference: ReferenceData[];
+    autoConverting: boolean;
   }
 
   interface Tab extends chrome.tabs.Tab {

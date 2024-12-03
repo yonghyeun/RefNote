@@ -9,12 +9,12 @@ export const IsMarkdownToggle = () => {
       <input
         type="checkbox"
         className={styles.checkBox}
-        checked={chromeStorage.isMarkdown}
+        checked={chromeStorage.autoConverting}
         onChange={() => {
           setChromeStorage((prev) => {
             return {
               ...prev,
-              isMarkdown: !prev.isMarkdown,
+              autoConverting: !prev.autoConverting,
             };
           });
         }}

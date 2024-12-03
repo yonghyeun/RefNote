@@ -2,6 +2,7 @@ import { useState, useEffect, createContext, useContext } from "react";
 
 export const chromeStorageInitialValue: ChromeStorage = {
   reference: [],
+  autoConverting: false,
 };
 
 const ChromeStorageContext = createContext<{
