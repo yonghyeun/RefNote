@@ -6,7 +6,7 @@ import {
   ResetReferenceButton,
 } from "@/features/reference/ui";
 import { useChromeStorage } from "@/shared/store/chromeStorage";
-import { IsMarkdownToggle } from "@/features/reference/ui/IsMarkdownToggle";
+import { AutoConvertingToggle } from "@/features/reference/ui";
 import styles from "./pages.module.css";
 
 export const SidePanelPage = () => {
@@ -34,8 +34,13 @@ export const SidePanelPage = () => {
           </ul>
         </section>
         <section className={styles.referenceContainer}>
-          <h2>Attached References</h2>
-          <IsMarkdownToggle />
+          <div className={styles.headerButtonContainer}>
+            <h2>Attached References</h2>
+            <div className={styles.flexItemsEnd}>
+              <span>자동 변환</span>
+              <AutoConvertingToggle />
+            </div>
+          </div>
           <div className={styles.headerButtonContainer}>
             <CopyReferenceListButton />
             <ConvertToReferenceButton />

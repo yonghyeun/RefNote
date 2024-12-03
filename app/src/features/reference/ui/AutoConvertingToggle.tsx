@@ -1,7 +1,7 @@
 import { useChromeStorage } from "@/shared/store";
 import styles from "./styles.module.css";
 
-export const IsMarkdownToggle = () => {
+export const AutoConvertingToggle = () => {
   const { chromeStorage, setChromeStorage } = useChromeStorage();
 
   return (

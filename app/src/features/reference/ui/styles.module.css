@@ -96,7 +96,7 @@
 
 .toggleSlider:before {
   position: absolute;
-  content: "T";
+  content: "OFF";
   height: 26px;
   width: 26px;
   left: 4px;
@@ -109,6 +109,7 @@
   justify-content: center;
   font-size: 16px;
   font-weight: bold;
+  color: #ccc;
 }
 
 .checkBox:checked + .toggleSlider {
@@ -117,5 +118,6 @@
 
 .checkBox:checked + .toggleSlider:before {
   transform: translateX(26px);
-  content: "M";
+  content: "ON";
+  color: black;
 }
