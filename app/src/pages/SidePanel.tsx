@@ -36,10 +36,7 @@ export const SidePanelPage = () => {
         <section className={styles.referenceContainer}>
           <div className={styles.headerButtonContainer}>
             <h2>Attached References</h2>
-            <div className={styles.flexItemsEnd}>
-              <span>자동 변환</span>
-              <AutoConvertingToggle />
-            </div>
+            <AutoConvertingToggle />
           </div>
           <div className={styles.headerButtonContainer}>
             <CopyReferenceListButton />

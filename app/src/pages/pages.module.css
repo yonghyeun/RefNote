@@ -13,14 +13,3 @@
   display: flex;
   gap: 0.5rem;
 }
-
-.flexItemsEnd {
-  display: flex;
-  gap: 0.1rem;
-}
-
-.flexItemsEnd span {
-  display: flex;
-  align-items: flex-end;
-  flex-grow: 1;
-}

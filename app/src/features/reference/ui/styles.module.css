@@ -82,6 +82,12 @@
   height: 0;
 }
 
+.toggleLabel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .toggleSlider {
   position: absolute;
   cursor: pointer;
@@ -120,4 +126,16 @@
   transform: translateX(26px);
   content: "ON";
   color: black;
+}
+
+.toggleSpan {
+  text-align: center;
+}
+
+.activeSpan {
+  color: #2196f3;
+}
+
+.defaultSpan {
+  color: #ccc;
 }
