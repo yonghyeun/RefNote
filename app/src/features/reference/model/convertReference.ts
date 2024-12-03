@@ -1,12 +1,3 @@
-interface CodeMirrorMockInterface {
-  getValue: () => string;
-  setValue: (value: string) => void;
-}
-
-interface CodeMirrorElement extends HTMLElement {
-  CodeMirror: CodeMirrorMockInterface;
-}
-
 type BracketOnly = `[${number}]` | `[[${number}]]`;
 type BracketWithUrl = `[[${number}]](${string})`;
 
@@ -15,13 +6,10 @@ type BracketWithUrl = `[[${number}]](${string})`;
  * 이에 적용 가능한 도메인 별로 로직을 따로 만들어야 합니다.
  * 적용 가능한 도메인에서만 해당 버튼을 이용 할 수 있도록 합니다.
  */
-export const convertNumberToReference = ({
-  tab,
-  data,
-}: {
-  tab: Tab;
-  data: ReferenceData[];
-}) => {
+export const convertNumberToReference = async ({ tab }: { tab: Tab }) => {
+  const { reference } =
+    await chrome.storage.sync.get<ChromeStorage>("reference");
+
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
     world: "MAIN",
@@ -29,6 +17,11 @@ export const convertNumberToReference = ({
       const codeMirror = (
         document.querySelector(".CodeMirror") as CodeMirrorElement
       ).CodeMirror;
+
+      if (!codeMirror) {
+        // TODO 알림창 띄우기
+        return;
+      }
 
       const getRegExp = (
         key: "combinedBracketRegExp" | "url" | "bracketWithUrl"
@@ -137,7 +130,7 @@ export const convertNumberToReference = ({
     },
 
     args: [
-      data.filter((data): data is AttachedReferenceData => data.isWritten),
+      reference.filter((data): data is AttachedReferenceData => data.isWritten),
     ],
   });
 };

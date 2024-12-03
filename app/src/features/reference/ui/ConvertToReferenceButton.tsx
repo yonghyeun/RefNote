@@ -1,6 +1,5 @@
 import { sendMessage } from "@/shared/lib";
 import { getCurrentTab } from "@/shared/model";
-import { useChromeStorage } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 
 export interface CovertToReferenceMessage {
@@ -10,16 +9,12 @@ export interface CovertToReferenceMessage {
 }
 
 export const ConvertToReferenceButton = () => {
-  const { chromeStorage } = useChromeStorage();
-  const { reference } = chromeStorage;
-
   const handleCovertToReference = async () => {
     const tab = await getCurrentTab();
 
     await sendMessage({
       message: "CovertToReference",
       tab,
-      data: reference,
     });
   };
 
