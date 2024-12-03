@@ -8,7 +8,7 @@ interface CodeMirrorElement extends HTMLElement {
 }
 
 type BracketOnly = `[${number}]` | `[[${number}]]`;
-type BracketWithUrl = `[[${number}]]${string}`;
+type BracketWithUrl = `[[${number}]](${string})`;
 
 /**
  * convertNumberToReference 은 도메인마다 서로 다른 로직을 가지고 있습니다.
@@ -55,9 +55,8 @@ export const convertNumberToReference = async ({
         );
       };
 
-      const excludeId = (str: string) => {
-        const [bracket] = str.match(getRegExp("combinedBracketRegExp")) || [];
-        return bracket ? Number(bracket.replace(/\[|\]/g, "")) : 999999;
+      const excludeId = (bracket: BracketOnly) => {
+        return Number(bracket.replace(/\[|\]/g, ""));
       };
 
       const excludeUrl = (str: string) => {
@@ -90,7 +89,7 @@ export const convertNumberToReference = async ({
       const bracketWithUrlMatchArray = getBracketWithUrlMatch(
         codeMirror.getValue()
       ).filter((match) => {
-        const referenceId = excludeId(match);
+        const referenceId = excludeId(match.split("(")[0] as BracketOnly);
         const url = excludeUrl(match);
 
         return (
@@ -99,17 +98,37 @@ export const convertNumberToReference = async ({
         );
       });
 
-      const convertedText = [
-        ...bracketOnlyMatchArray,
-        ...bracketWithUrlMatchArray,
-      ].reduce((text, match) => {
-        const referenceId = excludeId(match);
-        const attachedReference = attachedReferenceArray[referenceId - 1];
-        return text.replace(
-          match,
-          `[[${referenceId}]](${attachedReference.url})`
+      let convertedText: string = codeMirror.getValue();
+
+      bracketOnlyMatchArray.forEach((bracket) => {
+        const referenceId = excludeId(bracket);
+        const url = attachedReferenceArray[referenceId - 1].url;
+        const globalBracket = new RegExp(
+          bracket.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+          "g"
         );
-      }, codeMirror.getValue());
+
+        convertedText = convertedText.replace(
+          globalBracket,
+          `[[${referenceId}]](${url})`
+        );
+      });
+
+      bracketWithUrlMatchArray.forEach((bracketWithUrl) => {
+        const referenceId = excludeId(
+          bracketWithUrl.split("(")[0] as BracketOnly
+        );
+        const url = attachedReferenceArray[referenceId - 1].url;
+        const globalBracketWithUrl = new RegExp(
+          bracketWithUrl.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+          "g"
+        );
+
+        convertedText = convertedText.replace(
+          globalBracketWithUrl,
+          `[[${referenceId}]](${url})`
+        );
+      });
 
       codeMirror.setValue(convertedText);
     },

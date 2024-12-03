@@ -4,7 +4,7 @@ import {
   convertNumberToReference,
   getReferenceData,
 } from "./features/reference/model";
-import { type ConvertToMarkdownMessage } from "./features/reference/ui";
+import { type CovertToReferenceMessage } from "./features/reference/ui";
 
 console.log("Hello from the background!");
 
@@ -52,9 +52,9 @@ chrome.runtime.onMessage.addListener(
         return handleAsyncMessage<UnAttachedReferenceData>(() =>
           getReferenceData(message.tab)
         );
-      case "convertToMarkdown":
+      case "CovertToReference":
         return handleAsyncMessage(async () => {
-          return convertNumberToReference(message as ConvertToMarkdownMessage);
+          return convertNumberToReference(message as CovertToReferenceMessage);
         });
       default:
         if (process.env.NODE_ENV === "development") {

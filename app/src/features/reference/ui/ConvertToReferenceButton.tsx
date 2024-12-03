@@ -3,29 +3,29 @@ import { getCurrentTab } from "@/shared/model";
 import { useChromeStorage } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 
-export interface ConvertToMarkdownMessage {
-  message: "convertToMarkdown";
+export interface CovertToReferenceMessage {
+  message: "CovertToReference";
   tab: Tab;
   data: ReferenceData[];
 }
 
-export const ConvertToMarkdownButton = () => {
+export const ConvertToReferenceButton = () => {
   const { chromeStorage } = useChromeStorage();
   const { isMarkdown, reference } = chromeStorage;
 
-  const handleConvertToMarkdown = async () => {
+  const handleCovertToReference = async () => {
     const tab = await getCurrentTab();
 
     await sendMessage({
-      message: "convertToMarkdown",
+      message: "CovertToReference",
       tab,
       data: reference,
     });
   };
 
   return (
-    <Button disabled={!isMarkdown} onClick={handleConvertToMarkdown}>
-      Convert to Markdown
+    <Button disabled={!isMarkdown} onClick={handleCovertToReference}>
+      Convert Reference !
     </Button>
   );
 };
