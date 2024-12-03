@@ -53,9 +53,7 @@ chrome.runtime.onMessage.addListener(
           getReferenceData(message.tab)
         );
       case "CovertToReference":
-        return handleAsyncMessage(async () => {
-          return convertNumberToReference(message as CovertToReferenceMessage);
-        });
+        return convertNumberToReference(message as CovertToReferenceMessage);
       default:
         if (process.env.NODE_ENV === "development") {
           throw new Error(`처리 되지 않은 메시지 입니다. ${message.message}`);

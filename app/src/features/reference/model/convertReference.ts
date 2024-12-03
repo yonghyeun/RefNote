@@ -15,14 +15,14 @@ type BracketWithUrl = `[[${number}]](${string})`;
  * 이에 적용 가능한 도메인 별로 로직을 따로 만들어야 합니다.
  * 적용 가능한 도메인에서만 해당 버튼을 이용 할 수 있도록 합니다.
  */
-export const convertNumberToReference = async ({
+export const convertNumberToReference = ({
   tab,
   data,
 }: {
   tab: Tab;
   data: ReferenceData[];
 }) => {
-  const [result] = await chrome.scripting.executeScript({
+  chrome.scripting.executeScript({
     target: { tabId: tab.id },
     world: "MAIN",
     func: async (attachedReferenceArray) => {
@@ -140,6 +140,4 @@ export const convertNumberToReference = async ({
       data.filter((data): data is AttachedReferenceData => data.isWritten),
     ],
   });
-
-  return result.result;
 };
