@@ -98,8 +98,11 @@ export const convertNumberToReference = async ({
         );
       });
 
-      let convertedText: string = codeMirror.getValue();
+      if (bracketOnlyMatchArray.length + bracketWithUrlMatchArray.length < 1) {
+        return;
+      }
 
+      let convertedText: string = codeMirror.getValue();
       bracketOnlyMatchArray.forEach((bracket) => {
         const referenceId = excludeId(bracket);
         const url = attachedReferenceArray[referenceId - 1].url;
