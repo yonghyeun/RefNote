@@ -3,15 +3,22 @@ import { getCurrentTab } from "@/shared/model";
 import { useChromeStorage } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 
+export interface ConvertToMarkdownMessage {
+  message: "convertToMarkdown";
+  tab: Tab;
+  data: ReferenceData[];
+}
+
 export const ConvertToMarkdownButton = () => {
   const { chromeStorage } = useChromeStorage();
   const { isMarkdown, reference } = chromeStorage;
 
   const handleConvertToMarkdown = async () => {
     const tab = await getCurrentTab();
+
     await sendMessage({
       message: "convertToMarkdown",
-      tabId: tab.id,
+      tab,
       data: reference,
     });
   };
