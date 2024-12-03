@@ -11,7 +11,7 @@
  *
  * 저희의 경우는 모두 해당되지 않으니 타입 단언을 통해 타입을 좁히도록 합니다.
  */
-export const getCurrentTab = async () => {
+export const getCurrentTab = async (): Promise<Tab> => {
   const [tab] = await chrome.tabs.query({
     active: true,
     currentWindow: true,
@@ -24,5 +24,5 @@ export const getCurrentTab = async () => {
     return tab as never;
   }
 
-  return tab as chrome.tabs.Tab & { id: NonNullable<chrome.tabs.Tab["id"]> };
+  return tab as Tab;
 };

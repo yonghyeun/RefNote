@@ -1,8 +1,6 @@
-export const getReferenceData = async (
-  tabId: NonNullable<chrome.tabs.Tab["id"]>
-) => {
+export const getReferenceData = async (tab: Tab) => {
   const [reference] = await chrome.scripting.executeScript({
-    target: { tabId },
+    target: { tabId: tab.id },
     func: (): ReferenceData => ({
       title: document.title,
       url: document.URL,

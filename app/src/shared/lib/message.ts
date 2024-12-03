@@ -1,10 +1,7 @@
-export const sendMessage = async <T extends unknown>({
-  message,
-  tabId,
-}: RequestMessage) => {
-  const responseMessage = await chrome.runtime.sendMessage<RequestMessage>({
-    message,
-    tabId,
-  });
-  return responseMessage.message as T;
+export const sendMessage = <R extends unknown>(
+  requestMessage: RequestMessage
+) => {
+  return chrome.runtime.sendMessage<unknown, ResponseMessage<R>>(
+    requestMessage
+  );
 };

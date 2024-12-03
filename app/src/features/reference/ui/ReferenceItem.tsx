@@ -44,7 +44,7 @@ const Title = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const WriteButton = ({ title }: Pick<UnWrittenReferenceData, "title">) => {
+const WriteButton = ({ title }: Pick<UnAttachedReferenceData, "title">) => {
   const { setChromeStorage } = useChromeStorage();
 
   const handleWriteReference = () => {
@@ -86,7 +86,7 @@ const WriteButton = ({ title }: Pick<UnWrittenReferenceData, "title">) => {
 const EraseButton = ({
   title,
   id,
-}: Pick<WrittenReferenceData, "title" | "id">) => {
+}: Pick<AttachedReferenceData, "title" | "id">) => {
   const { setChromeStorage } = useChromeStorage();
 
   const handleEraseReference = () => {
@@ -95,7 +95,7 @@ const EraseButton = ({
         ...prev,
         reference: prev.reference.map((data) => {
           if (data.title === title) {
-            const { id, ...rest } = data as WrittenReferenceData;
+            const { id, ...rest } = data as AttachedReferenceData;
             return { ...rest, isWritten: false };
           }
           if (data.isWritten && data.id > id) {

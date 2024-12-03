@@ -1,24 +1,26 @@
 export {};
 
 declare global {
-  interface RequestMessage {
+  interface RequestMessage<T = unknown> {
     message: string;
-    tabId: number;
+    tab: Tab;
+    data?: T;
   }
 
-  interface ResponseMessage {
+  interface ResponseMessage<R = unknown> {
     status: "ok" | Error;
-    tabId: number;
+    tab: Tab;
+    data: R;
   }
 
-  interface UnWrittenReferenceData {
+  interface UnAttachedReferenceData {
     title: string;
     url: string;
     faviconUrl: string;
     isWritten: false;
   }
 
-  interface WrittenReferenceData {
+  interface AttachedReferenceData {
     title: string;
     url: string;
     faviconUrl: string;
@@ -26,10 +28,15 @@ declare global {
     id: number;
   }
 
-  type ReferenceData = UnWrittenReferenceData | WrittenReferenceData;
+  type ReferenceData = UnAttachedReferenceData | AttachedReferenceData;
 
   interface ChromeStorage {
     reference: ReferenceData[];
     isMarkdown: boolean;
+  }
+
+  interface Tab extends chrome.tabs.Tab {
+    id: NonNullable<chrome.tabs.Tab["id"]>;
+    url: NonNullable<chrome.tabs.Tab["url"]>;
   }
 }

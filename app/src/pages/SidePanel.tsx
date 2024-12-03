@@ -1,4 +1,5 @@
 import {
+  ConvertToReferenceButton,
   CopyReferenceListButton,
   ReferenceItem,
   ReferenceSaveButton,
@@ -23,7 +24,9 @@ export const SidePanelPage = () => {
           <h2>UnAttached References</h2>
           <ul>
             {reference
-              .filter((data): data is UnWrittenReferenceData => !data.isWritten)
+              .filter(
+                (data): data is UnAttachedReferenceData => !data.isWritten
+              )
               .map((reference, idx) => (
                 <li key={idx}>
                   <ReferenceItem {...reference} />
@@ -33,12 +36,13 @@ export const SidePanelPage = () => {
         </section>
         <section className={styles.referenceContainer}>
           <h2>Attached References</h2>
-          <div>
+          <div className={styles.headerButtonContainer}>
             <CopyReferenceListButton />
+            <ConvertToReferenceButton />
           </div>
           <ul>
             {reference
-              .filter((data): data is WrittenReferenceData => data.isWritten)
+              .filter((data): data is AttachedReferenceData => data.isWritten)
               .sort((prev, cur) => prev.id - cur.id)
               .map((reference, idx) => (
                 <li key={idx}>
