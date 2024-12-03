@@ -32,7 +32,6 @@ declare global {
 
   interface ChromeStorage {
     reference: ReferenceData[];
-    isMarkdown: boolean;
   }
 
   interface Tab extends chrome.tabs.Tab {

@@ -11,7 +11,7 @@ export interface CovertToReferenceMessage {
 
 export const ConvertToReferenceButton = () => {
   const { chromeStorage } = useChromeStorage();
-  const { isMarkdown, reference } = chromeStorage;
+  const { reference } = chromeStorage;
 
   const handleCovertToReference = async () => {
     const tab = await getCurrentTab();
@@ -23,9 +23,5 @@ export const ConvertToReferenceButton = () => {
     });
   };
 
-  return (
-    <Button disabled={!isMarkdown} onClick={handleCovertToReference}>
-      Convert Reference !
-    </Button>
-  );
+  return <Button onClick={handleCovertToReference}>Convert Reference !</Button>;
 };

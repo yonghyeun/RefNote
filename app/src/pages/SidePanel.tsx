@@ -17,7 +17,6 @@ export const SidePanelPage = () => {
     <>
       <header className={styles.headerButtonContainer}>
         <ReferenceSaveButton />
-        <IsMarkdownToggle />
       </header>
       <main>
         <section className={styles.referenceContainer}>
@@ -36,6 +35,7 @@ export const SidePanelPage = () => {
         </section>
         <section className={styles.referenceContainer}>
           <h2>Attached References</h2>
+          <IsMarkdownToggle />
           <div className={styles.headerButtonContainer}>
             <CopyReferenceListButton />
             <ConvertToReferenceButton />
