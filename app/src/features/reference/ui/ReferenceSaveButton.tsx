@@ -1,5 +1,3 @@
-import { sendMessage } from "@/shared/lib";
-import { getCurrentTab } from "@/shared/model";
 import { useChromeStorage } from "@/shared/store/chromeStorage";
 import { Button } from "@/shared/ui/button";
 
@@ -9,12 +7,17 @@ export const ReferenceSaveButton = () => {
 
   const handleSaveReference = async () => {
     // tabId 를 가져 옵니다.
-    const tab = await getCurrentTab();
     // 해당 tabId를 이용해 document 정보를 받아 옵니다.
-    const { data } = await sendMessage<UnAttachedReferenceData>({
-      message: "getReferenceData",
-      tab,
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
     });
+    const data = {
+      title: tab.title,
+      url: tab.url,
+      faviconUrl: tab.favIconUrl,
+      isWritten: false,
+    } as UnAttachedReferenceData;
 
     setChromeStorage((prevStorage) => ({
       ...prevStorage,
