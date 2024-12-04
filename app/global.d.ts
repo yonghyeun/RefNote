@@ -37,4 +37,8 @@ declare global {
     id: NonNullable<chrome.tabs.Tab["id"]>;
     url: NonNullable<chrome.tabs.Tab["url"]>;
   }
+
+  interface CodeMirrorElement extends HTMLElement {
+    CodeMirror: CodeMirror;
+  }
 }

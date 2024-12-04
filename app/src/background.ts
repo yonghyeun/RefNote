@@ -60,10 +60,7 @@ chrome.runtime.onMessage.addListener(
           convertNumberToReference(currentActiveTab)
         );
       default:
-        if (process.env.NODE_ENV === "development") {
-          throw new Error(`처리 되지 않은 메시지 입니다. ${message.message}`);
-        }
-        return message.message as never;
+        return message.message;
     }
   }
 );
