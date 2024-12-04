@@ -3,13 +3,11 @@ export {};
 declare global {
   interface RequestMessage<T = unknown> {
     message: string;
-    tab: Tab;
     data?: T;
   }
 
   interface ResponseMessage<R = unknown> {
     status: "ok" | Error;
-    tab: Tab;
     data: R;
   }
 

@@ -6,7 +6,7 @@ type BracketWithUrl = `[[${number}]](${string})`;
  * 이에 적용 가능한 도메인 별로 로직을 따로 만들어야 합니다.
  * 적용 가능한 도메인에서만 해당 버튼을 이용 할 수 있도록 합니다.
  */
-export const convertNumberToReference = async ({ tab }: { tab: Tab }) => {
+export const convertNumberToReference = async (tab: Tab) => {
   const { reference } =
     await chrome.storage.sync.get<ChromeStorage>("reference");
 
