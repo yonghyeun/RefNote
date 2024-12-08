@@ -50,7 +50,7 @@ export const SidePanelPage = () => {
             <h2>
               글에 첨부된 레퍼런스
               <span>
-                ({reference.filter(({ isWritten }) => !isWritten).length})
+                ({reference.filter(({ isWritten }) => isWritten).length})
               </span>
             </h2>
             <AutoConvertingToggle />
