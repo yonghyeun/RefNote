@@ -25,5 +25,5 @@ export const ReferenceSaveButton = () => {
     }));
   };
 
-  return <Button onClick={handleSaveReference}>Save Reference</Button>;
+  return <Button onClick={handleSaveReference}>저장</Button>;
 };

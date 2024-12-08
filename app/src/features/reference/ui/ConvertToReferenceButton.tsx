@@ -8,5 +8,5 @@ export const ConvertToReferenceButton = () => {
     });
   };
 
-  return <Button onClick={handleCovertToReference}>Convert Reference !</Button>;
+  return <Button onClick={handleCovertToReference}>문법 변환</Button>;
 };

@@ -20,7 +20,12 @@ export const SidePanelPage = () => {
       </header>
       <main>
         <section className={styles.referenceContainer}>
-          <h2>UnAttached References</h2>
+          <h2>
+            글에 첨부되지 않은 레퍼런스
+            <span>
+              ({reference.filter(({ isWritten }) => !isWritten).length})
+            </span>
+          </h2>
           <ul>
             {reference
               .filter(
@@ -35,11 +40,15 @@ export const SidePanelPage = () => {
         </section>
         <section className={styles.referenceContainer}>
           <div className={styles.headerButtonContainer}>
-            <h2>Attached References</h2>
+            <h2>
+              글에 첨부된 레퍼런스
+              <span>
+                ({reference.filter(({ isWritten }) => !isWritten).length})
+              </span>
+            </h2>
             <AutoConvertingToggle />
           </div>
-          <div className={styles.headerButtonContainer}>
-            <CopyReferenceListButton />
+          <div>
             <ConvertToReferenceButton />
           </div>
           <ul>
@@ -54,7 +63,8 @@ export const SidePanelPage = () => {
           </ul>
         </section>
       </main>
-      <footer>
+      <footer className={styles.headerButtonContainer}>
+        <CopyReferenceListButton />
         <ResetReferenceButton />
       </footer>
     </>
