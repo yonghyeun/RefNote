@@ -1,6 +1,6 @@
 import { useChromeStorage } from "@/shared/store";
 import styles from "./styles.module.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const AutoConvertingToggle = () => {
   const { chromeStorage, setChromeStorage } = useChromeStorage();
@@ -13,20 +13,73 @@ export const AutoConvertingToggle = () => {
         currentWindow: true,
       });
 
-      if (!tab || !tab.id) {
+      if (!tab || !tab.id || tab.url !== "https://velog.io/write") {
+        const chromeStorage = (await chrome.storage.sync.get(
+          null
+        )) as ChromeStorage;
+
+        setChromeStorage(() => ({
+          ...chromeStorage,
+          autoConverting: false,
+        }));
+
         return;
       }
-      try {
-        await chrome.tabs.sendMessage(tab.id, {
-          message: "SetAutoConverting",
-          data: autoConverting ? "on" : "off",
-        });
-      } catch (e) {
-        // content script 가 로드 되기 전에 메시지가 보내지는 경우가 있다.
-        // 이에 우선 에러 처리를 캐치만 해두도록 하고 나중에 어떻게 변환할지 생각해보자
-      }
+
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ["src/autoConverting.js"],
+      });
+
+      await chrome.tabs.sendMessage(tab.id, {
+        message: "SetAutoConverting",
+        data: autoConverting,
+      });
     })();
-  }, [autoConverting]);
+  }, []);
+
+  const handleToggle = async () => {
+    try {
+      const [tab] = await chrome.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+
+      if (!tab || !tab.id) {
+        throw new Error(
+          "현재 탭 정보를 가져오는데 실패했습니다. 다시 시도해주세요"
+        );
+      }
+
+      if (tab.url !== "https://velog.io/write") {
+        throw new Error(
+          "해당 기능은 벨로그 > 글쓰기에서만 사용 가능한 기능입니다."
+        );
+      }
+
+      await chrome.tabs.sendMessage(tab.id, {
+        message: "SetAutoConverting",
+        data: autoConverting ? "on" : "off",
+      });
+
+      setChromeStorage((prev) => ({
+        ...prev,
+        autoConverting: !prev.autoConverting,
+      }));
+    } catch (error) {
+      // TODO 알림 처리 하기
+      console.error(error);
+
+      const chromeStorage = (await chrome.storage.sync.get(
+        null
+      )) as ChromeStorage;
+
+      setChromeStorage(() => ({
+        ...chromeStorage,
+        autoConverting: false,
+      }));
+    }
+  };
 
   return (
     <label className={styles.toggleLabel}>
@@ -40,14 +93,7 @@ export const AutoConvertingToggle = () => {
           type="checkbox"
           className={styles.checkBox}
           checked={autoConverting}
-          onChange={() => {
-            setChromeStorage((prev) => {
-              return {
-                ...prev,
-                autoConverting: !prev.autoConverting,
-              };
-            });
-          }}
+          onChange={handleToggle}
         />
         <span className={styles.toggleSlider} />
       </div>
