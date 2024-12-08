@@ -45,13 +45,13 @@ export const AutoConvertingToggle = () => {
         currentWindow: true,
       });
 
-      if (!tab || !tab.id) {
+      if (!tab || !tab.id || !tab.url) {
         throw new Error(
           "현재 탭 정보를 가져오는데 실패했습니다. 다시 시도해주세요"
         );
       }
 
-      if (tab.url !== "https://velog.io/write") {
+      if (!tab.url.includes("https://velog.io/write")) {
         throw new Error(
           "해당 기능은 벨로그 > 글쓰기에서만 사용 가능한 기능입니다."
         );
@@ -76,7 +76,12 @@ export const AutoConvertingToggle = () => {
         currentWindow: true,
       });
 
-      if (tab && tab.id && tab.url === "https://velog.io/write") {
+      if (
+        tab &&
+        tab.id &&
+        tab.url &&
+        tab.url.includes("https://velog.io/write")
+      ) {
         await chrome.scripting.executeScript({
           target: { tabId: tab.id },
           files: ["src/autoConverting.js"],
