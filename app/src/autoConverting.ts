@@ -25,6 +25,7 @@ const sendConvertReferenceMessage = (event: KeyboardEvent) => {
 };
 
 chrome.runtime.onMessage.addListener((message) => {
+  console.log("contentScript", message);
   if (message.message === "SetAutoConverting") {
     if (message.data === "on") {
       window.addEventListener("keyup", sendConvertReferenceMessage);

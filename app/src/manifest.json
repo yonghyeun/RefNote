@@ -22,12 +22,5 @@
     "service_worker": "src/background.ts"
   },
   "permissions": ["sidePanel", "scripting", "activeTab", "storage"],
-  "host_permissions": ["<all_urls>"],
-  "content_scripts": [
-    {
-      "matches": ["https://velog.io/write/*"],
-      "js": ["src/contentScript.ts"],
-      "run_at": "document_idle"
-    }
-  ]
+  "host_permissions": ["<all_urls>"]
 }
