@@ -11,7 +11,7 @@ export const ConvertToReferenceButton = () => {
 
   return (
     <Button onClick={handleCovertToReference} className={styles.flexOneButton}>
-      문법 변환
+      텍스트 전환
     </Button>
   );
 };
