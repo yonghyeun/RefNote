@@ -14,6 +14,15 @@ export const AutoConvertingToggle = () => {
       });
 
       if (!tab || !tab.id || tab.url !== "https://velog.io/write") {
+        const chromeStorage = (await chrome.storage.sync.get(
+          null
+        )) as ChromeStorage;
+
+        setChromeStorage(() => ({
+          ...chromeStorage,
+          autoConverting: false,
+        }));
+
         return;
       }
 
@@ -60,6 +69,15 @@ export const AutoConvertingToggle = () => {
     } catch (error) {
       // TODO 알림 처리 하기
       console.error(error);
+
+      const chromeStorage = (await chrome.storage.sync.get(
+        null
+      )) as ChromeStorage;
+
+      setChromeStorage(() => ({
+        ...chromeStorage,
+        autoConverting: false,
+      }));
     }
   };
 
