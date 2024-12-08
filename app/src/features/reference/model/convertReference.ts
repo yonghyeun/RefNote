@@ -23,13 +23,10 @@ export const convertNumberToReference = async (tab: Tab) => {
         return;
       }
 
-      const getRegExp = (
-        key: "combinedBracketRegExp" | "url" | "bracketWithUrl"
-      ) => {
+      const getRegExp = (key: "combinedBracketRegExp" | "bracketWithUrl") => {
         const regExpMap = {
           combinedBracketRegExp: /(?<!\[)\[\d+\](?!\]|\()|\[\[\d+\]\](?!\()/g,
           bracketWithUrl: /\[\[\d+\]\]\(http[s]?:\/\/[^\s]+\)/g,
-          url: /http[s]?:\/\/[^\s]+/g,
         };
         return regExpMap[key];
       };
@@ -50,11 +47,6 @@ export const convertNumberToReference = async (tab: Tab) => {
 
       const excludeId = (bracket: BracketOnly) => {
         return Number(bracket.replace(/\[|\]/g, ""));
-      };
-
-      const excludeUrl = (str: string) => {
-        const [url] = str.match(getRegExp("url")) || [];
-        return url || "wrongUrlMatch";
       };
 
       const isReferenceIdValid = (
@@ -83,7 +75,23 @@ export const convertNumberToReference = async (tab: Tab) => {
         codeMirror.getValue()
       );
 
-      if (bracketOnlyMatchArray.length + bracketWithUrlMatchArray.length < 1) {
+      // 변환 할 문구가 없다면 early return 합니다.
+
+      if (
+        bracketOnlyMatchArray.length +
+          bracketWithUrlMatchArray.filter((bracketWithUrlMatch) => {
+            const referenceId = excludeId(
+              bracketWithUrlMatch.split("(")[0] as BracketOnly
+            );
+            const url = bracketWithUrlMatch.split("(")[1].slice(0, -1);
+
+            return (
+              isReferenceIdValid(referenceId, attachedReferenceArray) &&
+              !isReferenceUrlValid({ referenceId, url }, attachedReferenceArray)
+            );
+          }).length <
+        1
+      ) {
         return;
       }
 
@@ -99,7 +107,7 @@ export const convertNumberToReference = async (tab: Tab) => {
         const referenceId = excludeId(
           bracketWithUrl.split("(")[0] as BracketOnly
         );
-        const url = excludeUrl(bracketWithUrl);
+        const url = bracketWithUrl.split("(")[1].slice(0, -1);
         const bracketWithUrlMatchKey = Math.random().toString();
 
         const bracketWithUrlMatchValue =
