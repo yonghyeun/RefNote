@@ -67,7 +67,24 @@ export const AutoConvertingToggle = () => {
         autoConverting: !prev.autoConverting,
       }));
     } catch (error) {
-      // TODO 알림 처리 하기
+      // 이러한 경우에 대한 에러 핸들링을 해야 합니다.
+      // 확장 프로그램이 지정된 경로가 아닌 곳에서 열린 후
+      // 열린 채로 지정된 경로로 이동한 경우 사용 가능하지만 스크립트가 삽입 되지 않았기 때문에 에러가 발생 할 수 있습니다.
+
+      const [tab] = await chrome.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+
+      if (tab && tab.id && tab.url === "https://velog.io/write") {
+        await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          files: ["src/autoConverting.js"],
+        });
+        handleToggle();
+        return;
+      }
+
       const errorMessage = (error as Error).message;
 
       await chrome.notifications.create(
@@ -79,7 +96,7 @@ export const AutoConvertingToggle = () => {
           message: errorMessage,
         },
         () => {
-          // 1초 후에 해당 알림 닫히게
+          // 1초 후에 해당 알림 닫히게 하기
           setTimeout(() => {
             chrome.notifications.clear(errorMessage);
           }, 1000);
