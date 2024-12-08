@@ -17,12 +17,24 @@
   font-style: normal;
 }
 
+html[data-theme="dark"] {
+  --bg-color: #121212;
+  --text-color: #f5f5f5;
+}
+
+html[data-theme="light"] {
+  --bg-color: #f5f5f5;
+  --text-color: #121212;
+}
+
 body {
   font-family: "Pretendard-Regular", sans-serif;
   height: 100vh;
   display: flex;
   flex-direction: column;
   padding: 0.3rem;
+  color: var(--text-color);
+  background-color: var(--bg-color);
 }
 
 header {

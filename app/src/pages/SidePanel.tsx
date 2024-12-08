@@ -8,6 +8,7 @@ import {
 import { useChromeStorage } from "@/shared/store/chromeStorage";
 import { AutoConvertingToggle } from "@/features/reference/ui";
 import styles from "./pages.module.css";
+import { DarkModeToggle } from "@/features/utils/ui";
 
 export const SidePanelPage = () => {
   const { chromeStorage } = useChromeStorage();
@@ -17,6 +18,7 @@ export const SidePanelPage = () => {
     <>
       <header className={styles.headerButtonContainer}>
         <ReferenceSaveButton />
+        <DarkModeToggle />
       </header>
       <main>
         <section className={styles.referenceContainer}>

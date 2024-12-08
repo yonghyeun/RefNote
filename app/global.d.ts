@@ -31,6 +31,7 @@ declare global {
   interface ChromeStorage {
     reference: ReferenceData[];
     autoConverting: boolean;
+    isDarkMode: boolean;
   }
 
   interface Tab extends chrome.tabs.Tab {
