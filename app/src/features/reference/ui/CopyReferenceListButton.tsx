@@ -17,7 +17,20 @@ export const CopyReferenceListButton = () => {
 
     // 클립보드에 복사합니다.
     navigator.clipboard.writeText(result.join("\n"));
-    // TODO 클립 보드에 복사 되었다면 알림을 띄워줍니다.
+    chrome.notifications.create(
+      "codeMirror",
+      {
+        type: "basic",
+        iconUrl: "/icon/96.png",
+        title: "복사 완료",
+        message: `${reference.filter(({ isWritten }) => isWritten).length} 개의 레퍼런스 목록이 복사되었습니다.`,
+      },
+      () => {
+        setTimeout(() => {
+          chrome.notifications.clear("codeMirror");
+        }, 1000);
+      }
+    );
   };
 
   return <Button onClick={handleCopyReferenceList}>목록 복사</Button>;
