@@ -2,7 +2,7 @@ import { useState, useEffect, createContext, useContext } from "react";
 
 export const chromeStorageInitialValue: ChromeStorage = {
   reference: [],
-  isMarkdown: false,
+  autoConverting: false,
 };
 
 const ChromeStorageContext = createContext<{
@@ -27,9 +27,6 @@ export const ChromeStorageProvider = ({
     updater: (prevStorage: ChromeStorage) => ChromeStorage
   ) => {
     const updatedChromeStorage = updater(chromeStorage);
-
-    console.log("setChroemStorage", updatedChromeStorage);
-
     chrome.storage.sync.set(updatedChromeStorage);
   };
 

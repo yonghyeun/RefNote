@@ -1,10 +1,6 @@
 import browser from "webextension-polyfill";
 import { openSidePanel } from "./sidePanel/model";
-import {
-  convertNumberToReference,
-  getReferenceData,
-} from "./features/reference/model";
-import { type CovertToReferenceMessage } from "./features/reference/ui";
+import { convertNumberToReference } from "./features/reference/model";
 
 console.log("Hello from the background!");
 
@@ -21,7 +17,7 @@ browser.runtime.onInstalled.addListener((details) => {
 });
 
 chrome.runtime.onMessage.addListener(
-  (message: RequestMessage, _sender, sendResponse) => {
+  async (message: RequestMessage, _sender, sendResponse) => {
     /**
      * 비동기 메시지 핸들러의 경우 핸들러 응답값에 따라 response 를 보내는 고차 함수 입니다.
      */
@@ -31,40 +27,46 @@ chrome.runtime.onMessage.addListener(
       handler()
         .then((data) => {
           sendResponse({
-            message: "ok",
-            tab: message.tab,
+            status: "ok",
             data: data as T,
           });
         })
         .catch((error) => {
           sendResponse({
-            message: error,
-            tab: message.tab,
+            status: error,
           });
         });
       return true;
     };
 
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+
+    if (!tab || !tab.id) {
+      console.log("tab not found");
+      sendResponse({
+        status: "tab not found",
+      });
+    }
+    const currentActiveTab = tab as Tab;
+
     switch (message.message) {
       case "openSidePanel":
-        return handleAsyncMessage(() => openSidePanel(message.tab));
-      case "getReferenceData":
-        return handleAsyncMessage<UnAttachedReferenceData>(() =>
-          getReferenceData(message.tab)
-        );
+        return handleAsyncMessage(() => openSidePanel(currentActiveTab));
       case "CovertToReference":
-        return convertNumberToReference(message as CovertToReferenceMessage);
+        return handleAsyncMessage(() =>
+          convertNumberToReference(currentActiveTab)
+        );
       default:
-        if (process.env.NODE_ENV === "development") {
-          throw new Error(`처리 되지 않은 메시지 입니다. ${message.message}`);
-        }
-        return message.message as never;
+        return message.message;
     }
   }
 );
 
 chrome.action.onClicked.addListener((tab) => {
-  if (tab.id !== undefined) {
-    openSidePanel(tab.id);
+  if (tab && tab.id !== undefined) {
+    openSidePanel(tab as Tab);
   }
 });
