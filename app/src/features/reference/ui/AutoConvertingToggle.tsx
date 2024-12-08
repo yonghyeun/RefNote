@@ -1,10 +1,11 @@
 import { useChromeStorage } from "@/shared/store";
 import styles from "./styles.module.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const AutoConvertingToggle = () => {
   const { chromeStorage, setChromeStorage } = useChromeStorage();
   const { autoConverting } = chromeStorage;
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
   useEffect(() => {
     (async function () {
@@ -21,7 +22,7 @@ export const AutoConvertingToggle = () => {
 
       chrome.scripting.executeScript({
         target: { tabId: tab.id },
-        files: ["autoConverting.ts"],
+        files: ["src/autoConverting.js"],
       });
     })();
   }, []);
@@ -41,14 +42,11 @@ export const AutoConvertingToggle = () => {
           message: "SetAutoConverting",
           data: autoConverting ? "on" : "off",
         });
-        console.log("toggle", {
-          message: "SetAutoConverting",
-          data: autoConverting ? "on" : "off",
-        });
       } catch (e) {
-        // content script 가 로드 되기 전에 메시지가 보내지는 경우가 있다.
-        // 이에 우선 에러 처리를 캐치만 해두도록 하고 나중에 어떻게 변환할지 생각해보자
-        console.error(e);
+        // 에러가 나는 경우에는 스크립트가 삽입되지 않은 경우, 즉 올바른 경로가 아닌 곳에서 autoConvertingToggle을 누른 경우입니다.
+        // 이 때는 해당 버튼을 disabled 상태로 만들어 오류가 발생하지 않도록 합니다.
+
+        setIsDisabled(true);
       }
     })();
   }, [autoConverting]);
@@ -73,6 +71,7 @@ export const AutoConvertingToggle = () => {
               };
             });
           }}
+          disabled={isDisabled}
         />
         <span className={styles.toggleSlider} />
       </div>
