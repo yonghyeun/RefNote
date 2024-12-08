@@ -1,6 +1,6 @@
 import { useChromeStorage } from "@/shared/store";
 import styles from "./styles.module.css";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export const AutoConvertingToggle = () => {
   const { chromeStorage, setChromeStorage } = useChromeStorage();
@@ -68,7 +68,23 @@ export const AutoConvertingToggle = () => {
       }));
     } catch (error) {
       // TODO 알림 처리 하기
-      console.error(error);
+      const errorMessage = (error as Error).message;
+
+      await chrome.notifications.create(
+        errorMessage,
+        {
+          type: "basic",
+          iconUrl: "/icon/96.png",
+          title: "오류 발생",
+          message: errorMessage,
+        },
+        () => {
+          // 1초 후에 해당 알림 닫히게
+          setTimeout(() => {
+            chrome.notifications.clear(errorMessage);
+          }, 1000);
+        }
+      );
 
       const chromeStorage = (await chrome.storage.sync.get(
         null
