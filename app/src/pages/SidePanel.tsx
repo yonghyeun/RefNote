@@ -38,8 +38,7 @@ export const SidePanelPage = () => {
             <h2>글에 첨부된 레퍼런스</h2>
             <AutoConvertingToggle />
           </div>
-          <div className={styles.headerButtonContainer}>
-            <CopyReferenceListButton />
+          <div>
             <ConvertToReferenceButton />
           </div>
           <ul>
@@ -54,7 +53,8 @@ export const SidePanelPage = () => {
           </ul>
         </section>
       </main>
-      <footer>
+      <footer className={styles.headerButtonContainer}>
+        <CopyReferenceListButton />
         <ResetReferenceButton />
       </footer>
     </>
