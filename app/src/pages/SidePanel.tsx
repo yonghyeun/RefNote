@@ -20,7 +20,12 @@ export const SidePanelPage = () => {
       </header>
       <main>
         <section className={styles.referenceContainer}>
-          <h2>글에 첨부되지 않은 레퍼런스</h2>
+          <h2>
+            글에 첨부되지 않은 레퍼런스
+            <span>
+              ({reference.filter(({ isWritten }) => !isWritten).length})
+            </span>
+          </h2>
           <ul>
             {reference
               .filter(
@@ -35,7 +40,12 @@ export const SidePanelPage = () => {
         </section>
         <section className={styles.referenceContainer}>
           <div className={styles.headerButtonContainer}>
-            <h2>글에 첨부된 레퍼런스</h2>
+            <h2>
+              글에 첨부된 레퍼런스
+              <span>
+                ({reference.filter(({ isWritten }) => !isWritten).length})
+              </span>
+            </h2>
             <AutoConvertingToggle />
           </div>
           <div>

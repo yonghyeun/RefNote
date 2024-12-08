@@ -13,3 +13,9 @@
   display: flex;
   gap: 0.5rem;
 }
+
+h2 > span {
+  font-size: 0.8rem;
+  color: #a0a0a0;
+  margin-left: 4px;
+}
