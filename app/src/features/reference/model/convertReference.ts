@@ -145,6 +145,13 @@ export const convertNumberToReference = async (tab: Tab) => {
       });
 
       codeMirror.setValue(convertedText);
+
+      // setValue로 변경 이후 비동기적으로 커서를 마지막 줄로 이동시킵니다.
+
+      setTimeout(() => {
+        codeMirror.setCursor({ line: codeMirror.lineCount(), ch: 0 });
+        codeMirror.focus();
+      }, 0);
     },
 
     args: [
