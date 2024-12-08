@@ -15,7 +15,7 @@ export const ResetReferenceButton = () => {
       className={styles.resetButton}
       onClick={handleResetReference}
     >
-      Reset Reference Note
+      레퍼런스 목록 초기화
     </Button>
   );
 };
