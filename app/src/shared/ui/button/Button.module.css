@@ -1,8 +1,35 @@
 .button {
-  background-color: #f9fafb; /* bg-grey-0 */
-  color: #1f2937; /* text-grey-900 */
-  border: 0.0625rem solid #1f2937; /* border-grey-900 */
-  padding: 0 1.5rem;
+  background-color: #2196f3;
+  color: #fff;
+  border: none;
+  border-radius: 34px;
+  font-weight: 600;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #1976d2; /* 기본 배경색보다 어두운 톤 */
+  color: #e6f7f1;
+}
+
+.button:focus-visible {
+  background-color: #1976d2; /* 기본 배경색보다 어두운 톤 */
+  color: #e6f7f1;
+}
+
+.button:active {
+  background-color: #1565c0; /* 기본 배경색보다 더 어두운 톤 */
+  color: #e6f7f1;
+}
+
+.button:disabled {
+  pointer-events: none;
+  background-color: #b2e2d3;
+  color: #d1d5db;
 }
 
 .iconButton {

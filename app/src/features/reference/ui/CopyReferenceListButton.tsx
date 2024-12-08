@@ -20,5 +20,5 @@ export const CopyReferenceListButton = () => {
     // TODO 클립 보드에 복사 되었다면 알림을 띄워줍니다.
   };
 
-  return <Button onClick={handleCopyReferenceList}>레퍼런스 목록 복사</Button>;
+  return <Button onClick={handleCopyReferenceList}>목록 복사</Button>;
 };

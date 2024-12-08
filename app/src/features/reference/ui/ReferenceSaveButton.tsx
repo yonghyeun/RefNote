@@ -25,5 +25,5 @@ export const ReferenceSaveButton = () => {
     }));
   };
 
-  return <Button onClick={handleSaveReference}>레퍼런스 저장</Button>;
+  return <Button onClick={handleSaveReference}>저장</Button>;
 };
