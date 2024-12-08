@@ -20,11 +20,15 @@
 html[data-theme="dark"] {
   --bg-color: #121212;
   --text-color: #f5f5f5;
+  --content-hover: #4a4a4a;
+  --content-active: #3a3a3a;
 }
 
 html[data-theme="light"] {
   --bg-color: #f5f5f5;
   --text-color: #121212;
+  --content-hover: #f0f0f0;
+  --content-active: #e0e0e0;
 }
 
 body {

@@ -7,8 +7,8 @@ import {
 } from "@/features/reference/ui";
 import { useChromeStorage } from "@/shared/store/chromeStorage";
 import { AutoConvertingToggle } from "@/features/reference/ui";
-import styles from "./pages.module.css";
 import { DarkModeToggle } from "@/features/utils/ui";
+import styles from "./pages.module.css";
 
 export const SidePanelPage = () => {
   const { chromeStorage } = useChromeStorage();
@@ -41,7 +41,12 @@ export const SidePanelPage = () => {
           </ul>
         </section>
         <section className={styles.referenceContainer}>
-          <div className={styles.headerButtonContainer}>
+          <div
+            className={styles.headerButtonContainer}
+            style={{
+              marginBottom: "0.5rem",
+            }}
+          >
             <h2>
               글에 첨부된 레퍼런스
               <span>
@@ -50,8 +55,8 @@ export const SidePanelPage = () => {
             </h2>
             <AutoConvertingToggle />
           </div>
-          <div>
-            <ConvertToReferenceButton />
+          <div className={styles.headerButtonContainer}>
+            <CopyReferenceListButton />
           </div>
           <ul>
             {reference
@@ -66,7 +71,7 @@ export const SidePanelPage = () => {
         </section>
       </main>
       <footer className={styles.headerButtonContainer}>
-        <CopyReferenceListButton />
+        <ConvertToReferenceButton />
         <ResetReferenceButton />
       </footer>
     </>

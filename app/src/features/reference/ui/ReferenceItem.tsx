@@ -22,7 +22,7 @@ const Content = ({
   url: ReferenceData["url"];
 }) => (
   <div
-    className={styles.content}
+    className="content"
     onDoubleClick={() => {
       window.open(url, "_blank");
     }}
