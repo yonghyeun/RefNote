@@ -21,6 +21,12 @@
   "background": {
     "service_worker": "src/background.ts"
   },
-  "permissions": ["sidePanel", "scripting", "activeTab", "storage"],
+  "permissions": [
+    "sidePanel",
+    "scripting",
+    "activeTab",
+    "storage",
+    "notifications"
+  ],
   "host_permissions": ["<all_urls>"]
 }

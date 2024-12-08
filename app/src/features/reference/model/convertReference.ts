@@ -19,7 +19,21 @@ export const convertNumberToReference = async (tab: Tab) => {
       ).CodeMirror;
 
       if (!codeMirror) {
-        // TODO 알림창 띄우기
+        await chrome.notifications.create(
+          "codeMirror",
+          {
+            type: "basic",
+            iconUrl: "/icon/96.png",
+            title: "오류 발생",
+            message:
+              "codeMirror 인스턴스를 찾을 수 없습니다. 벨로그가 업데이트 되었는데 게으른 개발자가 업데이트를 하지 않은 거 같습니다 미안합니다..",
+          },
+          () => {
+            setTimeout(() => {
+              chrome.notifications.clear("codeMirror");
+            }, 3000);
+          }
+        );
         return;
       }
 
