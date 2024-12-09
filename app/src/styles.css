@@ -17,12 +17,28 @@
   font-style: normal;
 }
 
+html[data-theme="dark"] {
+  --bg-color: #414141;
+  --text-color: #f5f5f5;
+  --content-hover: #4a4a4a;
+  --content-active: #3a3a3a;
+}
+
+html[data-theme="light"] {
+  --bg-color: #f5f5f5;
+  --text-color: #121212;
+  --content-hover: #f0f0f0;
+  --content-active: #e0e0e0;
+}
+
 body {
   font-family: "Pretendard-Regular", sans-serif;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 0.3rem;
+  padding: 0.5rem;
+  color: var(--text-color);
+  background-color: var(--bg-color);
 }
 
 header {

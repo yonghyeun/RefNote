@@ -13,20 +13,21 @@
   margin-right: 0.3rem;
 }
 
-.content {
+:global(.content) {
   flex-grow: 1;
   cursor: pointer;
   min-height: 2.5rem;
   display: flex;
   align-items: center;
+  font-size: 13px;
 }
 
-.content:hover {
-  background-color: #f0f0f0;
+:global(.content:hover) {
+  background-color: var(--content-hover);
 }
 
-.content.clicked {
-  background-color: #e0e0e0;
+:global(.content:active) {
+  background-color: var(--content-active);
 }
 
 .ellipsis {
@@ -156,4 +157,11 @@
 
 .defaultSpan {
   color: #ccc;
+}
+
+/* flex 1 button */
+
+.flexOneButton {
+  flex-grow: 1;
+  flex-shrink: 0;
 }

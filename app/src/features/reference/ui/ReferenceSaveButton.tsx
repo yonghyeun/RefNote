@@ -1,5 +1,6 @@
 import { useChromeStorage } from "@/shared/store/chromeStorage";
 import { Button } from "@/shared/ui/button";
+import styles from "./styles.module.css";
 
 // TODO : 로딩 처리 하기
 export const ReferenceSaveButton = () => {
@@ -25,5 +26,9 @@ export const ReferenceSaveButton = () => {
     }));
   };
 
-  return <Button onClick={handleSaveReference}>저장</Button>;
+  return (
+    <Button onClick={handleSaveReference} className={styles.flexOneButton}>
+      저장
+    </Button>
+  );
 };

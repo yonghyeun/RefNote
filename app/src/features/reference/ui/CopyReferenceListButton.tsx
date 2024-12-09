@@ -1,5 +1,7 @@
 import { useChromeStorage } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
+import styles from "./styles.module.css";
+
 export const CopyReferenceListButton = () => {
   const { chromeStorage } = useChromeStorage();
   const { reference } = chromeStorage;
@@ -33,5 +35,9 @@ export const CopyReferenceListButton = () => {
     );
   };
 
-  return <Button onClick={handleCopyReferenceList}>목록 복사</Button>;
+  return (
+    <Button onClick={handleCopyReferenceList} className={styles.flexOneButton}>
+      목록 복사
+    </Button>
+  );
 };

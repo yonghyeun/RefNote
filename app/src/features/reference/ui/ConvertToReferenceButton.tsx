@@ -1,5 +1,6 @@
 import { sendMessage } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
+import styles from "./styles.module.css";
 
 export const ConvertToReferenceButton = () => {
   const handleCovertToReference = async () => {
@@ -8,5 +9,9 @@ export const ConvertToReferenceButton = () => {
     });
   };
 
-  return <Button onClick={handleCovertToReference}>문법 변환</Button>;
+  return (
+    <Button onClick={handleCovertToReference} className={styles.flexOneButton}>
+      텍스트 전환
+    </Button>
+  );
 };
