@@ -96,7 +96,7 @@ export const AutoConvertingToggle = () => {
         errorMessage,
         {
           type: "basic",
-          iconUrl: "/icon/96.png",
+          iconUrl: "/icon/128.png",
           title: "오류 발생",
           message: errorMessage,
         },
