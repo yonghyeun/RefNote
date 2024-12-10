@@ -2,8 +2,6 @@ import browser from "webextension-polyfill";
 import { openSidePanel } from "./sidePanel/model";
 import { convertNumberToReference } from "./features/reference/model";
 
-console.log("Hello from the background!");
-
 browser.runtime.onInstalled.addListener((details) => {
   if (process.env.NODE_ENV === "development") {
     console.group("browser.runtime.onInstalled");
