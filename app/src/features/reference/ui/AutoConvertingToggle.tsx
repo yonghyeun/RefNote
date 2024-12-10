@@ -59,7 +59,7 @@ export const AutoConvertingToggle = () => {
 
       await chrome.tabs.sendMessage(tab.id, {
         message: "SetAutoConverting",
-        data: autoConverting ? "on" : "off",
+        data: autoConverting ? "off" : "on",
       });
 
       setChromeStorage((prev) => ({
