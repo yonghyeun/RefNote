@@ -23,7 +23,7 @@ export const CopyReferenceListButton = () => {
       "codeMirror",
       {
         type: "basic",
-        iconUrl: "/icon/96.png",
+        iconUrl: "/icon/128.png",
         title: "복사 완료",
         message: `${reference.filter(({ isWritten }) => isWritten).length} 개의 레퍼런스 목록이 복사되었습니다.`,
       },
