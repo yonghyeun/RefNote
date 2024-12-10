@@ -20,3 +20,7 @@ chrome.runtime.onMessage.addListener((message) => {
     return { status: "ok" };
   }
 });
+
+chrome.runtime.connect().onDisconnect.addListener(() => {
+  window.removeEventListener("keyup", sendConvertReferenceMessage);
+});
