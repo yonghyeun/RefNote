@@ -6,8 +6,16 @@
 }
 
 .referenceContainer {
-  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
   height: 50%;
+}
+
+.referenceContainer > ul {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow-y: scroll;
 }
 
 .flexBetweenCenter {
