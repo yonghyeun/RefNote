@@ -7,9 +7,11 @@ export const CopyReferenceListButton = () => {
   const { reference } = chromeStorage;
 
   const handleCopyReferenceList = () => {
-    const attachedReferences = reference.filter(
-      (data): data is AttachedReferenceData => data.isWritten
-    );
+    const attachedReferences = [
+      ...reference.filter(
+        (data): data is AttachedReferenceData => data.isWritten
+      ),
+    ].sort((a, b) => a.id - b.id);
 
     // 마크다운 모드라면 마크다운 문법에 맞게 anchor tag를 만들어줍니다.
     // 마크다운 모드가 아니라면 일반 텍스트로 만들어줍니다.
