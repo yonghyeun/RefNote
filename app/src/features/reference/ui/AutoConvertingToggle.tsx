@@ -31,9 +31,15 @@ export const AutoConvertingToggle = () => {
         files: ["src/autoConverting.js"],
       });
 
-      await chrome.tabs.sendMessage(tab.id, {
+      // 초기화 할 때 메모리에 저장된 autoConverting 값은 스토리지에 저장된 값을
+      // 바라보지 못합니다. 이에 초기화 할 때는 비동기적으로 크롬스토리지에 접근합니다.
+
+      const { autoConverting } =
+        await chrome.storage.sync.get("autoConverting");
+
+      chrome.tabs.sendMessage(tab.id, {
         message: "SetAutoConverting",
-        data: autoConverting,
+        data: autoConverting ? "on" : "off",
       });
     })();
   }, []);

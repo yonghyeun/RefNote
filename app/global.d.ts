@@ -42,4 +42,8 @@ declare global {
   interface CodeMirrorElement extends HTMLElement {
     CodeMirror: CodeMirror;
   }
+
+  interface Window {
+    autoConvertingInjected: boolean;
+  }
 }
