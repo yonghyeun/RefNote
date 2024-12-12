@@ -57,6 +57,23 @@ chrome.runtime.onMessage.addListener(
         return handleAsyncMessage(() =>
           convertNumberToReference(currentActiveTab)
         );
+      case "NotifyError":
+        return handleAsyncMessage(async () => {
+          await chrome.notifications.create(
+            "alarm",
+            {
+              type: "basic",
+              iconUrl: "/icon/128.png",
+              title: "오류",
+              message: message.data as string,
+            },
+            () => {
+              setTimeout(() => {
+                chrome.notifications.clear("alarm");
+              }, 1500);
+            }
+          );
+        });
       default:
         return message.message;
     }
