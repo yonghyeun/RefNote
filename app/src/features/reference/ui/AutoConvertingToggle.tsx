@@ -2,6 +2,7 @@ import { useChromeStorage } from "@/shared/store";
 import styles from "./styles.module.css";
 import { useEffect } from "react";
 import { getVelogTab } from "../model";
+import { sendMessage } from "@/shared/lib";
 
 export const AutoConvertingToggle = () => {
   const { chromeStorage, setChromeStorage } = useChromeStorage();
@@ -10,6 +11,11 @@ export const AutoConvertingToggle = () => {
   const initialize = async () => {
     try {
       const tab = await getVelogTab();
+
+      if (!tab.url.includes("https://velog.io/write")) {
+        return;
+      }
+
       const { autoConverting } =
         await chrome.storage.sync.get("autoConverting");
 
@@ -37,6 +43,14 @@ export const AutoConvertingToggle = () => {
   const handleToggle = async () => {
     try {
       const tab = await getVelogTab();
+
+      if (!tab.url.includes("https://velog.io/write")) {
+        await sendMessage({
+          message: "NotifyError",
+          data: "자동 변환 기능은 벨로그 > 글쓰기에서만 가능합니다.",
+        });
+        return;
+      }
 
       await chrome.tabs.sendMessage(tab.id, {
         message: "SetAutoConverting",
