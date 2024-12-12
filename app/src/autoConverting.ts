@@ -38,8 +38,4 @@ if (!window.autoConvertingInjected) {
       return { status: "ok" };
     }
   });
-
-  chrome.runtime.connect().onDisconnect.addListener(() => {
-    window.removeEventListener("keyup", sendConvertReferenceMessage);
-  });
 }
