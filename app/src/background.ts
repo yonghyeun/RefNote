@@ -30,6 +30,22 @@ chrome.runtime.onMessage.addListener(
           });
         })
         .catch((error) => {
+          chrome.notifications.create(
+            "alarm",
+            {
+              type: "basic",
+              iconUrl: "/icon/128.png",
+              title: "오류",
+              message: error.message,
+              silent: true,
+            },
+            () => {
+              setTimeout(() => {
+                chrome.notifications.clear("alarm");
+              }, 3000);
+            }
+          );
+
           sendResponse({
             status: error,
           });
@@ -66,11 +82,12 @@ chrome.runtime.onMessage.addListener(
               iconUrl: "/icon/128.png",
               title: "오류",
               message: message.data as string,
+              silent: true,
             },
             () => {
               setTimeout(() => {
                 chrome.notifications.clear("alarm");
-              }, 1500);
+              }, 3000);
             }
           );
         });
