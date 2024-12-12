@@ -33,6 +33,5 @@
       "matches": ["https://velog.io/write*"],
       "js": ["src/autoConverting.ts"]
     }
-  ],
-  "host_permissions": ["<all_urls>"]
+  ]
 }
