@@ -21,17 +21,12 @@
   "background": {
     "service_worker": "src/background.ts"
   },
-  "permissions": [
-    "sidePanel",
-    "scripting",
-    "activeTab",
-    "storage",
-    "notifications"
-  ],
+  "permissions": ["sidePanel", "scripting", "tabs", "storage", "notifications"],
   "content_scripts": [
     {
       "matches": ["https://velog.io/write*"],
       "js": ["src/autoConverting.ts"]
     }
-  ]
+  ],
+  "host_permissions": ["https://velog.io/*"]
 }
