@@ -4,9 +4,16 @@ import styles from "./styles.module.css";
 
 export const ConvertToReferenceButton = () => {
   const handleConvertToReference = async () => {
-    await sendMessage({
+    const { status, data } = await sendMessage({
       message: "ConvertToReference",
     });
+
+    if (status !== "ok") {
+      sendMessage({
+        message: "NotifyError",
+        data,
+      });
+    }
   };
 
   return (

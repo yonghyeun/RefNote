@@ -7,7 +7,7 @@ declare global {
   }
 
   interface ResponseMessage<R = unknown> {
-    status: "ok" | Error;
+    status: "ok" | "error";
     data: R;
   }
 

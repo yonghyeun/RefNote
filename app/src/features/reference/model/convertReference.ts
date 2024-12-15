@@ -1,3 +1,5 @@
+import { getCurrentActiveTab } from "@/shared/lib";
+
 type BracketOnly = `[${number}]` | `[[${number}]]`;
 type BracketWithUrl = `[[${number}]](${string})`;
 
@@ -6,11 +8,22 @@ type BracketWithUrl = `[[${number}]](${string})`;
  * 이에 적용 가능한 도메인 별로 로직을 따로 만들어야 합니다.
  * 적용 가능한 도메인에서만 해당 버튼을 이용 할 수 있도록 합니다.
  */
-export const convertNumberToReference = async (tab: Tab) => {
+export const convertNumberToReference = async (
+  sendResponse: (response: ResponseMessage) => void
+) => {
+  try {
+    const tab = await getCurrentActiveTab();
+
+    if (!tab.url.includes("https://velog.io/write")) {
+      throw new Error(
+        "텍스트 전환 기능은 벨로그 > 글쓰기 페이지에서만 사용 가능합니다."
+      );
+    }
+
   const { reference } =
     await chrome.storage.sync.get<ChromeStorage>("reference");
 
-  chrome.scripting.executeScript({
+    const [result] = await chrome.scripting.executeScript({
     target: { tabId: tab.id },
     world: "MAIN",
     func: async (attachedReferenceArray) => {
@@ -19,22 +32,10 @@ export const convertNumberToReference = async (tab: Tab) => {
       ).CodeMirror;
 
       if (!codeMirror) {
-        await chrome.notifications.create(
-          "codeMirror",
-          {
-            type: "basic",
-            iconUrl: "/icon/128.png",
-            title: "오류 발생",
-            message:
-              "codeMirror 인스턴스를 찾을 수 없습니다. 벨로그가 업데이트 되었는데 게으른 개발자가 업데이트를 하지 않은 거 같습니다 미안합니다..",
-          },
-          () => {
-            setTimeout(() => {
-              chrome.notifications.clear("codeMirror");
-            }, 3000);
-          }
-        );
-        return;
+          return {
+            status: "error",
+            data: "codeMirror 인스턴스를 찾을 수 없습니다. 벨로그가 업데이트 되었는데 게으른 개발자가 업데이트를 하지 않은 거 같습니다 미안합니다..",
+          };
       }
 
       const getRegExp = (key: "combinedBracketRegExp" | "bracketWithUrl") => {
@@ -101,7 +102,10 @@ export const convertNumberToReference = async (tab: Tab) => {
 
             return (
               isReferenceIdValid(referenceId, attachedReferenceArray) &&
-              !isReferenceUrlValid({ referenceId, url }, attachedReferenceArray)
+                !isReferenceUrlValid(
+                  { referenceId, url },
+                  attachedReferenceArray
+                )
             );
           }).length <
         1
@@ -203,7 +207,20 @@ export const convertNumberToReference = async (tab: Tab) => {
     },
 
     args: [
-      reference.filter((data): data is AttachedReferenceData => data.isWritten),
+        reference.filter(
+          (data): data is AttachedReferenceData => data.isWritten
+        ),
     ],
   });
+
+    sendResponse({
+      status: "ok",
+      data: result.result,
+    });
+  } catch (error) {
+    sendResponse({
+      status: "error",
+      data: (error as Error).message,
+    });
+  }
 };
