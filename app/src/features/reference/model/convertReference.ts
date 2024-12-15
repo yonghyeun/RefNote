@@ -164,12 +164,40 @@ export const convertNumberToReference = async (tab: Tab) => {
         convertedText = convertedText.replace(new RegExp(key, "g"), value);
       });
 
+      // 변경된 부분을 찾기 위해 이전의 값을 캐싱 후 setValue로 변경합니다.
+      const prevText = codeMirror.getValue();
       codeMirror.setValue(convertedText);
 
-      // setValue로 변경 이후 비동기적으로 커서를 마지막 줄로 이동시킵니다.
-
       setTimeout(() => {
-        codeMirror.setCursor({ line: codeMirror.lineCount(), ch: 0 });
+        const convertedText = codeMirror.getValue();
+
+        // 변경 전과 변경 후의 레퍼런스 리스트를 비교 하여
+        // 문단의 마지막에서 가장 마지막에 변경 된 레퍼런스를 찾습니다.
+        // 이후 해당 레퍼런스 글의 마지막으로 커서를 이동시킵니다.
+
+        const prevReferenceList =
+          prevText.match(getRegExp("bracketWithUrl")) || [];
+        const convertedReferenceList =
+          convertedText.match(getRegExp("bracketWithUrl")) || [];
+
+        let prevIndex = prevReferenceList.length - 1;
+        let convertedIndex = convertedReferenceList.length - 1;
+
+        while (
+          convertedIndex >= 0 &&
+          prevReferenceList[prevIndex] ===
+            convertedReferenceList[convertedIndex]
+        ) {
+          prevIndex--;
+          convertedIndex--;
+        }
+
+        const lastDiffReference = convertedReferenceList[convertedIndex];
+        const { line, ch } = codeMirror.posFromIndex(
+          codeMirror.getValue().lastIndexOf(lastDiffReference)
+        );
+
+        codeMirror.setCursor({ line, ch: ch + lastDiffReference.length });
         codeMirror.focus();
       }, 0);
     },
