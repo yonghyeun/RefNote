@@ -135,13 +135,11 @@ export const convertNumberToReference = async (tab: Tab) => {
           bracketWithUrlMatchValue
         );
 
-        const globalBracketWithUrl = new RegExp(
-          bracketWithUrl.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
-          "g"
-        );
-
         convertedText = convertedText.replace(
-          globalBracketWithUrl,
+          new RegExp(
+            bracketWithUrl.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+            "g"
+          ),
           bracketWithUrlMatchKey
         );
       });
