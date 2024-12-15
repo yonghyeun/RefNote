@@ -20,9 +20,7 @@ export const AutoConvertingToggle = () => {
         data,
       });
 
-      // TOOD state 를 변경하는 부분을 분리하여 중복 제거
-      const prev = (await chrome.storage.sync.get(null)) as ChromeStorage;
-      setChromeStorage(() => ({
+      await setChromeStorage((prev) => ({
         ...prev,
         autoConverting: data === "on" ? true : false,
       }));

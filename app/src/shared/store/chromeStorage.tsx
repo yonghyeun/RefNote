@@ -10,7 +10,7 @@ const ChromeStorageContext = createContext<{
   chromeStorage: ChromeStorage;
   setChromeStorage: (
     updater: (prevStorage: ChromeStorage) => ChromeStorage
-  ) => void;
+  ) => Promise<void>;
 } | null>(null);
 
 // ChromeStorageProvider 는 오로지 readonly 형태인 chrome.storage.sync 데이터를 메모리에 저장한 chromeStorage 객체만을 반환합니다.
@@ -24,10 +24,14 @@ export const ChromeStorageProvider = ({
     chromeStorageInitialValue
   );
 
-  const setChromeStorage = (
+  const setChromeStorage = async (
     updater: (prevStorage: ChromeStorage) => ChromeStorage
   ) => {
-    const updatedChromeStorage = updater(chromeStorage);
+    const prevChromeStorage = (await chrome.storage.sync.get(
+      null
+    )) as ChromeStorage;
+
+    const updatedChromeStorage = updater(prevChromeStorage);
     chrome.storage.sync.set(updatedChromeStorage);
   };
 
