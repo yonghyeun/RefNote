@@ -42,12 +42,11 @@ chrome.runtime.onMessage.addListener(
         convertNumberToReference(sendResponse);
         break;
       case "NotifyError":
-        notifyError(message.data as string);
+        notifyError(
+          message.data || ("예기치 못한 에러가 발생했습니다" as string)
+        );
         break;
       default:
-        notifyError(
-          "준비하지 못한 메시지가 발생했습니다. 리뷰를 남겨 개발자를 혼내주세요"
-        );
         break;
     }
     return true;
