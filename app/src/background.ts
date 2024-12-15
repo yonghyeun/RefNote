@@ -1,5 +1,4 @@
 import browser from "webextension-polyfill";
-import { openSidePanel } from "./sidePanel/model";
 import { convertNumberToReference } from "./features/reference/model";
 
 browser.runtime.onInstalled.addListener((details) => {
@@ -67,8 +66,6 @@ chrome.runtime.onMessage.addListener(
     const currentActiveTab = tab as Tab;
 
     switch (message.message) {
-      case "openSidePanel":
-        return handleAsyncMessage(() => openSidePanel(currentActiveTab));
       case "ConvertToReference":
         return handleAsyncMessage(() =>
           convertNumberToReference(currentActiveTab)
