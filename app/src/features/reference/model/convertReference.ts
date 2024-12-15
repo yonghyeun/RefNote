@@ -72,31 +72,29 @@ export const convertNumberToReference = async (
 
       const bracketWithUrlMatchArray = getBracketWithUrlMatch(
         codeMirror.getValue()
-        ).filter((bracketWithUrlMatch) => {
-            const referenceId = excludeId(
-              bracketWithUrlMatch.split("(")[0] as BracketOnly
-            );
-            const url = bracketWithUrlMatch.split("(")[1].slice(0, -1);
-
-            return (
-            referenceId <= attachedReferenceArray.length &&
-            attachedReferenceArray[referenceId - 1].url !== url
-            );
-        });
+        );
 
         // 변환 할 문구가 없다면 early return 합니다.
 
         if (
-          [...bracketOnlyMatchArray, ...bracketWithUrlMatchArray].length < 1
-      ) {
-        return;
-      }
+          bracketOnlyMatchArray.length === 0 &&
+          bracketWithUrlMatchArray.every((bracket) => {
+            const referenceId = excludeId(bracket.split("(")[0] as BracketOnly);
+            const url = bracket.split("(")[1].slice(0, -1);
+            return (
+              attachedReferenceArray.find(({ id }) => id === referenceId)
+                ?.url === url
+            );
+          })
+        ) {
+          return;
+        }
 
-      let convertedText: string = codeMirror.getValue();
+        let convertedText: string = codeMirror.getValue();
 
-      // url이 변경 될 필요가 있는 bracketWithUrlMatchArray 를 랜덤한 key로 변경해줍니다.
-      // bracketOnlyMatchUrlArray 변환 과정에서 동일한 referenceId 를 가진 bracket이 있어 충돌 할 수 있기 때문입니다.
-      // bracketOnlyMatchUrlArray 변환 이후 변경되었던 key를 다시 올바른 bracketWithUrl로 변경해줄 것입니다.
+        // url이 변경 될 필요가 있는 bracketWithUrlMatchArray 를 랜덤한 key로 변경해줍니다.
+        // bracketOnlyMatchUrlArray 변환 과정에서 동일한 referenceId 를 가진 bracket이 있어 충돌 할 수 있기 때문입니다.
+        // bracketOnlyMatchUrlArray 변환 이후 변경되었던 key를 다시 올바른 bracketWithUrl로 변경해줄 것입니다.
 
       const bracketWithUrlMatchMap = new Map<string, string>();
 
@@ -107,15 +105,18 @@ export const convertNumberToReference = async (
         const url = bracketWithUrl.split("(")[1].slice(0, -1);
         const bracketWithUrlMatchKey = Math.random().toString();
 
-        const bracketWithUrlMatchValue =
-          isReferenceIdValid(referenceId, attachedReferenceArray) &&
-          !isReferenceUrlValid({ referenceId, url }, attachedReferenceArray)
-            ? `[[${referenceId}]](${attachedReferenceArray[referenceId - 1].url})`
-            : bracketWithUrl;
+          // url이 올바르지만 변호가 잘못된 경우엔 url을 기준으로 번호를 수정 합니다.
+          // 번호가 올바르지만 url이 잘못된 경우엔 번호를 기준으로 url을 수정 합니다.
+
+          const correctReference =
+            attachedReferenceArray.find((reference) => reference.url === url) ||
+            attachedReferenceArray.find(
+              (reference) => reference.id === referenceId
+            )!;
 
         bracketWithUrlMatchMap.set(
           bracketWithUrlMatchKey,
-          bracketWithUrlMatchValue
+            `[[${correctReference.id}]](${correctReference.url})`
         );
 
         convertedText = convertedText.replace(
@@ -129,7 +130,9 @@ export const convertNumberToReference = async (
 
       bracketOnlyMatchArray.forEach((bracket) => {
         const referenceId = excludeId(bracket);
-        const url = attachedReferenceArray[referenceId - 1].url;
+          const url = attachedReferenceArray.find(
+            ({ id }) => id === referenceId
+          )!.url;
         const globalBracket = new RegExp(
           bracket.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
           "g"
