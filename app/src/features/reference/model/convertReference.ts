@@ -64,51 +64,30 @@ export const convertNumberToReference = async (
         return Number(bracket.replace(/\[|\]/g, ""));
       };
 
-      const isReferenceIdValid = (
-        referenceId: number,
-        attachedReferenceArray: AttachedReferenceData[]
-      ) => {
-        return attachedReferenceArray.some(
-          (reference) => reference.id === referenceId
-        );
-      };
-
-      const isReferenceUrlValid = (
-        { referenceId, url }: { referenceId: number; url: string },
-        attachedReferenceArray: AttachedReferenceData[]
-      ) => {
-        return attachedReferenceArray[referenceId - 1].url === url;
-      };
-
       const bracketOnlyMatchArray = getBracketOnlyMatch(
         codeMirror.getValue()
       ).filter((match) => {
-        return isReferenceIdValid(excludeId(match), attachedReferenceArray);
+          return excludeId(match) <= attachedReferenceArray.length;
       });
 
       const bracketWithUrlMatchArray = getBracketWithUrlMatch(
         codeMirror.getValue()
-      );
-
-      // 변환 할 문구가 없다면 early return 합니다.
-
-      if (
-        bracketOnlyMatchArray.length +
-          bracketWithUrlMatchArray.filter((bracketWithUrlMatch) => {
+        ).filter((bracketWithUrlMatch) => {
             const referenceId = excludeId(
               bracketWithUrlMatch.split("(")[0] as BracketOnly
             );
             const url = bracketWithUrlMatch.split("(")[1].slice(0, -1);
 
             return (
-              isReferenceIdValid(referenceId, attachedReferenceArray) &&
-                !isReferenceUrlValid(
-                  { referenceId, url },
-                  attachedReferenceArray
-                )
+            referenceId <= attachedReferenceArray.length &&
+            attachedReferenceArray[referenceId - 1].url !== url
             );
-          }).length <
-        1
+        });
+
+        // 변환 할 문구가 없다면 early return 합니다.
+
+        if (
+          [...bracketOnlyMatchArray, ...bracketWithUrlMatchArray].length < 1
       ) {
         return;
       }
