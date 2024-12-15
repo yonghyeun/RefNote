@@ -23,12 +23,11 @@ const sendConvertReferenceMessage = (event: KeyboardEvent) => {
     const { status, data } = await chrome.runtime.sendMessage({
       message: "ConvertToReference",
     });
-    if (status !== "ok") {
-      chrome.runtime.sendMessage({
-        message: "NotifyError",
-        data,
-      });
-    }
+
+    chrome.runtime.sendMessage({
+      message: status === "ok" ? "NotifyConvertProcessSuccess" : "NotifyError",
+      data,
+    });
   }, 500);
 };
 

@@ -1,7 +1,7 @@
 import { useChromeStorage, useTab } from "@/shared/store";
 import { ReferenceItem } from "./ReferenceItem";
 import { useEffect } from "react";
-import { sendMessage } from "@/shared/lib";
+import { sendConvertReferenceMessage } from "../model";
 
 export const AttachedReferenceList = () => {
   const { chromeStorage } = useChromeStorage();
@@ -12,10 +12,7 @@ export const AttachedReferenceList = () => {
     if (!tab?.url?.includes("https://velog.io/write")) {
       return;
     }
-
-    sendMessage({
-      message: "ConvertToReference",
-    });
+    sendConvertReferenceMessage();
   }, [reference]);
 
   return (

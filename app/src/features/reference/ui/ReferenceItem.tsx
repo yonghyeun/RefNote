@@ -53,7 +53,9 @@ const WriteButton = ({ title }: Pick<UnAttachedReferenceData, "title">) => {
       return {
         ...prev,
         reference: prev.reference.map((data) =>
-          data.title !== title ? data : { ...data, isWritten: true, id }
+          data.title !== title
+            ? data
+            : { ...data, isWritten: true, id, isUsed: false }
         ),
       };
     });
@@ -95,7 +97,8 @@ const EraseButton = ({
         ...prev,
         reference: prev.reference.map((data) => {
           if (data.title === title) {
-            const { id, ...rest } = data as AttachedReferenceData;
+            const { id, isUsed, isWritten, ...rest } =
+              data as AttachedReferenceData;
             return { ...rest, isWritten: false };
           }
           if (data.isWritten && data.id > id) {
@@ -209,7 +212,10 @@ export const ReferenceItem = (
           )}
           <div className={styles.writtenTitleContainer}>
             <Title>{title}</Title>
-            <span className={styles.writtenId}>[{props.id}]</span>
+            <span className={styles.writtenId}>
+              {props.isUsed && <span className={styles.check}>✔</span>}[
+              {props.id}]
+            </span>
           </div>
         </Content>
         <EraseButton title={title} id={props.id} />

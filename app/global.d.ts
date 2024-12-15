@@ -24,6 +24,7 @@ declare global {
     faviconUrl: string;
     isWritten: true;
     id: number;
+isUsed: boolean;
   }
 
   type ReferenceData = UnAttachedReferenceData | AttachedReferenceData;

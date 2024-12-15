@@ -57,6 +57,34 @@ export const ChromeStorageProvider = ({
     };
   }, []);
 
+  useEffect(() => {
+    const handleConvertProcessDone = ({
+      message,
+      data,
+    }: RequestMessage<number[]>) => {
+      if (message === "NotifyConvertProcessSuccess") {
+        setChromeStorage(({ reference, ...rest }) => {
+          return {
+            ...rest,
+            reference: reference.map((referenceData) => {
+              if (referenceData.isWritten) {
+                return {
+                  ...referenceData,
+                  isUsed: data.includes(referenceData.id),
+                };
+              }
+              return referenceData;
+            }),
+          };
+        });
+      }
+    };
+    chrome.runtime.onMessage.addListener(handleConvertProcessDone);
+    return () => {
+      chrome.runtime.onMessage.removeListener(handleConvertProcessDone);
+    };
+  }, []);
+
   return (
     <ChromeStorageContext.Provider
       value={{

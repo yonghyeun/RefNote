@@ -218,3 +218,14 @@ export const convertNumberToReference = async (
     });
   }
 };
+
+export const sendConvertReferenceMessage = async () => {
+  const { status, data } = await chrome.runtime.sendMessage({
+    message: "ConvertToReference",
+  });
+
+  chrome.runtime.sendMessage({
+    message: status === "ok" ? "NotifyConvertProcessSuccess" : "NotifyError",
+    data,
+  });
+};
