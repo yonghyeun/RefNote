@@ -14,14 +14,24 @@ export const TabProvider = ({ children }: TabProviderProps) => {
       setTab(tab);
     });
 
-    const handleTabUpdate = (_tabId: number, changeInfo: any, tab: any) => {
+    const handleHistoryUpdate = (_tabId: number, changeInfo: any, tab: any) => {
       if (changeInfo.status === "complete") {
         setTab(tab);
       }
     };
-    chrome.tabs.onUpdated.addListener(handleTabUpdate);
+
+    const handleWindowUpdate = async ({ tabId }: chrome.tabs.TabActiveInfo) => {
+      const tab = await chrome.tabs.get(tabId);
+      if (tab.status === "complete") {
+        setTab(tab);
+      }
+    };
+
+    chrome.tabs.onUpdated.addListener(handleHistoryUpdate);
+    chrome.tabs.onActivated.addListener(handleWindowUpdate);
     return () => {
-      chrome.tabs.onUpdated.removeListener(handleTabUpdate);
+      chrome.tabs.onUpdated.removeListener(handleHistoryUpdate);
+      chrome.tabs.onActivated.removeListener(handleWindowUpdate);
     };
   }, []);
 
