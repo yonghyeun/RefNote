@@ -2,7 +2,7 @@ let timer: ReturnType<typeof setTimeout> | null = null;
 const sendConvertReferenceMessage = (event: KeyboardEvent) => {
   // 눌린키가 유효한 키인지 확인 , 방향키나 meta 키 등 포함하지 아니함
   if (
-    event.key.length !== 1 ||
+    (event.key !== "Backspace" && event.key.length !== 1) ||
     event.key === " " ||
     event.key === "Meta" ||
     event.key === "Alt" ||
