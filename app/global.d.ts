@@ -1,9 +1,9 @@
 export {};
 
 declare global {
-  interface RequestMessage<T = unknown> {
+  interface RequestMessage<T extends unknown = undefined> {
     message: string;
-    data?: T;
+    data: T;
   }
 
   interface ResponseMessage<R = unknown> {
@@ -24,7 +24,7 @@ declare global {
     faviconUrl: string;
     isWritten: true;
     id: number;
-isUsed: boolean;
+    isUsed: boolean;
   }
 
   type ReferenceData = UnAttachedReferenceData | AttachedReferenceData;
