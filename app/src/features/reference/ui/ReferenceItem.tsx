@@ -193,13 +193,11 @@ const Container = ({ children }: { children: React.ReactNode }) => (
   <section className={styles.container}>{children}</section>
 );
 
-export const ReferenceItem = ({
-  title,
-  faviconUrl,
-  url,
-  isWritten,
-  id,
-}: ReferenceData & { id?: number }) => {
+export const ReferenceItem = (
+  props: UnAttachedReferenceData | AttachedReferenceData
+) => {
+  const { title, faviconUrl, url, isWritten } = props;
+
   if (isWritten) {
     return (
       <Container>
@@ -211,10 +209,10 @@ export const ReferenceItem = ({
           )}
           <div className={styles.writtenTitleContainer}>
             <Title>{title}</Title>
-            <span className={styles.writtenId}>[{id}]</span>
+            <span className={styles.writtenId}>[{props.id}]</span>
           </div>
         </Content>
-        <EraseButton title={title} id={id} />
+        <EraseButton title={title} id={props.id} />
         <RemoveButton title={title} />
       </Container>
     );
