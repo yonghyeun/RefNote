@@ -3,14 +3,14 @@ import { Button } from "@/shared/ui/button";
 import styles from "./styles.module.css";
 
 export const ConvertToReferenceButton = () => {
-  const handleCovertToReference = async () => {
+  const handleConvertToReference = async () => {
     await sendMessage({
-      message: "CovertToReference",
+      message: "ConvertToReference",
     });
   };
 
   return (
-    <Button onClick={handleCovertToReference} className={styles.flexOneButton}>
+    <Button onClick={handleConvertToReference} className={styles.flexOneButton}>
       텍스트 전환
     </Button>
   );

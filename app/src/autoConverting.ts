@@ -20,7 +20,7 @@ const sendConvertReferenceMessage = (event: KeyboardEvent) => {
     clearTimeout(timer);
   }
   timer = setTimeout(() => {
-    chrome.runtime.sendMessage({ message: "CovertToReference" });
+    chrome.runtime.sendMessage({ message: "ConvertToReference" });
   }, 500);
 };
 

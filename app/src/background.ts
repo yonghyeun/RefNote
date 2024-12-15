@@ -69,7 +69,7 @@ chrome.runtime.onMessage.addListener(
     switch (message.message) {
       case "openSidePanel":
         return handleAsyncMessage(() => openSidePanel(currentActiveTab));
-      case "CovertToReference":
+      case "ConvertToReference":
         return handleAsyncMessage(() =>
           convertNumberToReference(currentActiveTab)
         );
