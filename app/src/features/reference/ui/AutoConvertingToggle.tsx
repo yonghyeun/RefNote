@@ -1,7 +1,6 @@
 import { useChromeStorage, useTab } from "@/shared/store";
 import styles from "./styles.module.css";
 import { useEffect } from "react";
-import { sendMessage } from "@/shared/lib";
 
 export const AutoConvertingToggle = () => {
   const { chromeStorage, setChromeStorage } = useChromeStorage();
@@ -53,7 +52,7 @@ export const AutoConvertingToggle = () => {
 
       toggling(autoConverting ? "off" : "on", id);
     } catch (error) {
-      sendMessage({
+      chrome.runtime.sendMessage({
         message: "NotifyError",
         data: (error as Error).message,
       });
@@ -78,7 +77,7 @@ export const AutoConvertingToggle = () => {
 
       toggling(autoConverting ? "on" : "off", id);
     } catch (error) {
-      sendMessage({
+      chrome.runtime.sendMessage({
         message: "NotifyError",
         data: (error as Error).message,
       });
