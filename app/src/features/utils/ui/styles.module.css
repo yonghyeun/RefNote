@@ -53,7 +53,7 @@
 }
 
 .checkBox:checked + .toggleSlider {
-  background-color: #2196f3;
+  background-color: #12b886;
 }
 
 .checkBox:checked + .toggleSlider:before {

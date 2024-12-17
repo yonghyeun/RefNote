@@ -18,15 +18,15 @@
 }
 
 html[data-theme="dark"] {
-  --bg-color: #414141;
-  --text-color: #f5f5f5;
+  --bg-color: #121212;
+  --text-color: #f0f0f0;
   --content-hover: #4a4a4a;
   --content-active: #3a3a3a;
 }
 
 html[data-theme="light"] {
-  --bg-color: #f5f5f5;
-  --text-color: #121212;
+  --bg-color: #fff;
+  --text-color: #212529;
   --content-hover: #f0f0f0;
   --content-active: #e0e0e0;
 }

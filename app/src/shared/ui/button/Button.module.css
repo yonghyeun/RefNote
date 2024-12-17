@@ -1,5 +1,5 @@
 .button {
-  background-color: #2196f3;
+  background-color: #12b886;
   color: #fff;
   font-size: 15px;
   border: none;
@@ -13,23 +13,23 @@
 }
 
 .button:hover {
-  background-color: #1976d2; /* 기본 배경색보다 어두운 톤 */
+  background-color: #099268; /* 기본 배경색보다 어두운 톤 */
   color: #e6f7f1;
 }
 
 .button:focus-visible {
-  background-color: #1976d2; /* 기본 배경색보다 어두운 톤 */
+  background-color: #099268; /* 기본 배경색보다 어두운 톤 */
   color: #e6f7f1;
 }
 
 .button:active {
-  background-color: #1565c0; /* 기본 배경색보다 더 어두운 톤 */
+  background-color: #0ca678; /* 기본 배경색보다 더 어두운 톤 */
   color: #e6f7f1;
 }
 
 .button:disabled {
   pointer-events: none;
-  background-color: #b2e2d3;
+  background-color: #38d9a9;
   color: #d1d5db;
 }
 

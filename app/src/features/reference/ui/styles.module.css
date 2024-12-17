@@ -19,7 +19,7 @@
 }
 
 .clickedItem button {
-  background-color: #2196f3;
+  background-color: #12b886;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -29,15 +29,15 @@
 }
 
 .clickedItem > button:hover {
-  background-color: #1976d2;
+  background-color: #099268;
 }
 
 .clickedItem > button:focus-visible {
-  background-color: #1976d2;
+  background-color: #099268;
 }
 
 .clickedItem > button:active {
-  background-color: #1565c0;
+  background-color: #0ca678;
 }
 
 .favicon {
@@ -176,7 +176,7 @@
 }
 
 .checkBox:checked + .toggleSlider {
-  background-color: #2196f3;
+  background-color: #12b886;
 }
 
 .checkBox:checked + .toggleSlider:before {
@@ -190,7 +190,7 @@
 }
 
 .activeSpan {
-  color: #2196f3;
+  color: #12b886;
 }
 
 .defaultSpan {
