@@ -1,26 +1,16 @@
-import { useChromeStorage, useTab } from "@/shared/store";
+import { useChromeStorage } from "@/shared/store";
 import { ReferenceItem } from "./ReferenceItem";
-import { useEffect, useState } from "react";
-import { sendConvertReferenceMessage } from "../model";
+import { useState } from "react";
 
-export const AttachedReferenceList = () => {
+export const UnAttachedReferenceList = () => {
   const [activeUrl, setIsActiveUrl] = useState<string>("");
   const { chromeStorage } = useChromeStorage();
   const { reference } = chromeStorage;
-  const tab = useTab();
-
-  useEffect(() => {
-    if (!tab?.url?.includes("https://velog.io/write")) {
-      return;
-    }
-    sendConvertReferenceMessage();
-  }, [reference]);
 
   return (
     <ul>
       {reference
-        .filter((data): data is AttachedReferenceData => data.isWritten)
-        .sort((prev, cur) => prev.id - cur.id)
+        .filter((data): data is UnAttachedReferenceData => !data.isWritten)
         .map((reference, idx) => (
           <li key={idx}>
             <ReferenceItem

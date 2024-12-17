@@ -2,9 +2,9 @@ import {
   AttachedReferenceList,
   ConvertToReferenceButton,
   CopyReferenceListButton,
-  ReferenceItem,
   ReferenceSaveButton,
   ResetReferenceButton,
+  UnAttachedReferenceList,
 } from "@/features/reference/ui";
 import { useChromeStorage } from "@/shared/store/chromeStorage";
 import { AutoConvertingToggle } from "@/features/reference/ui";
@@ -29,17 +29,7 @@ export const SidePanelPage = () => {
               ({reference.filter(({ isWritten }) => !isWritten).length})
             </span>
           </h2>
-          <ul>
-            {reference
-              .filter(
-                (data): data is UnAttachedReferenceData => !data.isWritten
-              )
-              .map((reference, idx) => (
-                <li key={idx}>
-                  <ReferenceItem {...reference} />
-                </li>
-              ))}
-          </ul>
+          <UnAttachedReferenceList />
         </section>
         <section className={styles.referenceContainer}>
           <div
