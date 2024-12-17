@@ -14,19 +14,12 @@ const DefaultFavicon = () => (
   <img className={styles.favicon} src="favicon.ico" />
 );
 
-const Content = ({
-  children,
-  url,
-}: {
+interface ContentProps {
   children: React.ReactNode;
-  url: ReferenceData["url"];
-}) => (
-  <div
-    className="content"
-    onDoubleClick={() => {
-      window.open(url, "_blank");
-    }}
-  >
+  onClick: () => void;
+}
+const Content = ({ children, onClick }: ContentProps) => (
+  <div className="content" onClick={onClick}>
     {children}
   </div>
 );
@@ -192,45 +185,89 @@ const RemoveButton = ({ title }: Pick<ReferenceData, "title">) => {
   );
 };
 
+const ClickedItem = ({ url, title }: Pick<ReferenceData, "url" | "title">) => {
+  return (
+    <div className={styles.clickedItem}>
+      <button
+        onClick={() => {
+          navigator.clipboard.writeText(url);
+        }}
+        className={styles.clickedItemButton}
+      >
+        링크 복사
+      </button>
+      <button
+        onClick={() => {
+          navigator.clipboard.writeText(`[${title}](${url})`);
+        }}
+        className={styles.clickedItemButton}
+      >
+        [제목](링크) 복사
+      </button>
+      <button
+        onClick={() => {
+          window.open(url, "_blank");
+        }}
+        className={styles.clickedItemButton}
+      >
+        페이지로 이동
+      </button>
+    </div>
+  );
+};
+
 const Container = ({ children }: { children: React.ReactNode }) => (
   <section className={styles.container}>{children}</section>
 );
 
-export const ReferenceItem = (
-  props: UnAttachedReferenceData | AttachedReferenceData
-) => {
-  const { title, faviconUrl, url, isWritten } = props;
+type ReferenceItemProps = ReferenceData & {
+  isActive: boolean;
+  onClick: () => void;
+};
+
+export const ReferenceItem = (props: ReferenceItemProps) => {
+  const { title, faviconUrl, url, isWritten, isActive, onClick } = props;
 
   if (isWritten) {
     return (
       <Container>
-        <Content url={url}>
-          {faviconUrl ? (
-            <Favicon faviconUrl={faviconUrl} />
-          ) : (
-            <DefaultFavicon />
-          )}
-          <div className={styles.writtenTitleContainer}>
-            <Title>{title}</Title>
-            <span className={styles.writtenId}>
-              {props.isUsed && <span className={styles.check}>✔</span>}[
-              {props.id}]
-            </span>
-          </div>
-        </Content>
-        <EraseButton title={title} id={props.id} />
-        <RemoveButton title={title} />
+        <div>
+          <Content onClick={onClick}>
+            {faviconUrl ? (
+              <Favicon faviconUrl={faviconUrl} />
+            ) : (
+              <DefaultFavicon />
+            )}
+            <div className={styles.writtenTitleContainer}>
+              <Title>{title}</Title>
+              <span className={styles.writtenId}>
+                {props.isUsed && <span className={styles.check}>✔</span>}[
+                {props.id}]
+              </span>
+            </div>
+          </Content>
+          <EraseButton title={title} id={props.id} />
+          <RemoveButton title={title} />
+        </div>
+        {isActive && <ClickedItem url={url} title={title} />}
       </Container>
     );
   }
   return (
     <Container>
-      <Content url={url}>
-        {faviconUrl ? <Favicon faviconUrl={faviconUrl} /> : <DefaultFavicon />}
-        <Title>{title}</Title>
-      </Content>
-      <WriteButton title={title} />
-      <RemoveButton title={title} />
+      <div>
+        <Content onClick={onClick}>
+          {faviconUrl ? (
+            <Favicon faviconUrl={faviconUrl} />
+          ) : (
+            <DefaultFavicon />
+          )}
+          <Title>{title}</Title>
+        </Content>
+        <WriteButton title={title} />
+        <RemoveButton title={title} />
+      </div>
+      {isActive && <ClickedItem url={url} title={title} />}
     </Container>
   );
 };
