@@ -1,5 +1,4 @@
 import browser from "webextension-polyfill";
-import { openSidePanel } from "./sidePanel/model";
 import { convertNumberToReference } from "./features/reference/model";
 
 browser.runtime.onInstalled.addListener((details) => {
@@ -14,91 +13,75 @@ browser.runtime.onInstalled.addListener((details) => {
   }
 });
 
+const notifyError = (message: string) => {
+  chrome.notifications.create(
+    "alarm",
+    {
+      type: "basic",
+      iconUrl: "/icon/128.png",
+      title: "오류",
+      message: message,
+      silent: true,
+    },
+    () => {
+      setTimeout(() => {
+        chrome.notifications.clear("alarm");
+      }, 3000);
+    }
+  );
+};
+
 chrome.runtime.onMessage.addListener(
-  async (message: RequestMessage, _sender, sendResponse) => {
+  (message: RequestMessage, _sender, sendResponse) => {
     /**
      * 비동기 메시지 핸들러의 경우 핸들러 응답값에 따라 response 를 보내는 고차 함수 입니다.
      */
-    const handleAsyncMessage = <T extends unknown>(
-      handler: () => Promise<unknown>
-    ) => {
-      handler()
-        .then((data) => {
-          sendResponse({
-            status: "ok",
-            data: data as T,
-          });
-        })
-        .catch((error) => {
-          chrome.notifications.create(
-            "alarm",
-            {
-              type: "basic",
-              iconUrl: "/icon/128.png",
-              title: "오류",
-              message: error.message,
-              silent: true,
-            },
-            () => {
-              setTimeout(() => {
-                chrome.notifications.clear("alarm");
-              }, 3000);
-            }
-          );
-
-          sendResponse({
-            status: error,
-          });
-        });
-      return true;
-    };
-
-    const [tab] = await chrome.tabs.query({
-      active: true,
-      currentWindow: true,
-    });
-
-    if (!tab || !tab.id) {
-      console.log("tab not found");
-      sendResponse({
-        status: "tab not found",
-      });
-    }
-    const currentActiveTab = tab as Tab;
 
     switch (message.message) {
-      case "openSidePanel":
-        return handleAsyncMessage(() => openSidePanel(currentActiveTab));
-      case "CovertToReference":
-        return handleAsyncMessage(() =>
-          convertNumberToReference(currentActiveTab)
-        );
+      case "ConvertToReference":
+        convertNumberToReference(sendResponse);
+        break;
       case "NotifyError":
-        return handleAsyncMessage(async () => {
-          await chrome.notifications.create(
-            "alarm",
-            {
-              type: "basic",
-              iconUrl: "/icon/128.png",
-              title: "오류",
-              message: message.data as string,
-              silent: true,
-            },
-            () => {
-              setTimeout(() => {
-                chrome.notifications.clear("alarm");
-              }, 3000);
-            }
-          );
-        });
+        notifyError(
+          message.data || ("예기치 못한 에러가 발생했습니다" as string)
+        );
+        break;
       default:
-        return message.message;
+        break;
     }
+    return true;
   }
 );
 
-chrome.action.onClicked.addListener((tab) => {
-  if (tab && tab.id !== undefined) {
-    openSidePanel(tab as Tab);
+chrome.action.onClicked.addListener(async (tab) => {
+  try {
+    if (!tab || !tab.id || !tab.url) {
+      throw new Error("현재 탭 정보를 가져올 수 없습니다.");
+    }
+
+    await chrome.sidePanel.open({
+      tabId: tab.id,
+    });
+    await chrome.sidePanel.setOptions({
+      enabled: true,
+      path: "src/side_panel.html",
+      tabId: tab.id,
+    });
+  } catch (error) {
+    chrome.notifications.create(
+      "alarm",
+      {
+        type: "basic",
+        iconUrl: "/icon/128.png",
+        title: "오류",
+        message: (error as Error).message,
+        silent: true,
+      },
+      () => {
+        setTimeout(() => {
+          chrome.notifications.clear("alarm");
+        }, 3000);
+      }
+    );
   }
 });

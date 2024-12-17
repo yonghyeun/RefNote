@@ -52,6 +52,11 @@
   margin: auto 0;
 }
 
+.check {
+  color: #f44336;
+  margin-right: 4px;
+}
+
 .resetButton {
   background-color: #f44336; /* 빨간색 기본 배경색 */
   color: #fff;

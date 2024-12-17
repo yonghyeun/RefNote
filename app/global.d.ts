@@ -1,13 +1,13 @@
 export {};
 
 declare global {
-  interface RequestMessage<T = unknown> {
+  interface RequestMessage<T extends unknown = undefined> {
     message: string;
-    data?: T;
+    data: T;
   }
 
   interface ResponseMessage<R = unknown> {
-    status: "ok" | Error;
+    status: "ok" | "error";
     data: R;
   }
 
@@ -24,6 +24,7 @@ declare global {
     faviconUrl: string;
     isWritten: true;
     id: number;
+    isUsed: boolean;
   }
 
   type ReferenceData = UnAttachedReferenceData | AttachedReferenceData;

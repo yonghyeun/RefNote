@@ -1,4 +1,5 @@
 import {
+  AttachedReferenceList,
   ConvertToReferenceButton,
   CopyReferenceListButton,
   ReferenceItem,
@@ -58,16 +59,7 @@ export const SidePanelPage = () => {
           <div className={styles.headerButtonContainer}>
             <CopyReferenceListButton />
           </div>
-          <ul>
-            {reference
-              .filter((data): data is AttachedReferenceData => data.isWritten)
-              .sort((prev, cur) => prev.id - cur.id)
-              .map((reference, idx) => (
-                <li key={idx}>
-                  <ReferenceItem {...reference} />
-                </li>
-              ))}
-          </ul>
+          <AttachedReferenceList />
         </section>
       </main>
       <footer className={styles.headerButtonContainer}>
