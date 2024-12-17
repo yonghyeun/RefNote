@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext, useContext } from "react";
 
-export const chromeStorageInitialValue: ChromeStorage = {
+const chromeStorageInitialValue: ChromeStorage = {
   reference: [],
   autoConverting: false,
   isDarkMode: false,
