@@ -11,7 +11,7 @@ const Favicon = ({
 
 // TODO 적절한 파비콘 아이콘 선택 하기
 const DefaultFavicon = () => (
-  <img className={styles.favicon} src="favicon.ico" />
+  <img className={styles.favicon} src="/icon/128.png" />
 );
 
 interface ContentProps {
