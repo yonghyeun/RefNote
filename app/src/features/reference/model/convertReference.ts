@@ -70,6 +70,19 @@ export const convertNumberToReference = async (
           return excludeId(match) <= attachedReferenceArray.length;
         });
 
+        const getUsedReferenceIds = (text: string) => {
+          const usedIds =
+            text
+              .match(getRegExp("bracketWithUrl"))
+              ?.map((bracket) =>
+                excludeId(bracket.split("(")[0] as BracketOnly)
+              ) || [];
+
+          usedIds.sort((a, b) => a - b);
+
+          return Array.from(new Set(usedIds));
+        };
+
         const bracketWithUrlMatchArray = getBracketWithUrlMatch(
           codeMirror.getValue()
         );
@@ -87,9 +100,7 @@ export const convertNumberToReference = async (
             );
           })
         ) {
-          return bracketWithUrlMatchArray.map((bracket) => {
-            return excludeId(bracket.split("(")[0] as BracketOnly);
-          });
+          return getUsedReferenceIds(codeMirror.getValue());
         }
 
         let convertedText: string = codeMirror.getValue();
@@ -191,13 +202,7 @@ export const convertNumberToReference = async (
 
         // 변경 후 사용된 id 들을 응답으로 전송 합니다.
 
-        return (
-          convertedText
-            .match(getRegExp("bracketWithUrl"))
-            ?.map((bracket) =>
-              excludeId(bracket.split("(")[0] as BracketOnly)
-            ) || []
-        );
+        return getUsedReferenceIds(convertedText);
       },
 
       args: [
