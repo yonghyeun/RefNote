@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext } from "react";
+import { useState, useEffect, createContext, useContext, useRef } from "react";
 
 const chromeStorageInitialValue: ChromeStorage = {
   reference: [],
@@ -23,6 +23,7 @@ export const ChromeStorageProvider = ({
   const [chromeStorage, _syncChromeStorage] = useState<ChromeStorage>(
     chromeStorageInitialValue
   );
+  const prevUsedReferenceIdsRef = useRef<number[]>([]);
 
   const setChromeStorage = async (
     updater: (prevStorage: ChromeStorage) => ChromeStorage
@@ -64,6 +65,13 @@ export const ChromeStorageProvider = ({
       data,
     }: RequestMessage<number[]>) => {
       if (message === "NotifyConvertProcessSuccess") {
+        const prevUsedReferenceIds = prevUsedReferenceIdsRef.current;
+
+        if (JSON.stringify(prevUsedReferenceIds) === JSON.stringify(data)) {
+          return;
+        }
+        prevUsedReferenceIdsRef.current = data;
+
         setChromeStorage(({ reference, ...rest }) => {
           return {
             ...rest,
