@@ -40,10 +40,6 @@ export const AutoConvertingToggle = () => {
     try {
       const { id, url } = tab;
 
-      if (!id || !url) {
-        throw new Error("현재 탭의 정보를 가져올 수 없습니다.");
-      }
-
       if (!url.includes("https://velog.io/write")) {
         throw new Error(
           "자동 전환 기능은 벨로그 > 글 작성 페이지에서만 사용할 수 있습니다."
@@ -66,10 +62,6 @@ export const AutoConvertingToggle = () => {
 
     try {
       const { id, url } = tab;
-
-      if (!id || !url) {
-        throw new Error("현재 탭의 정보를 가져올 수 없습니다.");
-      }
 
       if (!url.includes("https://velog.io/write")) {
         return;

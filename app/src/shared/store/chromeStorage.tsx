@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext, useRef } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 
 export const chromeStorageInitialValue: ChromeStorage = {
   reference: [],
@@ -24,7 +24,6 @@ export const ChromeStorageProvider = ({
   const [chromeStorage, _syncChromeStorage] = useState<ChromeStorage>(
     chromeStorageInitialValue
   );
-  const prevUsedReferenceIdsRef = useRef<number[]>([]);
 
   const setChromeStorage = async (
     updater: (prevStorage: ChromeStorage) => ChromeStorage
@@ -54,42 +53,8 @@ export const ChromeStorageProvider = ({
 
     chrome.storage.onChanged.addListener(synchronizeChromeStorage);
 
-    /**
-     * chrome.storage.sync의 referenceData 와 ConvertReference 의 responseMessage를 받아 처리하는 이벤트 리스너 등록
-     */
-    const handleConvertProcessDone = ({
-      message,
-      data,
-    }: RequestMessage<number[]>) => {
-      if (message === "NotifyConvertProcessSuccess") {
-        const prevUsedReferenceIds = prevUsedReferenceIdsRef.current;
-
-        if (JSON.stringify(prevUsedReferenceIds) === JSON.stringify(data)) {
-          return;
-        }
-        prevUsedReferenceIdsRef.current = data;
-
-        setChromeStorage(({ reference, ...rest }) => {
-          return {
-            ...rest,
-            reference: reference.map((referenceData) => {
-              if (referenceData.isWritten) {
-                return {
-                  ...referenceData,
-                  isUsed: data.includes(referenceData.id),
-                };
-              }
-              return referenceData;
-            }),
-          };
-        });
-      }
-    };
-    chrome.runtime.onMessage.addListener(handleConvertProcessDone);
-
     return () => {
       chrome.storage.onChanged.removeListener(synchronizeChromeStorage);
-      chrome.runtime.onMessage.removeListener(handleConvertProcessDone);
     };
   }, []);
 
