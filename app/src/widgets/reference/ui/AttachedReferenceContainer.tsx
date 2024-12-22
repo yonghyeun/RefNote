@@ -1,4 +1,3 @@
-import type { ReferenceContainerProps } from "./types";
 import styles from "./reference.module.css";
 import {
   AutoConvertingToggle,
@@ -6,22 +5,28 @@ import {
   AttachedReferenceList,
 } from "@/features/reference/ui";
 
+interface AttachedReferenceContainerProps {
+  attachedReferenceList: AttachedReferenceData[];
+}
+
 export const AttachedReferenceContainer = ({
-  reference,
-}: ReferenceContainerProps<AttachedReferenceData>) => {
+  attachedReferenceList,
+}: AttachedReferenceContainerProps) => {
   return (
     <section className={styles.referenceContainer}>
       <div>
         <h2>
           글에 첨부된 레퍼런스
-          <span>({reference.length})</span>
+          <span>({attachedReferenceList.length})</span>
         </h2>
         <AutoConvertingToggle />
       </div>
       <div>
-        <CopyReferenceListButton attachedReferenceList={reference} />
+        <CopyReferenceListButton
+          attachedReferenceList={attachedReferenceList}
+        />
       </div>
-      <AttachedReferenceList attachedReferenceList={reference} />
+      <AttachedReferenceList attachedReferenceList={attachedReferenceList} />
     </section>
   );
 };

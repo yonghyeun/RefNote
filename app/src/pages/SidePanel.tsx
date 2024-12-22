@@ -15,6 +15,14 @@ export const SidePanelPage = () => {
   const { chromeStorage } = useChromeStorage();
   const { reference } = chromeStorage;
 
+  const unAttachedReferenceList = reference.filter(
+    (data): data is UnAttachedReferenceData => !data.isWritten
+  );
+
+  const attachedReferenceList = reference.filter(
+    (data): data is AttachedReferenceData => data.isWritten
+  );
+
   return (
     <>
       <header className={styles.buttonContainer}>
@@ -23,14 +31,10 @@ export const SidePanelPage = () => {
       </header>
       <main>
         <UnAttachedReferenceContainer
-          reference={reference.filter(
-            (data): data is UnAttachedReferenceData => !data.isWritten
-          )}
+          unAttachedReferenceList={unAttachedReferenceList}
         />
         <AttachedReferenceContainer
-          reference={reference.filter(
-            (data): data is AttachedReferenceData => data.isWritten
-          )}
+          attachedReferenceList={attachedReferenceList}
         />
       </main>
       <footer className={styles.buttonContainer}>
