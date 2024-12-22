@@ -1,7 +1,8 @@
 import browser from "webextension-polyfill";
 import { convertNumberToReference } from "./features/reference/model";
+import { chromeStorageInitialValue } from "./shared/store";
 
-browser.runtime.onInstalled.addListener((details) => {
+browser.runtime.onInstalled.addListener(async (details) => {
   if (process.env.NODE_ENV === "development") {
     console.group("browser.runtime.onInstalled");
     console.dir(details);
@@ -11,6 +12,15 @@ browser.runtime.onInstalled.addListener((details) => {
     console.dir(browser.runtime.getManifest());
     console.groupEnd();
   }
+
+  // runtime.onInstalled 이벤트는 설치, 확장 프로그램 혹은 구글 크롬 업데이트 시 발생합니다.
+  // 이에 이전에 존재하던 스토리지 값과 기본 값을 이용해 크롬스토리지를 초기화합니다.
+
+  const prevStorageValue = await chrome.storage.sync.get(null);
+  chrome.storage.sync.set({
+    ...chromeStorageInitialValue,
+    ...prevStorageValue,
+  });
 });
 
 const notifyError = (message: string) => {
