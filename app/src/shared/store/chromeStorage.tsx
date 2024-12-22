@@ -47,14 +47,10 @@ export const ChromeStorageProvider = ({
       _syncChromeStorage(updatedChromeStorage as ChromeStorage);
     };
 
-    // chrome.storage.sync.get 을 통해 chrome.storage.sync 의 데이터를 가져옵니다.
-    chrome.storage.sync.get(chromeStorageInitialValue, (data) => {
-      if (Object.keys(data).length > 0) {
-        _syncChromeStorage(data as ChromeStorage);
-      } else {
-        chrome.storage.sync.set(chromeStorageInitialValue);
-      }
-    });
+    chrome.storage.sync.get(null, (chromeStorage) =>
+      _syncChromeStorage(chromeStorage as ChromeStorage)
+    );
+
     chrome.storage.onChanged.addListener(synchronizeChromeStorage);
 
     /**
