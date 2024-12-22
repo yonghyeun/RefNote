@@ -32,9 +32,13 @@ export const UnAttachedReferenceContainer = ({
               unAttachedIsVisible: !unAttachedIsVisible,
             }));
           }}
-          className={styles.foldButton}
+          aria-label={
+            unAttachedIsVisible
+              ? "글에 첨부하지 않은 레퍼런스 리스트 목록 보기"
+              : "글에 첨부하지 않은 레퍼런스 리스트 목록 숨기기"
+          }
         >
-          {unAttachedIsVisible ? "접기" : "펼치기"}
+          {unAttachedIsVisible ? "▲" : "▼"}
         </Button>
       </div>
       {unAttachedIsVisible && (
