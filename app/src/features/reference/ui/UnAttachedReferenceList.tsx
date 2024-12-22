@@ -1,5 +1,6 @@
 import { ReferenceItem } from "./ReferenceItem";
 import { useState } from "react";
+import styles from "./styles.module.css";
 
 interface UnAttachedReferenceListProps {
   unAttachedReferenceList: UnAttachedReferenceData[];
@@ -11,7 +12,7 @@ export const UnAttachedReferenceList = ({
   const [activeUrl, setIsActiveUrl] = useState<string>("");
 
   return (
-    <ul>
+    <ul className={styles.referenceList}>
       {unAttachedReferenceList.map((reference, idx) => (
         <li key={idx}>
           <ReferenceItem

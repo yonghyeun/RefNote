@@ -5,13 +5,6 @@
   flex-basis: 50%;
 }
 
-.referenceContainer > ul {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  overflow-y: scroll;
-}
-
 .referenceContainer > div {
   display: flex;
   justify-content: space-between;

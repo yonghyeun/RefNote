@@ -2,6 +2,7 @@ import { useTab } from "@/shared/store";
 import { ReferenceItem } from "./ReferenceItem";
 import { useEffect, useState } from "react";
 import { sendConvertReferenceMessage } from "../model";
+import styles from "./styles.module.css";
 
 interface AttachedReferenceListProps {
   attachedReferenceList: AttachedReferenceData[];
@@ -21,7 +22,7 @@ export const AttachedReferenceList = ({
   }, [attachedReferenceList]);
 
   return (
-    <ul>
+    <ul className={styles.referenceList}>
       {attachedReferenceList
         .sort((prev, cur) => prev.id - cur.id)
         .map((reference, idx) => (
