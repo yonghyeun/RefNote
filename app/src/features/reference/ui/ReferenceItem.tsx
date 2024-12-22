@@ -244,9 +244,13 @@ export const ReferenceItem = (props: ReferenceItemProps) => {
             <div className={styles.writtenTitleContainer}>
               <Title>{title}</Title>
               <span className={styles.writtenId}>
-                {isVelogWritePage && props.isUsed && (
-                  <span className={styles.check}>✔</span>
-                )}
+                <span
+                  className={`${styles.check}
+                  ${isVelogWritePage && props.isUsed ? "" : styles.unVisible}
+                  `}
+                >
+                  ✔
+                </span>
                 [{props.id}]
               </span>
             </div>
