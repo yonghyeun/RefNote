@@ -14,7 +14,7 @@ export const CopyReferenceListButton = ({
     );
 
     const result = attachedReferences.map(
-      ({ title, url, id }) => `[${id}. ${title}](${url})`
+      ({ title, url, id }) => `${id}. [${title}](${url})`
     );
 
     // 클립보드에 복사합니다.
