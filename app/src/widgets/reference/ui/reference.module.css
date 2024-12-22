@@ -1,0 +1,33 @@
+.referenceContainer {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  flex-basis: 50%;
+}
+
+.referenceContainer > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.referenceContainer > div:nth-child(1) {
+  margin-bottom: 0.5rem;
+}
+
+.referenceContainer h2 > span {
+  font-size: 0.8rem;
+  color: #a0a0a0;
+  margin-left: 4px;
+}
+
+.folded {
+  flex-basis: 0;
+  flex-grow: 0;
+  margin-bottom: 1rem;
+}
+
+.foldButton {
+  min-width: 5rem;
+}

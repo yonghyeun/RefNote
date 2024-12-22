@@ -1,12 +1,17 @@
-import { useChromeStorage, useTab } from "@/shared/store";
+import { useTab } from "@/shared/store";
 import { ReferenceItem } from "./ReferenceItem";
 import { useEffect, useState } from "react";
 import { sendConvertReferenceMessage } from "../model";
+import styles from "./styles.module.css";
 
-export const AttachedReferenceList = () => {
+interface AttachedReferenceListProps {
+  attachedReferenceList: AttachedReferenceData[];
+}
+
+export const AttachedReferenceList = ({
+  attachedReferenceList,
+}: AttachedReferenceListProps) => {
   const [activeUrl, setIsActiveUrl] = useState<string>("");
-  const { chromeStorage } = useChromeStorage();
-  const { reference } = chromeStorage;
   const tab = useTab();
 
   useEffect(() => {
@@ -14,12 +19,11 @@ export const AttachedReferenceList = () => {
       return;
     }
     sendConvertReferenceMessage();
-  }, [reference]);
+  }, [attachedReferenceList]);
 
   return (
-    <ul>
-      {reference
-        .filter((data): data is AttachedReferenceData => data.isWritten)
+    <ul className={styles.referenceList}>
+      {attachedReferenceList
         .sort((prev, cur) => prev.id - cur.id)
         .map((reference, idx) => (
           <li key={idx}>
