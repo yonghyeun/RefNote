@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./styles.module.css";
 import { useChromeStorage } from "@/shared/store/chromeStorage";
 import { IconButton } from "@/shared/ui/button";
+import { useTab } from "@/shared/store";
 
 const Favicon = ({
   faviconUrl,
@@ -227,6 +228,8 @@ type ReferenceItemProps = ReferenceData & {
 
 export const ReferenceItem = (props: ReferenceItemProps) => {
   const { title, faviconUrl, url, isWritten, isActive, onClick } = props;
+  const tab = useTab();
+  const isVelogWritePage = tab?.url.includes("velog.io/write");
 
   if (isWritten) {
     return (
@@ -241,8 +244,10 @@ export const ReferenceItem = (props: ReferenceItemProps) => {
             <div className={styles.writtenTitleContainer}>
               <Title>{title}</Title>
               <span className={styles.writtenId}>
-                {props.isUsed && <span className={styles.check}>✔</span>}[
-                {props.id}]
+                {isVelogWritePage && props.isUsed && (
+                  <span className={styles.check}>✔</span>
+                )}
+                [{props.id}]
               </span>
             </div>
           </Content>
