@@ -19,9 +19,9 @@ export const AttachedReferenceContainer = ({
         <AutoConvertingToggle />
       </div>
       <div>
-        <CopyReferenceListButton />
+        <CopyReferenceListButton attachedReferenceList={reference} />
       </div>
-      <AttachedReferenceList />
+      <AttachedReferenceList attachedReferenceList={reference} />
     </section>
   );
 };

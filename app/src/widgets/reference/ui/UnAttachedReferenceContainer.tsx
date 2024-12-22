@@ -11,7 +11,7 @@ export const UnAttachedReferenceContainer = ({
         글에 첨부되지 않은 레퍼런스
         <span>({reference.length})</span>
       </h2>
-      <UnAttachedReferenceList />
+      <UnAttachedReferenceList unAttachedReferenceList={reference} />
     </section>
   );
 };
