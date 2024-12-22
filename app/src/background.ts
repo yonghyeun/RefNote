@@ -1,5 +1,8 @@
 import browser from "webextension-polyfill";
-import { convertNumberToReference } from "./features/reference/model";
+import {
+  convertNumberToReference,
+  parseUsedReferenceData,
+} from "./features/reference/model";
 import { chromeStorageInitialValue } from "./shared/store";
 
 browser.runtime.onInstalled.addListener(async (details) => {
@@ -55,6 +58,9 @@ chrome.runtime.onMessage.addListener(
         notifyError(
           message.data || ("예기치 못한 에러가 발생했습니다" as string)
         );
+        break;
+      case "ParseUsedReferenceData":
+        parseUsedReferenceData(sendResponse);
         break;
       default:
         break;

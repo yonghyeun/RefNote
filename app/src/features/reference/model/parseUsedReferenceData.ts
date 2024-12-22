@@ -52,6 +52,7 @@ export const parseUsedReferenceData = async (
             title,
             isWritten: true,
             isUsed: true,
+            faviconUrl: undefined,
           };
         });
       },

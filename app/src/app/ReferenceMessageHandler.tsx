@@ -39,9 +39,59 @@ export const ReferenceMessageHandler = () => {
         });
       }
     };
+    /**
+     * 해당 메시지 리스너는 autoConverting.ts 가 삽입 된 후 글에 이미 작성 되어 있는 referenceData의 정보를 가져와
+     * chrome.storage.sync에 저장하는 역할을 합니다.
+     * 이 때 기존 attachedReferenceData의 데이터는 모두 unAttachedReferenceData로 변경됩니다.
+     */
+    const handleUpdateAttachedReferenceData = (
+      { message, data }: RequestMessage<AttachedReferenceData[]>,
+      _sender: chrome.runtime.MessageSender,
+      sendResponse: (response: ResponseMessage) => void
+    ) => {
+      if (message === "UpdateAttachedReferenceData") {
+        setChromeStorage((prev) => {
+          const { reference, ...rest } = prev;
+
+          const attachedReferenceData = reference.filter(
+            (data): data is AttachedReferenceData => data.isWritten
+          );
+
+          // 업데이트 할 때에는 data에 없는 attachedReferenceData만 unAttachedReferenceData로 변경합니다.
+          // attachedReferenceData는 모두 메시지로 받은 data의 값으로 변경 합니다.
+
+          const unAttachedReferenceData = reference
+            .filter(({ isWritten }) => !isWritten)
+            .concat(
+              attachedReferenceData
+                .filter(({ url }) =>
+                  data.every(({ url: dataUrl }) => url !== dataUrl)
+                )
+                .map(({ id, isUsed, ...item }) => ({
+                  ...item,
+                  isWritten: false,
+                }))
+            );
+
+          return {
+            ...rest,
+            reference: [...unAttachedReferenceData, ...data],
+          };
+        });
+
+        sendResponse({
+          status: "ok",
+          data: null,
+        });
+      }
+    };
     chrome.runtime.onMessage.addListener(handleConvertProcessDone);
+    chrome.runtime.onMessage.addListener(handleUpdateAttachedReferenceData);
     return () => {
       chrome.runtime.onMessage.removeListener(handleConvertProcessDone);
+      chrome.runtime.onMessage.removeListener(
+        handleUpdateAttachedReferenceData
+      );
     };
   }, []);
 

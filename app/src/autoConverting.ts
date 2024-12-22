@@ -31,6 +31,30 @@ const sendConvertReferenceMessage = (event: KeyboardEvent) => {
   }, 500);
 };
 
+const parseUsedReferenceData = async () => {
+  const { status, data } = await chrome.runtime.sendMessage({
+    message: "ParseUsedReferenceData",
+  });
+
+  if (status !== "ok") {
+    chrome.runtime.sendMessage({
+      message: "NotifyError",
+      data,
+    });
+  }
+
+  if (data.length === 0) {
+    return;
+  }
+
+  await chrome.runtime.sendMessage({
+    message: "UpdateAttachedReferenceData",
+    data,
+  });
+};
+
+parseUsedReferenceData();
+
 chrome.runtime.onMessage.addListener((message) => {
   if (message.message === "SetAutoConverting") {
     if (message.data === "on") {
