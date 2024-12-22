@@ -33,6 +33,7 @@ declare global {
     reference: ReferenceData[];
     autoConverting: boolean;
     isDarkMode: boolean;
+    unAttachedIsVisible: boolean;
   }
 
   interface Tab extends chrome.tabs.Tab {

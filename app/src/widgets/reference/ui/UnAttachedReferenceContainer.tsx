@@ -2,6 +2,7 @@ import { useState } from "react";
 import styles from "./reference.module.css";
 import { UnAttachedReferenceList } from "@/features/reference/ui";
 import { Button } from "@/shared/ui/button";
+import { useChromeStorage } from "@/shared/store";
 
 interface UnAttachedReferenceContainerProps {
   unAttachedReferenceList: UnAttachedReferenceData[];
@@ -10,12 +11,14 @@ interface UnAttachedReferenceContainerProps {
 export const UnAttachedReferenceContainer = ({
   unAttachedReferenceList,
 }: UnAttachedReferenceContainerProps) => {
-  const [unAttachedReferenceListVisible, setUnAttachedReferenceListVisible] =
-    useState<boolean>(false);
+  const {
+    chromeStorage: { unAttachedIsVisible },
+    setChromeStorage,
+  } = useChromeStorage();
 
   return (
     <section
-      className={`${styles.referenceContainer} ${unAttachedReferenceListVisible ? "" : styles.folded}`}
+      className={`${styles.referenceContainer} ${unAttachedIsVisible ? "" : styles.folded}`}
     >
       <div>
         <h2>
@@ -24,14 +27,17 @@ export const UnAttachedReferenceContainer = ({
         </h2>
         <Button
           onClick={() => {
-            setUnAttachedReferenceListVisible((prev) => !prev);
+            setChromeStorage((prev) => ({
+              ...prev,
+              unAttachedIsVisible: !unAttachedIsVisible,
+            }));
           }}
           className={styles.foldButton}
         >
-          {unAttachedReferenceListVisible ? "접기" : "펼치기"}
+          {unAttachedIsVisible ? "접기" : "펼치기"}
         </Button>
       </div>
-      {unAttachedReferenceListVisible && (
+      {unAttachedIsVisible && (
         <UnAttachedReferenceList
           unAttachedReferenceList={unAttachedReferenceList}
         />
