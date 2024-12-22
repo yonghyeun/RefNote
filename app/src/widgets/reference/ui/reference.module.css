@@ -1,0 +1,29 @@
+.referenceContainer {
+  display: flex;
+  flex-direction: column;
+  height: 50%;
+}
+
+.referenceContainer > ul {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow-y: scroll;
+}
+
+.referenceContainer > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.referenceContainer > div:nth-child(1) {
+  margin-bottom: 0.5rem;
+}
+
+.referenceContainer h2 > span {
+  font-size: 0.8rem;
+  color: #a0a0a0;
+  margin-left: 4px;
+}
