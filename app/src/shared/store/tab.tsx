@@ -1,29 +1,67 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-const TabContext = createContext<chrome.tabs.Tab | null>(null);
+type Tab = chrome.tabs.Tab & {
+  id: number;
+  url: string;
+};
+
+const TabContext = createContext<Tab | null>(null);
 
 interface TabProviderProps {
   children: React.ReactNode;
 }
 
 export const TabProvider = ({ children }: TabProviderProps) => {
-  const [tab, setTab] = useState<chrome.tabs.Tab | null>(null);
+  const [tab, setTab] = useState<Tab | null>(null);
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-      setTab(tab);
+      try {
+        if (!tab || !tab.id || !tab.url) {
+          throw new Error("현재 탭의 정보를 가져올 수 없습니다.");
+        }
+        setTab(tab as Tab);
+      } catch (error) {
+        chrome.runtime.sendMessage({
+          message: "NotifyError",
+          data: (error as Error).message,
+        });
+        setTab(null);
+      }
     });
 
     const handleHistoryUpdate = (_tabId: number, changeInfo: any, tab: any) => {
       if (changeInfo.status === "complete") {
-        setTab(tab);
+        try {
+          if (!tab || !tab.id || !tab.url) {
+            throw new Error("현재 탭의 정보를 가져올 수 없습니다.");
+          }
+          setTab(tab as Tab);
+        } catch (error) {
+          chrome.runtime.sendMessage({
+            message: "NotifyError",
+            data: (error as Error).message,
+          });
+          setTab(null);
+        }
       }
     };
 
     const handleWindowUpdate = async ({ tabId }: chrome.tabs.TabActiveInfo) => {
       const tab = await chrome.tabs.get(tabId);
       if (tab.status === "complete") {
-        setTab(tab);
+        try {
+          if (!tab || !tab.id || !tab.url) {
+            throw new Error("현재 탭의 정보를 가져올 수 없습니다.");
+          }
+          setTab(tab as Tab);
+        } catch (error) {
+          chrome.runtime.sendMessage({
+            message: "NotifyError",
+            data: (error as Error).message,
+          });
+          setTab(null);
+        }
       }
     };
 
