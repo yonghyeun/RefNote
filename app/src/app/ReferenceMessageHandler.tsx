@@ -53,29 +53,22 @@ export const ReferenceMessageHandler = () => {
         setChromeStorage((prev) => {
           const { reference, ...rest } = prev;
 
-          const attachedReferenceData = reference.filter(
-            (data): data is AttachedReferenceData => data.isWritten
-          );
+          // 업데이트 할 때에는 모든 데이터를 unAttachedReferenceData로 변경합니다.
 
-          // 업데이트 할 때에는 data에 없는 attachedReferenceData만 unAttachedReferenceData로 변경합니다.
-          // attachedReferenceData는 모두 메시지로 받은 data의 값으로 변경 합니다.
-
-          const unAttachedReferenceData = reference
-            .filter(({ isWritten }) => !isWritten)
-            .concat(
-              attachedReferenceData
+          const updatedPrevReferenceData: UnAttachedReferenceData[] = reference
                 .filter(({ url }) =>
                   data.every(({ url: dataUrl }) => url !== dataUrl)
                 )
-                .map(({ id, isUsed, ...item }) => ({
-                  ...item,
+            .map(({ title, url, faviconUrl }) => ({
+              title,
+              url,
+              faviconUrl,
                   isWritten: false,
-                }))
-            );
+            }));
 
           return {
             ...rest,
-            reference: [...unAttachedReferenceData, ...data],
+            reference: [...updatedPrevReferenceData, ...data],
           };
         });
 
