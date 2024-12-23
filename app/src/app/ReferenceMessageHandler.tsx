@@ -1,8 +1,9 @@
 import { useChromeStorage } from "@/shared/store";
 import { useEffect, useState } from "react";
 
+// TODO 백그라운드로 로직 옮기기
 export const ReferenceMessageHandler = () => {
-  const { chromeStorage, setChromeStorage } = useChromeStorage();
+  const { setChromeStorage } = useChromeStorage();
   const [prevUsedReferenceIds, setPrevUsedReferenceIds] = useState<number[]>(
     []
   );
@@ -44,30 +45,35 @@ export const ReferenceMessageHandler = () => {
      * chrome.storage.sync에 저장하는 역할을 합니다.
      * 이 때 기존 attachedReferenceData의 데이터는 모두 unAttachedReferenceData로 변경됩니다.
      */
-    const handleUpdateAttachedReferenceData = (
+    const handleUpdateAttachedReferenceData = async (
       { message, data }: RequestMessage<AttachedReferenceData[]>,
       _sender: chrome.runtime.MessageSender
     ) => {
       if (message === "UpdateAttachedReferenceData") {
+        // 출처가 사용 된 게시글이 존재하지 않고
+        // AttachedReferenceData에서 isUsed가 하나라도 있는 경우엔 AttachedReferenceData의 isUsed를 false로 변경합니다.
+
+        const { reference } = (await chrome.storage.sync.get(
+          "reference"
+        )) as ChromeStorage;
+
         if (data.length === 0) {
           if (
-            chromeStorage.reference
+            reference
               .filter((data) => data.isWritten)
-              .every(({ isUsed }) => !isUsed)
+              .some(({ isUsed }) => isUsed)
           ) {
-            return;
+            setChromeStorage((prev) => {
+              const { reference, ...rest } = prev;
+              return {
+                ...rest,
+                reference: reference.map((item) =>
+                  item.isWritten ? { ...item, isUsed: false } : item
+                ),
+              };
+            });
           }
 
-          setChromeStorage((prev) => {
-            const { reference, ...rest } = prev;
-
-            return {
-              ...rest,
-              reference: reference.map((item) =>
-                item.isWritten ? { ...item, isUsed: false } : item
-              ),
-            };
-          });
           return;
         }
 
