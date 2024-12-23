@@ -246,7 +246,7 @@ export const ReferenceItem = (props: ReferenceItemProps) => {
               <span className={styles.writtenId}>
                 <span
                   className={`${styles.check}
-                  ${isVelogWritePage && props.isUsed ? "" : styles.unVisible}
+                  ${isVelogWritePage && props.isUsed ? "" : styles.inVisible}
                   `}
                 >
                   ✔
