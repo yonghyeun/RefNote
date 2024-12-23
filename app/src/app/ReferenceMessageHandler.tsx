@@ -2,7 +2,7 @@ import { useChromeStorage } from "@/shared/store";
 import { useEffect, useState } from "react";
 
 export const ReferenceMessageHandler = () => {
-  const { setChromeStorage } = useChromeStorage();
+  const { chromeStorage, setChromeStorage } = useChromeStorage();
   const [prevUsedReferenceIds, setPrevUsedReferenceIds] = useState<number[]>(
     []
   );
@@ -46,35 +46,51 @@ export const ReferenceMessageHandler = () => {
      */
     const handleUpdateAttachedReferenceData = (
       { message, data }: RequestMessage<AttachedReferenceData[]>,
-      _sender: chrome.runtime.MessageSender,
-      sendResponse: (response: ResponseMessage) => void
+      _sender: chrome.runtime.MessageSender
     ) => {
       if (message === "UpdateAttachedReferenceData") {
+        if (data.length === 0) {
+          if (
+            chromeStorage.reference
+              .filter((data) => data.isWritten)
+              .every(({ isUsed }) => !isUsed)
+          ) {
+            return;
+          }
+
+          setChromeStorage((prev) => {
+            const { reference, ...rest } = prev;
+
+            return {
+              ...rest,
+              reference: reference.map((item) =>
+                item.isWritten ? { ...item, isUsed: false } : item
+              ),
+            };
+          });
+          return;
+        }
+
         setChromeStorage((prev) => {
           const { reference, ...rest } = prev;
 
           // 업데이트 할 때에는 모든 데이터를 unAttachedReferenceData로 변경합니다.
 
           const updatedPrevReferenceData: UnAttachedReferenceData[] = reference
-                .filter(({ url }) =>
-                  data.every(({ url: dataUrl }) => url !== dataUrl)
-                )
+            .filter(({ url }) =>
+              data.every(({ url: dataUrl }) => url !== dataUrl)
+            )
             .map(({ title, url, faviconUrl }) => ({
               title,
               url,
               faviconUrl,
-                  isWritten: false,
+              isWritten: false,
             }));
 
           return {
             ...rest,
             reference: [...updatedPrevReferenceData, ...data],
           };
-        });
-
-        sendResponse({
-          status: "ok",
-          data: null,
         });
       }
     };

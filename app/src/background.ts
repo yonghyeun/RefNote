@@ -95,3 +95,27 @@ chrome.action.onClicked.addListener(async (tab) => {
     );
   }
 });
+
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  if (changeInfo.status !== "complete") {
+    return;
+  }
+
+  if (!tab || !tab.id || !tab.url) {
+    return;
+  }
+
+  if (tab.url.includes("https://velog.io/write")) {
+    // 사이드 패널이 열려있지 않은 경우에는 오류가 발생하기에
+    // try-catch 문으로 감싸줍니다.
+    try {
+      const { data } = await chrome.tabs.sendMessage(tabId, {
+        message: "ParseUsedReferenceData",
+      });
+      await chrome.runtime.sendMessage({
+        message: "UpdateAttachedReferenceData",
+        data,
+      });
+    } catch (e) {}
+  }
+});
