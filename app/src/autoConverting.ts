@@ -1,4 +1,19 @@
 let timer: ReturnType<typeof setTimeout> | null = null;
+
+const parseUsedReferenceData = () => {
+  const references: HTMLAnchorElement[] = Array.from(
+    document.querySelectorAll("li > a")
+  );
+  return references.map(({ href, textContent }, idx) => ({
+    id: idx + 1,
+    url: href,
+    title: textContent,
+    isWritten: true,
+    isUsed: true,
+    faviconUrl: undefined,
+  }));
+};
+
 const sendConvertReferenceMessage = (event: KeyboardEvent) => {
   // 눌린키가 유효한 키인지 확인 , 방향키나 meta 키 등 포함하지 아니함
   if (
@@ -31,37 +46,22 @@ const sendConvertReferenceMessage = (event: KeyboardEvent) => {
   }, 500);
 };
 
-const parseUsedReferenceData = async () => {
-  const { status, data } = await chrome.runtime.sendMessage({
-    message: "ParseUsedReferenceData",
-  });
-
-  if (status !== "ok") {
-    chrome.runtime.sendMessage({
-      message: "NotifyError",
-      data,
-    });
-  }
-
-  if (data.length === 0) {
-    return;
-  }
-
-  await chrome.runtime.sendMessage({
-    message: "UpdateAttachedReferenceData",
-    data,
-  });
-};
-
-parseUsedReferenceData();
-
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.message === "SetAutoConverting") {
-    if (message.data === "on") {
-      window.addEventListener("keyup", sendConvertReferenceMessage);
-    } else {
-      window.removeEventListener("keyup", sendConvertReferenceMessage);
+chrome.runtime.onMessage.addListener(
+  ({ message, data }, _sender, sendResponse) => {
+    if (message === "SetAutoConverting") {
+      if (data === "on") {
+        window.addEventListener("keyup", sendConvertReferenceMessage);
+      } else {
+        window.removeEventListener("keyup", sendConvertReferenceMessage);
+      }
+      sendResponse({ status: "ok" });
     }
-    return { status: "ok" };
+
+    if (message === "ParseUsedReferenceData") {
+      sendResponse({
+        status: "ok",
+        data: parseUsedReferenceData(),
+      });
+    }
   }
-});
+);
