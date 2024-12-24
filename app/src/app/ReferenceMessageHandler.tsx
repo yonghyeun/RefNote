@@ -1,12 +1,15 @@
-import { useChromeStorage } from "@/shared/store";
+import { useChromeStorage, useTab } from "@/shared/store";
 import { useEffect, useState } from "react";
+import { sendMessageToTab } from "@/shared/lib";
 
-// TODO 백그라운드로 로직 옮기기
 export const ReferenceMessageHandler = () => {
-  const { setChromeStorage } = useChromeStorage();
+  const { chromeStorage, setChromeStorage } = useChromeStorage();
   const [prevUsedReferenceIds, setPrevUsedReferenceIds] = useState<number[]>(
     []
   );
+  const { reference } = chromeStorage;
+
+  const tab = useTab();
 
   useEffect(() => {
     /**
@@ -45,35 +48,58 @@ export const ReferenceMessageHandler = () => {
      * chrome.storage.sync에 저장하는 역할을 합니다.
      * 이 때 기존 attachedReferenceData의 데이터는 모두 unAttachedReferenceData로 변경됩니다.
      */
-    const handleUpdateAttachedReferenceData = async (
-      { message, data }: RequestMessage<AttachedReferenceData[]>,
-      _sender: chrome.runtime.MessageSender
-    ) => {
-      if (message === "UpdateAttachedReferenceData") {
-        // 출처가 사용 된 게시글이 존재하지 않고
-        // AttachedReferenceData에서 isUsed가 하나라도 있는 경우엔 AttachedReferenceData의 isUsed를 false로 변경합니다.
+    chrome.runtime.onMessage.addListener(handleConvertProcessDone);
+    return () => {
+      chrome.runtime.onMessage.removeListener(handleConvertProcessDone);
+    };
+  }, []);
 
-        const { reference } = (await chrome.storage.sync.get(
-          "reference"
-        )) as ChromeStorage;
+  /**
+   * 해당 이펙트는 벨로그 글 쓰기 페이지에서 콘텐트 스크립트에게 보내는
+   * 메시지들을 담고 있습니다.
+   */
+  useEffect(() => {
+    (async function () {
+      if (!tab || !tab.url.includes("https://velog.io/write")) {
+        return;
+      }
 
+      const sendParseUsedReferenceData = () =>
+        sendMessageToTab<AttachedReferenceData[]>(tab.id, {
+          message: "ParseUsedReferenceData",
+        });
+
+      const attachedReferenceList = reference.filter((data) => data.isWritten);
+
+      let data: AttachedReferenceData[] = [];
+      try {
+        data = await sendParseUsedReferenceData();
+      } catch (error) {
+        try {
+          data = await new Promise<AttachedReferenceData[]>((resolve) => {
+            setTimeout(() => sendParseUsedReferenceData().then(resolve), 500);
+          });
+        } catch (error) {
+          chrome.runtime.sendMessage({
+            message: "NotifyError",
+            data: (error as Error).message,
+          });
+        }
+      } finally {
         if (data.length === 0) {
-          if (
-            reference
-              .filter((data) => data.isWritten)
-              .some(({ isUsed }) => isUsed)
-          ) {
-            setChromeStorage((prev) => {
-              const { reference, ...rest } = prev;
-              return {
-                ...rest,
-                reference: reference.map((item) =>
-                  item.isWritten ? { ...item, isUsed: false } : item
-                ),
-              };
-            });
+          if (attachedReferenceList.every((reference) => !reference.isUsed)) {
+            return;
           }
-
+          setChromeStorage(({ reference, ...rest }) => {
+            return {
+              ...rest,
+              reference: reference.map((referenceData) =>
+                referenceData.isWritten
+                  ? { ...referenceData, isUsed: false }
+                  : referenceData
+              ),
+            };
+          });
           return;
         }
 
@@ -99,16 +125,8 @@ export const ReferenceMessageHandler = () => {
           };
         });
       }
-    };
-    chrome.runtime.onMessage.addListener(handleConvertProcessDone);
-    chrome.runtime.onMessage.addListener(handleUpdateAttachedReferenceData);
-    return () => {
-      chrome.runtime.onMessage.removeListener(handleConvertProcessDone);
-      chrome.runtime.onMessage.removeListener(
-        handleUpdateAttachedReferenceData
-      );
-    };
-  }, []);
+    })();
+  }, [tab]);
 
   return null;
 };
