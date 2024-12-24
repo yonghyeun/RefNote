@@ -1,4 +1,4 @@
-import { ReferenceItem } from "./ReferenceItem";
+import { UnAttachedReferenceItem } from "./ReferenceItem";
 import { useState } from "react";
 import styles from "./styles.module.css";
 
@@ -15,7 +15,7 @@ export const UnAttachedReferenceList = ({
     <ul className={styles.referenceList}>
       {unAttachedReferenceList.map((reference, idx) => (
         <li key={idx}>
-          <ReferenceItem
+          <UnAttachedReferenceItem
             {...reference}
             isActive={activeUrl === reference.url}
             onClick={() => {
