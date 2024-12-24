@@ -43,11 +43,7 @@ export const ReferenceMessageHandler = () => {
         });
       }
     };
-    /**
-     * 해당 메시지 리스너는 autoConverting.ts 가 삽입 된 후 글에 이미 작성 되어 있는 referenceData의 정보를 가져와
-     * chrome.storage.sync에 저장하는 역할을 합니다.
-     * 이 때 기존 attachedReferenceData의 데이터는 모두 unAttachedReferenceData로 변경됩니다.
-     */
+
     chrome.runtime.onMessage.addListener(handleConvertProcessDone);
     return () => {
       chrome.runtime.onMessage.removeListener(handleConvertProcessDone);
@@ -57,6 +53,11 @@ export const ReferenceMessageHandler = () => {
   /**
    * 해당 이펙트는 벨로그 글 쓰기 페이지에서 콘텐트 스크립트에게 보내는
    * 메시지들을 담고 있습니다.
+   *
+   * 다뤄지는 로직
+   * 1. ParseUsedReferenceData 메시지를 보내어 사용된 referenceData를 파싱합니다.
+   * 이 때 사용 된 데이터가 존재하지 않는 경우엔 기존 AttachedReferenceData의 isUsed를 false로 변경합니다.
+   * 만약 사용 된 데이터가 존재 한다면 해당 데이터들을 AttachedReferenceData로, 기존의 AttachedReferenceData는 UnAttachedReferenceData로 변경합니다.
    */
   useEffect(() => {
     (async function () {
