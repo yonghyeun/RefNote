@@ -65,3 +65,7 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
+
+chrome.runtime.onConnect.addListener((port) => {
+  console.log("connected ", port);
+});
