@@ -7,7 +7,6 @@ export const sendMessageToTab = async <T = undefined>(
       tabId,
       message,
       (response) => {
-        console.log(response);
         if (chrome.runtime.lastError || !response) {
           reject(chrome.runtime.lastError?.message || "응답이 없습니다.");
           return;
