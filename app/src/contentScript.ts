@@ -48,10 +48,6 @@ const sendConvertReferenceMessage = (event: KeyboardEvent) => {
 
 chrome.runtime.onMessage.addListener(
   ({ message, data }, _sender, sendResponse) => {
-    if (message === "KnockKnock") {
-      sendResponse({ status: "ok" });
-    }
-
     if (message === "SetAutoConverting") {
       if (data === "on") {
         window.addEventListener("keyup", sendConvertReferenceMessage);
