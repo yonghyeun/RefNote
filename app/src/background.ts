@@ -1,6 +1,7 @@
 import browser from "webextension-polyfill";
 import { convertNumberToReference } from "./features/reference/model";
 import { chromeStorageInitialValue } from "./shared/store";
+import { checkContentScriptInjected } from "./shared/lib";
 
 browser.runtime.onInstalled.addListener(async (details) => {
   if (process.env.NODE_ENV === "development") {
@@ -96,7 +97,7 @@ chrome.action.onClicked.addListener(async (tab) => {
   }
 });
 
-chrome.tabs.onUpdated.addListener(async (_tabId, changeInfo, tab) => {
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (changeInfo.status !== "complete") {
     return;
   }
@@ -106,6 +107,25 @@ chrome.tabs.onUpdated.addListener(async (_tabId, changeInfo, tab) => {
   }
 
   if (tab.url.includes("https://velog.io/write")) {
-    chrome.tabs.connect(tab.id);
+    try {
+      const { status, message } = await checkContentScriptInjected(tabId);
+      if (status !== "ok") {
+        throw new Error(message);
+      }
+
+      const { data } = await chrome.tabs.sendMessage(tabId, {
+        message: "ParseUsedReferenceData",
+      });
+
+      chrome.runtime.sendMessage({
+        message: "UpdateAttachedReferenceData",
+        data,
+      });
+    } catch (error) {
+      chrome.runtime.sendMessage({
+        message: "NotifyError",
+        data: (error as Error).message,
+      });
+    }
   }
 });
