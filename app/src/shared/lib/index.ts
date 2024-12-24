@@ -1,2 +1,2 @@
 export * from "./tab";
-export * from "./checkContentScriptInjected";
+export * from "./message";
