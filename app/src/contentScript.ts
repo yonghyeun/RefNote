@@ -1,4 +1,5 @@
 let timer: ReturnType<typeof setTimeout> | null = null;
+
 const sendConvertReferenceMessage = (event: KeyboardEvent) => {
   // 눌린키가 유효한 키인지 확인 , 방향키나 meta 키 등 포함하지 아니함
   if (
@@ -31,13 +32,15 @@ const sendConvertReferenceMessage = (event: KeyboardEvent) => {
   }, 500);
 };
 
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.message === "SetAutoConverting") {
-    if (message.data === "on") {
-      window.addEventListener("keyup", sendConvertReferenceMessage);
-    } else {
-      window.removeEventListener("keyup", sendConvertReferenceMessage);
+chrome.runtime.onMessage.addListener(
+  ({ message, data }, _sender, sendResponse) => {
+    if (message === "SetAutoConverting") {
+      if (data === "on") {
+        window.addEventListener("keyup", sendConvertReferenceMessage);
+      } else {
+        window.removeEventListener("keyup", sendConvertReferenceMessage);
+      }
+      sendResponse({ status: "ok" });
     }
-    return { status: "ok" };
   }
-});
+);

@@ -1,5 +1,8 @@
 import browser from "webextension-polyfill";
-import { convertNumberToReference } from "./features/reference/model";
+import {
+  convertNumberToReference,
+  parseUsedReferenceArray,
+} from "./features/reference/model";
 import { chromeStorageInitialValue } from "./shared/store";
 
 browser.runtime.onInstalled.addListener(async (details) => {
@@ -42,7 +45,7 @@ const notifyError = (message: string) => {
 };
 
 chrome.runtime.onMessage.addListener(
-  (message: RequestMessage, _sender, sendResponse) => {
+  (message: RequestMessage<any>, _sender, sendResponse) => {
     /**
      * 비동기 메시지 핸들러의 경우 핸들러 응답값에 따라 response 를 보내는 고차 함수 입니다.
      */
@@ -52,9 +55,10 @@ chrome.runtime.onMessage.addListener(
         convertNumberToReference(sendResponse);
         break;
       case "NotifyError":
-        notifyError(
-          message.data || ("예기치 못한 에러가 발생했습니다" as string)
-        );
+        notifyError(message.data as string);
+        break;
+      case "ParseUsedReferenceArray":
+        parseUsedReferenceArray(message.data as number, sendResponse);
         break;
       default:
         break;

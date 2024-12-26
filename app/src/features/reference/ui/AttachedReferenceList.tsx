@@ -1,5 +1,5 @@
 import { useTab } from "@/shared/store";
-import { ReferenceItem } from "./ReferenceItem";
+import { AttachedReferenceItem } from "./ReferenceItem";
 import { useEffect, useState } from "react";
 import { sendConvertReferenceMessage } from "../model";
 import styles from "./styles.module.css";
@@ -27,7 +27,7 @@ export const AttachedReferenceList = ({
         .sort((prev, cur) => prev.id - cur.id)
         .map((reference, idx) => (
           <li key={idx}>
-            <ReferenceItem
+            <AttachedReferenceItem
               {...reference}
               isActive={activeUrl === reference.url}
               onClick={() => {

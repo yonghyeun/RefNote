@@ -221,47 +221,18 @@ const Container = ({ children }: { children: React.ReactNode }) => (
   <section className={styles.container}>{children}</section>
 );
 
-type ReferenceItemProps = ReferenceData & {
+type ReferenceItemProps<T extends ReferenceData> = T & {
   isActive: boolean;
   onClick: () => void;
 };
 
-export const ReferenceItem = (props: ReferenceItemProps) => {
-  const { title, faviconUrl, url, isWritten, isActive, onClick } = props;
-  const tab = useTab();
-  const isVelogWritePage = tab?.url.includes("velog.io/write");
-
-  if (isWritten) {
-    return (
-      <Container>
-        <div>
-          <Content onClick={onClick}>
-            {faviconUrl ? (
-              <Favicon faviconUrl={faviconUrl} />
-            ) : (
-              <DefaultFavicon />
-            )}
-            <div className={styles.writtenTitleContainer}>
-              <Title>{title}</Title>
-              <span className={styles.writtenId}>
-                <span
-                  className={`${styles.check}
-                  ${isVelogWritePage && props.isUsed ? "" : styles.unVisible}
-                  `}
-                >
-                  ✔
-                </span>
-                [{props.id}]
-              </span>
-            </div>
-          </Content>
-          <EraseButton title={title} id={props.id} />
-          <RemoveButton title={title} />
-        </div>
-        {isActive && <ClickedItem url={url} title={title} />}
-      </Container>
-    );
-  }
+export const UnAttachedReferenceItem = ({
+  isActive,
+  onClick,
+  faviconUrl,
+  title,
+  url,
+}: ReferenceItemProps<UnAttachedReferenceData>) => {
   return (
     <Container>
       <div>
@@ -274,6 +245,49 @@ export const ReferenceItem = (props: ReferenceItemProps) => {
           <Title>{title}</Title>
         </Content>
         <WriteButton title={title} />
+        <RemoveButton title={title} />
+      </div>
+      {isActive && <ClickedItem url={url} title={title} />}
+    </Container>
+  );
+};
+
+export const AttachedReferenceItem = ({
+  onClick,
+  isActive,
+  faviconUrl,
+  title,
+  url,
+  id,
+  isUsed,
+}: ReferenceItemProps<AttachedReferenceData>) => {
+  const tab = useTab();
+  const isVelogWritePage = tab?.url.includes("velog.io/write");
+
+  return (
+    <Container>
+      <div>
+        <Content onClick={onClick}>
+          {faviconUrl ? (
+            <Favicon faviconUrl={faviconUrl} />
+          ) : (
+            <DefaultFavicon />
+          )}
+          <div className={styles.writtenTitleContainer}>
+            <Title>{title}</Title>
+            <span className={styles.writtenId}>
+              <span
+                className={`${styles.check}
+              ${isVelogWritePage && isUsed ? "" : styles.inVisible}
+              `}
+              >
+                ✔
+              </span>
+              [{id}]
+            </span>
+          </div>
+        </Content>
+        <EraseButton title={title} id={id} />
         <RemoveButton title={title} />
       </div>
       {isActive && <ClickedItem url={url} title={title} />}

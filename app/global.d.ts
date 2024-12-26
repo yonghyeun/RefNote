@@ -14,14 +14,14 @@ declare global {
   interface UnAttachedReferenceData {
     title: string;
     url: string;
-    faviconUrl: string;
+    faviconUrl?: string;
     isWritten: false;
   }
 
   interface AttachedReferenceData {
     title: string;
     url: string;
-    faviconUrl: string;
+    faviconUrl?: string;
     isWritten: true;
     id: number;
     isUsed: boolean;

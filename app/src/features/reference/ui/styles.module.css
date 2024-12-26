@@ -89,7 +89,7 @@
   gap: 4px;
 }
 
-.writtenId .unVisible {
+.writtenId .inVisible {
   visibility: hidden;
 }
 

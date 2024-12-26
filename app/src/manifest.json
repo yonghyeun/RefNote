@@ -25,7 +25,7 @@
   "content_scripts": [
     {
       "matches": ["https://velog.io/write*"],
-      "js": ["src/autoConverting.ts"]
+      "js": ["src/contentScript.ts"]
     }
   ],
   "host_permissions": ["https://velog.io/*"]
