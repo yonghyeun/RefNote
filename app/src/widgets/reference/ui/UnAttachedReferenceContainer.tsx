@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styles from "./reference.module.css";
 import { UnAttachedReferenceList } from "@/features/reference/ui";
 import { Button } from "@/shared/ui/button";

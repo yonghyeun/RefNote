@@ -66,10 +66,12 @@ export const ReferenceMessageHandler = () => {
       }
 
       const usedAttachedReferenceDataArray = await sendMessageToBackground<
-        AttachedReferenceData[]
+        AttachedReferenceData[],
+        number
       >({
         message: "ParseUsedReferenceArray",
         data: tab.id,
+        tab,
       });
 
       // 만약 사용 된 데이터가 없고 attachedReferenceData 모두 isUsed가 false 라면

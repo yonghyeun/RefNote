@@ -1,10 +1,9 @@
 export {};
 
 declare global {
-  interface RequestMessage<T extends unknown = undefined> {
-    message: string;
-    data: T;
-  }
+  type RequestMessage<T = undefined> = T extends undefined
+    ? { message: string; tab: Tab }
+    : { message: string; tab: Tab; data: T };
 
   interface ResponseMessage<R = unknown> {
     status: "ok" | "error";

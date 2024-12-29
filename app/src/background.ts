@@ -45,7 +45,7 @@ const notifyError = (message: string) => {
 };
 
 chrome.runtime.onMessage.addListener(
-  (message: RequestMessage<any>, _sender, sendResponse) => {
+  (message: RequestMessage<unknown>, _sender, sendResponse) => {
     /**
      * 비동기 메시지 핸들러의 경우 핸들러 응답값에 따라 response 를 보내는 고차 함수 입니다.
      */
