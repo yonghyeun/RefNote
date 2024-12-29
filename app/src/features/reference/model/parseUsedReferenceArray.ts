@@ -1,5 +1,5 @@
 export const parseUsedReferenceArray = async (
-  tabId: number,
+  { id: tabId }: Tab,
   sendResponse: (response: unknown) => void
 ) => {
   const [result] = await chrome.scripting.executeScript({

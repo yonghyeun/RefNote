@@ -17,8 +17,8 @@ export const sendMessageToTab = async <T = undefined>(
   });
 };
 
-export const sendMessageToBackground = async <T = undefined>(
-  message: RequestMessage<number>
+export const sendMessageToBackground = async <T = void, K = undefined>(
+  message: RequestMessage<K>
 ) => {
   return new Promise<T>((resolve, reject) => {
     chrome.runtime.sendMessage(message, (response) => {

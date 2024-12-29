@@ -1,8 +1,8 @@
 import { useTab } from "@/shared/store";
 import { AttachedReferenceItem } from "./ReferenceItem";
 import { useEffect, useState } from "react";
-import { sendConvertReferenceMessage } from "../model";
 import styles from "./styles.module.css";
+import { sendMessageToBackground } from "@/shared/lib";
 
 interface AttachedReferenceListProps {
   attachedReferenceList: AttachedReferenceData[];
@@ -15,11 +15,33 @@ export const AttachedReferenceList = ({
   const tab = useTab();
 
   useEffect(() => {
-    if (!tab?.url?.includes("https://velog.io/write")) {
-      return;
-    }
-    sendConvertReferenceMessage();
-  }, [attachedReferenceList]);
+    (async () => {
+      if (!tab || !tab.url.includes("https://velog.io/write")) {
+        return;
+      }
+
+      try {
+        const attachedReferenceList = await sendMessageToBackground<
+          AttachedReferenceData[]
+        >({
+          message: "ConvertToReference",
+          tab,
+        });
+
+        sendMessageToBackground<void, AttachedReferenceData[]>({
+          message: "NotifyConvertProcessSuccess",
+          data: attachedReferenceList,
+          tab,
+        });
+      } catch (error) {
+        sendMessageToBackground({
+          message: "NotifyError",
+          data: (error as Error).message,
+          tab,
+        });
+      }
+    })();
+  }, [attachedReferenceList, tab]);
 
   return (
     <ul className={styles.referenceList}>
