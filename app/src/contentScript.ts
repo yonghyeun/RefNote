@@ -16,7 +16,6 @@ const sendConvertReferenceMessage = (event: KeyboardEvent) => {
   ) {
     return;
   }
-
   if (timer) {
     clearTimeout(timer);
   }
@@ -24,16 +23,18 @@ const sendConvertReferenceMessage = (event: KeyboardEvent) => {
     const { status, data } = await chrome.runtime.sendMessage({
       message: "ConvertToReference",
     });
-
     chrome.runtime.sendMessage({
       message: status === "ok" ? "NotifyConvertProcessSuccess" : "NotifyError",
       data,
     });
   }, 500);
 };
-
 chrome.runtime.onMessage.addListener(
   ({ message, data }, _sender, sendResponse) => {
+    console.group("RefNote: contentScript.ts 가 메시지를 수신했습니다.");
+    console.table({ message, data });
+    console.groupEnd();
+
     if (message === "SetAutoConverting") {
       if (data === "on") {
         window.addEventListener("keyup", sendConvertReferenceMessage);
