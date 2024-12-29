@@ -20,8 +20,18 @@ const sendConvertReferenceMessage = (event: KeyboardEvent) => {
     clearTimeout(timer);
   }
   timer = setTimeout(async () => {
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+
+    if (!tab.id) {
+      return;
+    }
+
     const { status, data } = await chrome.runtime.sendMessage({
       message: "ConvertToReference",
+      tab,
     });
     chrome.runtime.sendMessage({
       message: status === "ok" ? "NotifyConvertProcessSuccess" : "NotifyError",

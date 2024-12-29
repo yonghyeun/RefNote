@@ -52,7 +52,7 @@ chrome.runtime.onMessage.addListener(
 
     switch (message.message) {
       case "ConvertToReference":
-        convertNumberToReference(sendResponse);
+        convertNumberToReference(message.tab, sendResponse);
         break;
       case "NotifyError":
         notifyError(message.data as string);

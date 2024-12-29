@@ -17,7 +17,7 @@ export const sendMessageToTab = async <T = undefined>(
   });
 };
 
-export const sendMessageToBackground = async <T = undefined, K = undefined>(
+export const sendMessageToBackground = async <T = void, K = undefined>(
   message: RequestMessage<K>
 ) => {
   return new Promise<T>((resolve, reject) => {
