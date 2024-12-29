@@ -26,7 +26,10 @@ browser.runtime.onInstalled.addListener(async (details) => {
   });
 });
 
-const notifyError = (message: string) => {
+const notifyError = (
+  message: string,
+  sendResponse: (response: any) => void
+) => {
   chrome.notifications.create(
     "alarm",
     {
@@ -37,6 +40,11 @@ const notifyError = (message: string) => {
       silent: true,
     },
     () => {
+      const { lastError } = chrome.runtime;
+      sendResponse({
+        status: lastError ? "error" : "ok",
+        data: lastError ? lastError.message : null,
+      });
       setTimeout(() => {
         chrome.notifications.clear("alarm");
       }, 3000);
@@ -55,7 +63,7 @@ chrome.runtime.onMessage.addListener(
         convertNumberToReference(message.tab, sendResponse);
         break;
       case "NotifyError":
-        notifyError(message.data as string);
+        notifyError(message.data as string, sendResponse);
         break;
       case "ParseUsedReferenceArray":
         parseUsedReferenceArray(message.tab, sendResponse);
