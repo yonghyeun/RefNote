@@ -4,32 +4,44 @@ import { useEffect } from "react";
 
 export const AutoConvertingToggle = () => {
   const { chromeStorage, setChromeStorage } = useChromeStorage();
-  const { autoConverting } = chromeStorage;
   const tab = useTab();
 
-  /**
-   * toggling 메소드는 url이 velog.io/write인지 확인된 경우에만 호출 되어야 합니다.
-   * 해당 메소드의 존재 이유는 SPA 로 개발 된 velog 에서 content script가 적절히 삽입 되지 않은 경우
-   * 에러 핸들러를 통해 스크립트를 적절히 삽입하고 다시 toggling 메소드를 호출하기 위함입니다.
-   */
-  const toggling = async (data: "on" | "off", tabId: number) => {
-    try {
-      await chrome.tabs.sendMessage(tabId, {
+  const toggling = (id: Tab["id"], autoConverting: boolean, retry: boolean) => {
+    chrome.tabs.sendMessage(
+      id,
+      {
         message: "SetAutoConverting",
-        data,
-      });
+        data: autoConverting ? "on" : "off",
+      },
+      () => {
+        if (chrome.runtime.lastError) {
+          if (retry) {
+            setTimeout(() => {
+              toggling(id, autoConverting, false);
+            }, 500);
+            return;
+          }
 
-      await setChromeStorage((prev) => ({
-        ...prev,
-        autoConverting: data === "on" ? true : false,
-      }));
-    } catch (error) {
-      await chrome.scripting.executeScript({
-        target: { tabId },
-        files: ["src/autoConverting.js"],
-      });
-      toggling(data, tabId);
-    }
+          chrome.runtime.sendMessage({
+            message: "NotifyError",
+            data: "자동 변환기능에 사용 할 삽입 될 콘텐트 스크립트를 찾지 못했습니다. 새로고침 후 이용해 주세요",
+          });
+
+          setChromeStorage((prev) => ({
+            ...prev,
+            autoConverting: false,
+          }));
+          return;
+        }
+
+        if (autoConverting !== chromeStorage.autoConverting) {
+          setChromeStorage((prev) => ({
+            ...prev,
+            autoConverting,
+          }));
+        }
+      }
+    );
   };
 
   const handleToggle = () => {
@@ -37,49 +49,32 @@ export const AutoConvertingToggle = () => {
       return;
     }
 
-    try {
-      const { id, url } = tab;
-
-      if (!url.includes("https://velog.io/write")) {
-        throw new Error(
-          "자동 전환 기능은 벨로그 > 글 작성 페이지에서만 사용할 수 있습니다."
-        );
-      }
-
-      toggling(autoConverting ? "off" : "on", id);
-    } catch (error) {
+    if (!tab.url.includes("https://velog.io/write")) {
       chrome.runtime.sendMessage({
         message: "NotifyError",
-        data: (error as Error).message,
+        data: "자동 전환 기능은 Velog 글쓰기 페이지에서만 사용 가능합니다.",
       });
+      return;
     }
+    toggling(tab.id, !chromeStorage.autoConverting, true);
   };
 
   useEffect(() => {
-    if (!tab) {
-      return;
-    }
-
-    try {
-      const { id, url } = tab;
-
-      if (!url.includes("https://velog.io/write")) {
+    (async () => {
+      if (!tab || !tab.url.includes("https://velog.io/write")) {
         return;
       }
 
-      toggling(autoConverting ? "on" : "off", id);
-    } catch (error) {
-      chrome.runtime.sendMessage({
-        message: "NotifyError",
-        data: (error as Error).message,
-      });
-    }
+      const { autoConverting } =
+        await chrome.storage.sync.get("autoConverting");
+      toggling(tab.id, autoConverting, false);
+    })();
   }, [tab]);
 
   return (
     <label className={styles.toggleLabel}>
       <span
-        className={`${styles.toggleSpan} ${autoConverting ? styles.activeSpan : styles.defaultSpan}`}
+        className={`${styles.toggleSpan} ${chromeStorage.autoConverting ? styles.activeSpan : styles.defaultSpan}`}
       >
         자동 변환
       </span>
@@ -87,7 +82,7 @@ export const AutoConvertingToggle = () => {
         <input
           type="checkbox"
           className={styles.checkBox}
-          checked={autoConverting}
+          checked={chromeStorage.autoConverting}
           onChange={handleToggle}
         />
         <span className={styles.toggleSlider} />
