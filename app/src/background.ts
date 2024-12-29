@@ -58,7 +58,7 @@ chrome.runtime.onMessage.addListener(
         notifyError(message.data as string);
         break;
       case "ParseUsedReferenceArray":
-        parseUsedReferenceArray(message.data as number, sendResponse);
+        parseUsedReferenceArray(message.tab, sendResponse);
         break;
       default:
         break;

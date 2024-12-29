@@ -66,11 +66,9 @@ export const ReferenceMessageHandler = () => {
       }
 
       const usedAttachedReferenceDataArray = await sendMessageToBackground<
-        AttachedReferenceData[],
-        number
+        AttachedReferenceData[]
       >({
         message: "ParseUsedReferenceArray",
-        data: tab.id,
         tab,
       });
 
