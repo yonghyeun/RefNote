@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { sendMessageToBackground } from "../lib";
 
 type Tab = chrome.tabs.Tab & {
   id: number;
@@ -22,10 +23,12 @@ export const TabProvider = ({ children }: TabProviderProps) => {
         }
         setTab(tab as Tab);
       } catch (error) {
-        chrome.runtime.sendMessage({
+        sendMessageToBackground<void, string>({
           message: "NotifyError",
           data: (error as Error).message,
+          tab: tab as Tab,
         });
+
         setTab(null);
       }
     });
@@ -38,9 +41,10 @@ export const TabProvider = ({ children }: TabProviderProps) => {
           }
           setTab(tab as Tab);
         } catch (error) {
-          chrome.runtime.sendMessage({
+          sendMessageToBackground<void, string>({
             message: "NotifyError",
             data: (error as Error).message,
+            tab: tab as Tab,
           });
           setTab(null);
         }
@@ -56,9 +60,10 @@ export const TabProvider = ({ children }: TabProviderProps) => {
           }
           setTab(tab as Tab);
         } catch (error) {
-          chrome.runtime.sendMessage({
+          sendMessageToBackground<void, string>({
             message: "NotifyError",
             data: (error as Error).message,
+            tab: tab as Tab,
           });
           setTab(null);
         }

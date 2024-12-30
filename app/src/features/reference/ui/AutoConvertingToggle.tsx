@@ -1,47 +1,49 @@
-import { useChromeStorage, useTab } from "@/shared/store";
-import styles from "./styles.module.css";
 import { useEffect } from "react";
+import { useChromeStorage, useTab } from "@/shared/store";
+import { sendMessageToTab, sendMessageToBackground } from "@/shared/lib";
+import styles from "./styles.module.css";
 
 export const AutoConvertingToggle = () => {
   const { chromeStorage, setChromeStorage } = useChromeStorage();
   const tab = useTab();
 
-  const toggling = (id: Tab["id"], autoConverting: boolean, retry: boolean) => {
-    chrome.tabs.sendMessage(
-      id,
-      {
+  const toggling = async (
+    tab: Tab,
+    autoConverting: boolean,
+    retry: boolean
+  ) => {
+    try {
+      await sendMessageToTab<void, "on" | "off">({
+        tab,
         message: "SetAutoConverting",
         data: autoConverting ? "on" : "off",
-      },
-      () => {
-        if (chrome.runtime.lastError) {
-          if (retry) {
-            setTimeout(() => {
-              toggling(id, autoConverting, false);
-            }, 500);
-            return;
-          }
+      });
 
-          chrome.runtime.sendMessage({
-            message: "NotifyError",
-            data: "자동 변환기능에 사용 할 삽입 될 콘텐트 스크립트를 찾지 못했습니다. 새로고침 후 이용해 주세요",
-          });
-
-          setChromeStorage((prev) => ({
-            ...prev,
-            autoConverting: false,
-          }));
-          return;
-        }
-
-        if (autoConverting !== chromeStorage.autoConverting) {
-          setChromeStorage((prev) => ({
-            ...prev,
-            autoConverting,
-          }));
-        }
+      if (autoConverting !== chromeStorage.autoConverting) {
+        setChromeStorage((prev) => ({
+          ...prev,
+          autoConverting,
+        }));
       }
-    );
+    } catch (error) {
+      if (retry) {
+        setTimeout(() => {
+          toggling(tab, autoConverting, false);
+        }, 500);
+        return;
+      }
+
+      sendMessageToBackground<void, string>({
+        message: "NotifyError",
+        data: "자동 변환기능에 사용 할 삽입 될 콘텐트 스크립트를 찾지 못했습니다. 새로고침 후 이용해 주세요",
+        tab,
+      });
+
+      setChromeStorage((prev) => ({
+        ...prev,
+        autoConverting: false,
+      }));
+    }
   };
 
   const handleToggle = () => {
@@ -50,13 +52,15 @@ export const AutoConvertingToggle = () => {
     }
 
     if (!tab.url.includes("https://velog.io/write")) {
-      chrome.runtime.sendMessage({
+      sendMessageToBackground<void, string>({
         message: "NotifyError",
         data: "자동 전환 기능은 Velog 글쓰기 페이지에서만 사용 가능합니다.",
+        tab,
       });
       return;
     }
-    toggling(tab.id, !chromeStorage.autoConverting, true);
+
+    toggling(tab, !chromeStorage.autoConverting, true);
   };
 
   useEffect(() => {
@@ -67,7 +71,8 @@ export const AutoConvertingToggle = () => {
 
       const { autoConverting } =
         await chrome.storage.sync.get("autoConverting");
-      toggling(tab.id, autoConverting, false);
+
+      toggling(tab, autoConverting, false);
     })();
   }, [tab]);
 
