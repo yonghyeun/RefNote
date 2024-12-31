@@ -1,13 +1,37 @@
-import { useChromeStorage } from "@/shared/store";
+import { useChromeStorage, useTab } from "@/shared/store";
 import styles from "./styles.module.css";
+import { useEffect, useState } from "react";
 
 export const AutoConvertingToggle = () => {
-  const { chromeStorage, setChromeStorage } = useChromeStorage();
+  const {
+    chromeStorage: { autoConverting, isContentScriptEnabled },
+    setChromeStorage,
+  } = useChromeStorage();
+  const tab = useTab();
+  const [isAutoConvertingDisabled, setIsAutoConvertingDisabled] =
+    useState<boolean>(false);
+
+  useEffect(() => {
+    if (!tab) {
+      return;
+    }
+
+    if (tab.url.includes("https://velog.io/write") && !isContentScriptEnabled) {
+      setIsAutoConvertingDisabled(true);
+      setChromeStorage((prev) => ({
+        ...prev,
+        autoConverting: false,
+      }));
+      return;
+    }
+
+    setIsAutoConvertingDisabled(false);
+  }, [tab, isContentScriptEnabled]);
 
   return (
     <label className={styles.toggleLabel}>
       <span
-        className={`${styles.toggleSpan} ${chromeStorage.autoConverting ? styles.activeSpan : styles.defaultSpan}`}
+        className={`${styles.toggleSpan} ${autoConverting ? styles.activeSpan : styles.defaultSpan}`}
       >
         자동 변환
       </span>
@@ -15,13 +39,14 @@ export const AutoConvertingToggle = () => {
         <input
           type="checkbox"
           className={styles.checkBox}
-          checked={chromeStorage.autoConverting}
+          checked={autoConverting}
           onChange={() => {
             setChromeStorage((prev) => ({
               ...prev,
               autoConverting: !prev.autoConverting,
             }));
           }}
+          disabled={isAutoConvertingDisabled}
         />
         <span className={styles.toggleSlider} />
       </div>
