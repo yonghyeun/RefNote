@@ -52,12 +52,11 @@ const notifyError = (
 const isTab = (tab: chrome.tabs.Tab | undefined): tab is Tab =>
   !!tab && !!tab.id && !!tab.url;
 
+// NotifyConvertProcessSuccess에서 사용할 이전에 사용된 referenceData의 id를 담은 배열입니다.
+let prevUsedReferenceIds: number[] = [];
+
 chrome.runtime.onMessage.addListener(
   (message: RequestMessage<unknown>, { tab }, sendResponse) => {
-    /**
-     * 비동기 메시지 핸들러의 경우 핸들러 응답값에 따라 response 를 보내는 고차 함수 입니다.
-     */
-
     if (!isTab(tab)) {
       notifyError(
         "탭의 정보가 유효하지 않습니다. 다시 시도해 주세요",
@@ -76,6 +75,35 @@ chrome.runtime.onMessage.addListener(
       case "ReloadPage":
         chrome.tabs.reload(tab.id);
         sendResponse({ status: "ok" });
+        break;
+      case "NotifyConvertProcessSuccess":
+        const { data } = message as RequestMessage<number[]>;
+
+        if (
+          data.length === prevUsedReferenceIds.length &&
+          data.every((id) => prevUsedReferenceIds.includes(id))
+        ) {
+          sendResponse({ status: "ok" });
+          break;
+        }
+
+        prevUsedReferenceIds = data;
+
+        chrome.storage.sync.get<ChromeStorage>("reference", (storage) => {
+          const { reference } = storage;
+          const updatedReference = reference.map((referenceData) =>
+            referenceData.isWritten
+              ? {
+                  ...referenceData,
+                  isUsed: data.includes(referenceData.id),
+                }
+              : referenceData
+          );
+
+          chrome.storage.sync.set({ reference: updatedReference }, () => {
+            sendResponse({ status: "ok" });
+          });
+        });
         break;
       default:
         break;
