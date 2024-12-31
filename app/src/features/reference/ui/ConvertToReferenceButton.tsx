@@ -1,9 +1,10 @@
 import { Button } from "@/shared/ui/button";
 import styles from "./styles.module.css";
-import { useTab } from "@/shared/store";
+import { useChromeStorage, useTab } from "@/shared/store";
 import { sendMessageToBackground } from "@/shared/lib";
 
 export const ConvertToReferenceButton = () => {
+  const { chromeStorage } = useChromeStorage();
   const tab = useTab();
 
   const handleClick = async () => {
@@ -43,7 +44,11 @@ export const ConvertToReferenceButton = () => {
   };
 
   return (
-    <Button onClick={handleClick} className={styles.flexOneButton}>
+    <Button
+      onClick={handleClick}
+      className={styles.flexOneButton}
+      disabled={!chromeStorage.isContentScriptEnabled}
+    >
       텍스트 전환
     </Button>
   );
