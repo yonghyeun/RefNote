@@ -5,6 +5,7 @@ export const chromeStorageInitialValue: ChromeStorage = {
   autoConverting: false,
   isDarkMode: false,
   unAttachedIsVisible: true,
+  isContentScriptEnabled: false,
 };
 
 const ChromeStorageContext = createContext<{
