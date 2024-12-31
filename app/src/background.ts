@@ -56,7 +56,9 @@ const isTab = (tab: chrome.tabs.Tab | undefined): tab is Tab =>
 let prevUsedReferenceIds: number[] = [];
 
 chrome.runtime.onMessage.addListener(
-  (message: RequestMessage<unknown>, { tab }, sendResponse) => {
+  (message: RequestMessage<unknown>, sender, sendResponse) => {
+    const tab = sender.tab || message.tab;
+
     if (!isTab(tab)) {
       notifyError(
         "탭의 정보가 유효하지 않습니다. 다시 시도해 주세요",
