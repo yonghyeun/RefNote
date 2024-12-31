@@ -1,4 +1,56 @@
 let timer: ReturnType<typeof setTimeout> | null = null;
+let isAbleToSendMessage: boolean = true;
+
+const sendConvertReferenceMessage = (event: KeyboardEvent) => {
+  // 눌린키가 유효한 키인지 확인 , 방향키나 meta 키 등 포함하지 아니함
+  if (
+    (event.key !== "Backspace" && event.key.length !== 1) ||
+    event.key === " " ||
+    event.key === "Meta" ||
+    event.key === "Alt" ||
+    event.key === "Control" ||
+    event.key === "Shift" ||
+    event.key === "ArrowUp" ||
+    event.key === "ArrowDown" ||
+    event.key === "ArrowLeft" ||
+    event.key === "ArrowRight"
+  ) {
+    return;
+  }
+  if (!chromeStorage || !chromeStorage.autoConverting || !isAbleToSendMessage) {
+    return;
+  }
+
+  if (timer) {
+    clearTimeout(timer);
+  }
+
+  timer = setTimeout(async () => {
+    isAbleToSendMessage = false;
+    const { status, data } = await chrome.runtime.sendMessage({
+      message: "ConvertToReference",
+    });
+    chrome.runtime.sendMessage({
+      message: status === "ok" ? "NotifyConvertProcessSuccess" : "NotifyError",
+      data,
+    });
+    isAbleToSendMessage = true;
+  }, 500);
+};
+
+const handleAutoConverting = (changes: chrome.storage.StorageChange) => {
+  const [[key, { newValue }]] = Object.entries(changes);
+
+  if (key !== "autoConverting") {
+    return;
+  }
+
+  if (newValue) {
+    window.addEventListener("keydown", sendConvertReferenceMessage);
+  } else {
+    window.removeEventListener("keydown", sendConvertReferenceMessage);
+  }
+};
 
 let chromeStorage: ChromeStorage | null = null;
 
@@ -29,6 +81,8 @@ const syncChromeStorage = (changes: chrome.storage.StorageChange) => {
 
 chrome.storage.sync.get<ChromeStorage>(null, (data) => {
   chrome.storage.sync.onChanged.addListener(syncChromeStorage);
+  chrome.storage.sync.onChanged.addListener(handleAutoConverting);
+
   chrome.storage.sync.set({
     ...data,
     isContentScriptEnabled: true,
@@ -37,6 +91,7 @@ chrome.storage.sync.get<ChromeStorage>(null, (data) => {
 
 window.addEventListener("unload", () => {
   chrome.storage.sync.onChanged.removeListener(syncChromeStorage);
+  chrome.storage.sync.onChanged.removeListener(handleAutoConverting);
 
   if (chromeStorage) {
     chrome.storage.sync.set({
@@ -45,43 +100,3 @@ window.addEventListener("unload", () => {
     });
   }
 });
-
-// function sendConvertReferenceMessage(event: KeyboardEvent) {
-//   // 눌린키가 유효한 키인지 확인 , 방향키나 meta 키 등 포함하지 아니함
-//   if (
-//     (event.key !== "Backspace" && event.key.length !== 1) ||
-//     event.key === " " ||
-//     event.key === "Meta" ||
-//     event.key === "Alt" ||
-//     event.key === "Control" ||
-//     event.key === "Shift" ||
-//     event.key === "ArrowUp" ||
-//     event.key === "ArrowDown" ||
-//     event.key === "ArrowLeft" ||
-//     event.key === "ArrowRight"
-//   ) {
-//     return;
-//   }
-//   if (timer) {
-//     clearTimeout(timer);
-//   }
-//   timer = setTimeout(async () => {
-//     const [tab] = await chrome.tabs.query({
-//       active: true,
-//       currentWindow: true,
-//     });
-
-//     if (!tab.id) {
-//       return;
-//     }
-
-//     const { status, data } = await chrome.runtime.sendMessage({
-//       message: "ConvertToReference",
-//       tab,
-//     });
-//     chrome.runtime.sendMessage({
-//       message: status === "ok" ? "NotifyConvertProcessSuccess" : "NotifyError",
-//       data,
-//     });
-//   }, 500);
-// }
