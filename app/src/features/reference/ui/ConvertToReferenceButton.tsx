@@ -18,7 +18,6 @@ export const ConvertToReferenceButton = () => {
       sendMessageToBackground<void, string>({
         message: "NotifyError",
         data: "텍스트 전환 기능은 벨로그 글 쓰기 페이지에서만 가능 합니다.",
-        tab,
       });
       return;
     }
@@ -28,19 +27,16 @@ export const ConvertToReferenceButton = () => {
         AttachedReferenceData[]
       >({
         message: "ConvertToReference",
-        tab,
       });
 
       sendMessageToBackground<void, AttachedReferenceData[]>({
         message: "NotifyConvertProcessSuccess",
         data: attachedReferenceList,
-        tab,
       });
     } catch (error) {
       sendMessageToBackground({
         message: "NotifyError",
         data: (error as Error).message,
-        tab,
       });
     }
   };

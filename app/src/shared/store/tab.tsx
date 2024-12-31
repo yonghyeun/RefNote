@@ -26,7 +26,6 @@ export const TabProvider = ({ children }: TabProviderProps) => {
         sendMessageToBackground<void, string>({
           message: "NotifyError",
           data: (error as Error).message,
-          tab: tab as Tab,
         });
 
         setTab(null);
@@ -44,7 +43,6 @@ export const TabProvider = ({ children }: TabProviderProps) => {
           sendMessageToBackground<void, string>({
             message: "NotifyError",
             data: (error as Error).message,
-            tab: tab as Tab,
           });
           setTab(null);
         }
@@ -63,7 +61,6 @@ export const TabProvider = ({ children }: TabProviderProps) => {
           sendMessageToBackground<void, string>({
             message: "NotifyError",
             data: (error as Error).message,
-            tab: tab as Tab,
           });
           setTab(null);
         }

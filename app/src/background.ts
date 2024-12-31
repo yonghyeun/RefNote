@@ -52,25 +52,36 @@ const notifyError = (
   );
 };
 
+const isTab = (tab: chrome.tabs.Tab | undefined): tab is Tab =>
+  !!tab && !!tab.id && !!tab.url;
+
 chrome.runtime.onMessage.addListener(
-  (message: RequestMessage<unknown>, _sender, sendResponse) => {
+  (message: RequestMessage<unknown>, { tab }, sendResponse) => {
     /**
      * 비동기 메시지 핸들러의 경우 핸들러 응답값에 따라 response 를 보내는 고차 함수 입니다.
      */
 
+    if (!isTab(tab)) {
+      notifyError(
+        "탭의 정보가 유효하지 않습니다. 다시 시도해 주세요",
+        sendResponse
+      );
+      return true;
+    }
+
     switch (message.message) {
       case "ConvertToReference":
-        convertNumberToReference(message.tab, sendResponse);
+        convertNumberToReference(tab, sendResponse);
         break;
       case "NotifyError":
         notifyError(message.data as string, sendResponse);
         break;
       case "ParseUsedReferenceArray":
-        parseUsedReferenceArray(message.tab, sendResponse);
+        parseUsedReferenceArray(tab, sendResponse);
         break;
 
       case "ReloadPage":
-        chrome.tabs.reload(message.tab.id);
+        chrome.tabs.reload(tab.id);
         sendResponse({ status: "ok" });
         break;
       default:
