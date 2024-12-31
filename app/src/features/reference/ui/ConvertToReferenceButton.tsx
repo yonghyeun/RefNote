@@ -7,6 +7,8 @@ export const ConvertToReferenceButton = () => {
   const { chromeStorage } = useChromeStorage();
   const tab = useTab();
 
+  const isVelogWritePage = tab?.url.includes("https://velog.io/write");
+
   const handleClick = async () => {
     if (!tab) {
       return;
@@ -47,7 +49,7 @@ export const ConvertToReferenceButton = () => {
     <Button
       onClick={handleClick}
       className={styles.flexOneButton}
-      disabled={!chromeStorage.isContentScriptEnabled}
+      disabled={!(isVelogWritePage && chromeStorage.isContentScriptEnabled)}
     >
       텍스트 전환
     </Button>

@@ -68,6 +68,11 @@ chrome.runtime.onMessage.addListener(
       case "ParseUsedReferenceArray":
         parseUsedReferenceArray(message.tab, sendResponse);
         break;
+
+      case "ReloadPage":
+        chrome.tabs.reload(message.tab.id);
+        sendResponse({ status: "ok" });
+        break;
       default:
         break;
     }
