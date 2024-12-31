@@ -100,3 +100,64 @@ window.addEventListener("unload", () => {
     });
   }
 });
+
+// document 에 이미 작성 된 출처 리스트를 가져와 chromeStorage를 업데이트 합니다.
+
+(async () => {
+  const usedAttachedReferenceDataArray = (
+    Array.from(document.querySelectorAll("li > a")) as HTMLAnchorElement[]
+  ).map(({ href, textContent }, idx) => ({
+    id: idx + 1,
+    url: href,
+    title: textContent,
+    isWritten: true,
+    isUsed: true,
+    faviconUrl: undefined,
+  }));
+
+  const { reference } =
+    await chrome.storage.sync.get<ChromeStorage>("reference");
+
+  // 만약 사용 된 데이터가 없고 attachedReferenceData 모두 isUsed가 false 라면
+  // 상태를 변경하지 않고 early return 합니다.
+
+  if (usedAttachedReferenceDataArray.length === 0) {
+    if (
+      reference.filter((data) => data.isWritten).every(({ isUsed }) => !isUsed)
+    ) {
+      return;
+    }
+
+    chrome.storage.sync.set({
+      reference: reference.map((referenceData) =>
+        referenceData.isWritten
+          ? { ...referenceData, isUsed: false }
+          : referenceData
+      ),
+    });
+    return;
+  }
+  // 만약 usedAttachedReferenceData가 존재 한다면
+  // usedAttachedReferenceData를 모두 attachedReferenceData로 이동 시키고
+  // 기존 attachedReferenceData는 unAttachedReferenceData로 변경합니다.
+
+  const updatedReferenceDataArray: UnAttachedReferenceData[] = reference
+    .filter((prevReference) =>
+      usedAttachedReferenceDataArray.every(
+        ({ url }) => url !== prevReference.url
+      )
+    )
+    .map(({ title, faviconUrl, url }) => ({
+      title,
+      faviconUrl,
+      url,
+      isWritten: false,
+    }));
+
+  chrome.storage.sync.set({
+    reference: [
+      ...updatedReferenceDataArray,
+      ...usedAttachedReferenceDataArray,
+    ],
+  });
+})();

@@ -1,8 +1,5 @@
 import browser from "webextension-polyfill";
-import {
-  convertNumberToReference,
-  parseUsedReferenceArray,
-} from "./features/reference/model";
+import { convertNumberToReference } from "./features/reference/model";
 import { chromeStorageInitialValue } from "./shared/store";
 
 browser.runtime.onInstalled.addListener(async (details) => {
@@ -76,10 +73,6 @@ chrome.runtime.onMessage.addListener(
       case "NotifyError":
         notifyError(message.data as string, sendResponse);
         break;
-      case "ParseUsedReferenceArray":
-        parseUsedReferenceArray(tab, sendResponse);
-        break;
-
       case "ReloadPage":
         chrome.tabs.reload(tab.id);
         sendResponse({ status: "ok" });
