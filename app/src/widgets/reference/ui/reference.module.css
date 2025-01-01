@@ -1,8 +1,11 @@
 .referenceContainer {
+  height: 50%;
   display: flex;
   flex-direction: column;
+}
+
+.flexGrow {
   flex-grow: 1;
-  flex-basis: 50%;
 }
 
 .referenceContainer > div {

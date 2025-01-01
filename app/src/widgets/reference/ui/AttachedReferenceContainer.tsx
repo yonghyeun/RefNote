@@ -9,7 +9,11 @@ import { ContentScriptErrorButton } from "@/features/error/ui";
 
 export const AttachedReferenceContainer = () => {
   const {
-    chromeStorage: { isContentScriptEnabled, reference },
+    chromeStorage: {
+      isContentScriptEnabled,
+      reference,
+      isUnAttachedReferenceVisible,
+    },
   } = useChromeStorage();
   const tab = useTab();
 
@@ -20,7 +24,11 @@ export const AttachedReferenceContainer = () => {
   );
 
   return (
-    <section className={styles.referenceContainer}>
+    <section
+      className={`${styles.referenceContainer} ${
+        isUnAttachedReferenceVisible ? "" : styles.flexGrow
+      }`}
+    >
       <div>
         <h2>
           글에 첨부된 레퍼런스
