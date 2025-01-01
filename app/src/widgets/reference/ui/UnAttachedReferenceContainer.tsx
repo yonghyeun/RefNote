@@ -3,21 +3,19 @@ import { UnAttachedReferenceList } from "@/features/reference/ui";
 import { Button } from "@/shared/ui/button";
 import { useChromeStorage } from "@/shared/store";
 
-interface UnAttachedReferenceContainerProps {
-  unAttachedReferenceList: UnAttachedReferenceData[];
-}
-
-export const UnAttachedReferenceContainer = ({
-  unAttachedReferenceList,
-}: UnAttachedReferenceContainerProps) => {
+export const UnAttachedReferenceContainer = () => {
   const {
-    chromeStorage: { unAttachedIsVisible },
+    chromeStorage: { isUnAttachedReferenceVisible, reference },
     setChromeStorage,
   } = useChromeStorage();
 
+  const unAttachedReferenceList = reference.filter(
+    (data): data is UnAttachedReferenceData => !data.isWritten
+  );
+
   return (
     <section
-      className={`${styles.referenceContainer} ${unAttachedIsVisible ? "" : styles.folded}`}
+      className={`${styles.referenceContainer} ${isUnAttachedReferenceVisible ? "" : styles.folded}`}
     >
       <div>
         <h2>
@@ -28,19 +26,19 @@ export const UnAttachedReferenceContainer = ({
           onClick={() => {
             setChromeStorage((prev) => ({
               ...prev,
-              unAttachedIsVisible: !unAttachedIsVisible,
+              isUnAttachedReferenceVisible: !isUnAttachedReferenceVisible,
             }));
           }}
           aria-label={
-            unAttachedIsVisible
+            isUnAttachedReferenceVisible
               ? "글에 첨부하지 않은 레퍼런스 리스트 목록 보기"
               : "글에 첨부하지 않은 레퍼런스 리스트 목록 숨기기"
           }
         >
-          {unAttachedIsVisible ? "▲" : "▼"}
+          {isUnAttachedReferenceVisible ? "▲" : "▼"}
         </Button>
       </div>
-      {unAttachedIsVisible && (
+      {isUnAttachedReferenceVisible && (
         <UnAttachedReferenceList
           unAttachedReferenceList={unAttachedReferenceList}
         />

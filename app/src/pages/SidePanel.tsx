@@ -3,7 +3,6 @@ import {
   ReferenceSaveButton,
   ResetReferenceButton,
 } from "@/features/reference/ui";
-import { useChromeStorage } from "@/shared/store/chromeStorage";
 import { DarkModeToggle } from "@/features/utils/ui";
 import styles from "./pages.module.css";
 import {
@@ -12,17 +11,6 @@ import {
 } from "@/widgets/reference/ui";
 
 export const SidePanelPage = () => {
-  const { chromeStorage } = useChromeStorage();
-  const { reference } = chromeStorage;
-
-  const unAttachedReferenceList = reference.filter(
-    (data): data is UnAttachedReferenceData => !data.isWritten
-  );
-
-  const attachedReferenceList = reference.filter(
-    (data): data is AttachedReferenceData => data.isWritten
-  );
-
   return (
     <>
       <header className={styles.buttonContainer}>
@@ -30,12 +18,8 @@ export const SidePanelPage = () => {
         <DarkModeToggle />
       </header>
       <main>
-        <UnAttachedReferenceContainer
-          unAttachedReferenceList={unAttachedReferenceList}
-        />
-        <AttachedReferenceContainer
-          attachedReferenceList={attachedReferenceList}
-        />
+        <UnAttachedReferenceContainer />
+        <AttachedReferenceContainer />
       </main>
       <footer className={styles.buttonContainer}>
         <ConvertToReferenceButton />

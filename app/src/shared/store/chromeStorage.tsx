@@ -4,7 +4,7 @@ export const chromeStorageInitialValue: ChromeStorage = {
   reference: [],
   autoConverting: false,
   isDarkMode: false,
-  unAttachedIsVisible: true,
+  isUnAttachedReferenceVisible: true,
   isContentScriptEnabled: false,
 };
 
