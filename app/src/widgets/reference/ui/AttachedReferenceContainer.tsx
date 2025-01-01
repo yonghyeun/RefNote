@@ -7,19 +7,17 @@ import {
 } from "@/features/reference/ui";
 import { ContentScriptErrorButton } from "@/features/error/ui";
 
-interface AttachedReferenceContainerProps {
-  attachedReferenceList: AttachedReferenceData[];
-}
-
-export const AttachedReferenceContainer = ({
-  attachedReferenceList,
-}: AttachedReferenceContainerProps) => {
+export const AttachedReferenceContainer = () => {
   const {
-    chromeStorage: { isContentScriptEnabled },
+    chromeStorage: { isContentScriptEnabled, reference },
   } = useChromeStorage();
   const tab = useTab();
 
   const isVelogWritePage = tab?.url.includes("https://velog.io/write");
+
+  const attachedReferenceList = reference.filter(
+    (data): data is AttachedReferenceData => data.isWritten
+  );
 
   return (
     <section className={styles.referenceContainer}>

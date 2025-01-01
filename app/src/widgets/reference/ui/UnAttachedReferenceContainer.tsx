@@ -3,17 +3,15 @@ import { UnAttachedReferenceList } from "@/features/reference/ui";
 import { Button } from "@/shared/ui/button";
 import { useChromeStorage } from "@/shared/store";
 
-interface UnAttachedReferenceContainerProps {
-  unAttachedReferenceList: UnAttachedReferenceData[];
-}
-
-export const UnAttachedReferenceContainer = ({
-  unAttachedReferenceList,
-}: UnAttachedReferenceContainerProps) => {
+export const UnAttachedReferenceContainer = () => {
   const {
-    chromeStorage: { unAttachedIsVisible },
+    chromeStorage: { unAttachedIsVisible, reference },
     setChromeStorage,
   } = useChromeStorage();
+
+  const unAttachedReferenceList = reference.filter(
+    (data): data is UnAttachedReferenceData => !data.isWritten
+  );
 
   return (
     <section
