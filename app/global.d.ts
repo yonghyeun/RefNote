@@ -2,8 +2,8 @@ export {};
 
 declare global {
   type RequestMessage<T = undefined> = T extends undefined
-    ? { message: string; tab: Tab }
-    : { message: string; tab: Tab; data: T };
+    ? { message: string; tab?: Tab }
+    : { message: string; tab?: Tab; data: T };
 
   interface ResponseMessage<R = unknown> {
     status: "ok" | "error";
@@ -33,6 +33,7 @@ declare global {
     autoConverting: boolean;
     isDarkMode: boolean;
     unAttachedIsVisible: boolean;
+    isContentScriptEnabled: boolean;
   }
 
   interface Tab extends chrome.tabs.Tab {

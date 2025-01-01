@@ -25,19 +25,16 @@ export const AttachedReferenceList = ({
           AttachedReferenceData[]
         >({
           message: "ConvertToReference",
-          tab,
         });
 
         sendMessageToBackground<void, AttachedReferenceData[]>({
           message: "NotifyConvertProcessSuccess",
           data: attachedReferenceList,
-          tab,
         });
       } catch (error) {
         sendMessageToBackground({
           message: "NotifyError",
           data: (error as Error).message,
-          tab,
         });
       }
     })();

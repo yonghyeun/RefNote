@@ -1,8 +1,5 @@
 import browser from "webextension-polyfill";
-import {
-  convertNumberToReference,
-  parseUsedReferenceArray,
-} from "./features/reference/model";
+import { convertNumberToReference } from "./features/reference/model";
 import { chromeStorageInitialValue } from "./shared/store";
 
 browser.runtime.onInstalled.addListener(async (details) => {
@@ -52,21 +49,63 @@ const notifyError = (
   );
 };
 
+const isTab = (tab: chrome.tabs.Tab | undefined): tab is Tab =>
+  !!tab && !!tab.id && !!tab.url;
+
+// NotifyConvertProcessSuccess에서 사용할 이전에 사용된 referenceData의 id를 담은 배열입니다.
+let prevUsedReferenceIds: number[] = [];
+
 chrome.runtime.onMessage.addListener(
-  (message: RequestMessage<unknown>, _sender, sendResponse) => {
-    /**
-     * 비동기 메시지 핸들러의 경우 핸들러 응답값에 따라 response 를 보내는 고차 함수 입니다.
-     */
+  (message: RequestMessage<unknown>, sender, sendResponse) => {
+    const tab = sender.tab || message.tab;
+
+    if (!isTab(tab)) {
+      notifyError(
+        "탭의 정보가 유효하지 않습니다. 다시 시도해 주세요",
+        sendResponse
+      );
+      return true;
+    }
 
     switch (message.message) {
       case "ConvertToReference":
-        convertNumberToReference(message.tab, sendResponse);
+        convertNumberToReference(tab, sendResponse);
         break;
       case "NotifyError":
         notifyError(message.data as string, sendResponse);
         break;
-      case "ParseUsedReferenceArray":
-        parseUsedReferenceArray(message.tab, sendResponse);
+      case "ReloadPage":
+        chrome.tabs.reload(tab.id);
+        sendResponse({ status: "ok" });
+        break;
+      case "NotifyConvertProcessSuccess":
+        const { data } = message as RequestMessage<number[]>;
+
+        if (
+          data.length === prevUsedReferenceIds.length &&
+          data.every((id) => prevUsedReferenceIds.includes(id))
+        ) {
+          sendResponse({ status: "ok" });
+          break;
+        }
+
+        prevUsedReferenceIds = data;
+
+        chrome.storage.sync.get<ChromeStorage>("reference", (storage) => {
+          const { reference } = storage;
+          const updatedReference = reference.map((referenceData) =>
+            referenceData.isWritten
+              ? {
+                  ...referenceData,
+                  isUsed: data.includes(referenceData.id),
+                }
+              : referenceData
+          );
+
+          chrome.storage.sync.set({ reference: updatedReference }, () => {
+            sendResponse({ status: "ok" });
+          });
+        });
         break;
       default:
         break;
