@@ -19,17 +19,13 @@
 }
 
 html[data-theme="dark"] {
-  --bg-color: #121212;
-  --text-color: #f0f0f0;
-  --content-hover: #4a4a4a;
-  --content-active: #3a3a3a;
+  --bg-color: theme("colors.bg.dark");
+  --text-color: theme("colors.text.dark");
 }
 
 html[data-theme="light"] {
-  --bg-color: #fff;
-  --text-color: #212529;
-  --content-hover: #f0f0f0;
-  --content-active: #e0e0e0;
+  --bg-color: theme("colors.bg.light");
+  --text-color: theme("colors.text.light");
 }
 
 body {

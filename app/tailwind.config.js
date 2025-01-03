@@ -5,6 +5,10 @@ export default {
   theme: {
     extend: {
       colors: {
+        bg: {
+          light: "#fff",
+          dark: "#121212",
+        },
         primary: {
           DEFAULT: "#12b886",
           dark: "#099268",
@@ -19,6 +23,8 @@ export default {
         },
         text: {
           DEFAULT: "#fff",
+          light: "#121212",
+          dark: "#f0f0f0",
           hover: "#e6f7f1",
           disabled: "#d1d5db",
         },
