@@ -14,7 +14,7 @@ export const UnAttachedReferenceContainer = () => {
 
   return (
     <section
-      className={`h-1/2 flex flex-col gap-2 transition-[height,margin] duration-300 ${isUnAttachedReferenceVisible ? "" : "h-0 mb-10"}`}
+      className={`flex flex-col gap-2 transition-[height,margin] duration-300 ${isUnAttachedReferenceVisible ? "h-1/2" : "h-0 mb-10"}`}
     >
       <div className="flex justify-between items-end gap-4">
         <h2 className="text-base">
