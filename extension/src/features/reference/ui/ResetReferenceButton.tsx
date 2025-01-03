@@ -1,6 +1,5 @@
 import { useChromeStorage } from "@/shared/store/chromeStorage";
 import { Button } from "@/shared/ui/button";
-import styles from "./styles.module.css";
 
 export const ResetReferenceButton = () => {
   const { setChromeStorage } = useChromeStorage();
