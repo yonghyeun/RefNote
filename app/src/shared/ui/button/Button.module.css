@@ -39,6 +39,6 @@
   align-items: center;
   border: none;
   background-color: #f0f0f0;
-  border-radius: 2rem;
+  border-radius: 4px;
   cursor: pointer;
 }
