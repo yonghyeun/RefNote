@@ -1,5 +1,4 @@
 import { useChromeStorage, useTab } from "@/shared/store";
-import styles from "./reference.module.css";
 import {
   AutoConvertingToggle,
   CopyReferenceListButton,
@@ -25,14 +24,16 @@ export const AttachedReferenceContainer = () => {
 
   return (
     <section
-      className={`${styles.referenceContainer} ${
-        isUnAttachedReferenceVisible ? "" : styles.flexGrow
+      className={`h-1/2 flex flex-col gap-2 ${
+        isUnAttachedReferenceVisible ? "" : "flex-grow"
       }`}
     >
-      <div>
-        <h2>
+      <div className="flex justify-between items-end gap-4">
+        <h2 className="text-lg">
           글에 첨부된 레퍼런스
-          <span>({attachedReferenceList.length})</span>
+          <span className="text-[0.8rem] text-[#a0a0a0] ml-1">
+            ({attachedReferenceList.length})
+          </span>
         </h2>
         <AutoConvertingToggle />
       </div>
