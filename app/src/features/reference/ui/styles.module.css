@@ -121,10 +121,3 @@
 .defaultSpan {
   color: #ccc;
 }
-
-/* flex 1 button */
-
-.flexOneButton {
-  flex-grow: 1;
-  flex-shrink: 0;
-}

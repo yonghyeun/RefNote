@@ -1,5 +1,4 @@
 import { Button } from "@/shared/ui/button";
-import styles from "./styles.module.css";
 import { useChromeStorage, useTab } from "@/shared/store";
 import { sendMessageToBackground } from "@/shared/lib";
 
@@ -39,7 +38,7 @@ export const ConvertToReferenceButton = () => {
   return (
     <Button
       onClick={handleClick}
-      className={styles.flexOneButton}
+      className="flex-grow"
       disabled={!(isVelogWritePage && chromeStorage.isContentScriptEnabled)}
     >
       텍스트 전환
