@@ -1,5 +1,4 @@
 import { Button } from "@/shared/ui/button";
-import styles from "./styles.module.css";
 
 interface CopyReferenceListButtonProps {
   attachedReferenceList: AttachedReferenceData[];
@@ -37,7 +36,7 @@ export const CopyReferenceListButton = ({
   };
 
   return (
-    <Button onClick={handleCopyReferenceList} className={styles.flexOneButton}>
+    <Button onClick={handleCopyReferenceList} className="w-full">
       목록 복사
     </Button>
   );

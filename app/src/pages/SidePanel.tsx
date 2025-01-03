@@ -4,7 +4,6 @@ import {
   ResetReferenceButton,
 } from "@/features/reference/ui";
 import { DarkModeToggle } from "@/features/utils/ui";
-import styles from "./pages.module.css";
 import {
   AttachedReferenceContainer,
   UnAttachedReferenceContainer,
@@ -13,15 +12,15 @@ import {
 export const SidePanelPage = () => {
   return (
     <>
-      <header className={styles.buttonContainer}>
+      <header className="flex justify-between items-center pb-2 gap-4 ">
         <ReferenceSaveButton />
         <DarkModeToggle />
       </header>
-      <main>
+      <main className="flex flex-col h-full gap-2">
         <UnAttachedReferenceContainer />
         <AttachedReferenceContainer />
       </main>
-      <footer className={styles.buttonContainer}>
+      <footer className="flex justify-center items-center gap-4">
         <ConvertToReferenceButton />
         <ResetReferenceButton />
       </footer>

@@ -8,11 +8,10 @@ const Favicon = ({
   faviconUrl,
 }: {
   faviconUrl: NonNullable<ReferenceData["faviconUrl"]>;
-}) => <img className={styles.favicon} src={faviconUrl} />;
+}) => <img className="w-4 h-4 object-cover mr-2" src={faviconUrl} />;
 
-// TODO 적절한 파비콘 아이콘 선택 하기
 const DefaultFavicon = () => (
-  <img className={styles.favicon} src="/icon/128.png" />
+  <img className="w-4 h-4 object-cover mr-2" src="/icon/128.png" />
 );
 
 interface ContentProps {
@@ -20,7 +19,10 @@ interface ContentProps {
   onClick: () => void;
 }
 const Content = ({ children, onClick }: ContentProps) => (
-  <div className="content" onClick={onClick}>
+  <div
+    className="flex-grow cursor-pointer min-h-[2.5rem] flex items-center text-xs"
+    onClick={onClick}
+  >
     {children}
   </div>
 );
@@ -30,7 +32,7 @@ const Title = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <p
-      className={isEllipsis ? styles.ellipsis : ""}
+      className={`indent-1 ${isEllipsis ? styles.ellipsis : ""}`}
       onClick={() => setIsEllipsis((prev) => !prev)}
     >
       {children}
@@ -123,7 +125,7 @@ const EraseButton = ({
       c-3.291-3.288-7.749-5.135-12.401-5.135c-4.65,0-9.11,1.847-12.398,5.135L5.138,425.262c-6.851,6.848-6.851,17.95,0,24.8
       l114.29,114.287c3.288,3.291,7.749,5.138,12.398,5.138h462.638c9.684,0,17.536-7.852,17.536-17.536
       C612,542.265,604.148,534.414,594.464,534.414z M395.145,84.851L569.664,259.37L363.27,465.763L188.753,291.245L395.145,84.851z
-       M294.618,534.414H139.09L42.336,437.66l121.617-121.617l174.519,174.519L294.618,534.414z"
+      M294.618,534.414H139.09L42.336,437.66l121.617-121.617l174.519,174.519L294.618,534.414z"
             stroke="#000000"
             stroke-width="2"
             stroke-linecap="round"
@@ -186,39 +188,53 @@ const RemoveButton = ({ title }: Pick<ReferenceData, "title">) => {
   );
 };
 
+interface ClickedItemButtonProps {
+  onClick: () => void;
+  children: React.ReactNode;
+}
+
+const ClickedItemButton = ({ onClick, children }: ClickedItemButtonProps) => (
+  <button
+    onClick={onClick}
+    className="bg-primary text-text border-none rounded-md font-medium py-[4px] px-[0.5rem] mb-2 
+    hover:bg-primary-dark hover:text-text-hover
+    focus-visible:bg-primary-dark focus-visible:text-text-hover
+    active:bg-primary-darker active:text-text-hover"
+  >
+    {children}
+  </button>
+);
+
 const ClickedItem = ({ url, title }: Pick<ReferenceData, "url" | "title">) => {
   return (
-    <div className={styles.clickedItem}>
-      <button
+    <div className="flex justify-start items-center gap-2">
+      <ClickedItemButton
         onClick={() => {
           navigator.clipboard.writeText(url);
         }}
-        className={styles.clickedItemButton}
       >
         링크 복사
-      </button>
-      <button
+      </ClickedItemButton>
+      <ClickedItemButton
         onClick={() => {
           navigator.clipboard.writeText(`[${title}](${url})`);
         }}
-        className={styles.clickedItemButton}
       >
         [제목](링크) 복사
-      </button>
-      <button
+      </ClickedItemButton>
+      <ClickedItemButton
         onClick={() => {
           window.open(url, "_blank");
         }}
-        className={styles.clickedItemButton}
       >
         페이지로 이동
-      </button>
+      </ClickedItemButton>
     </div>
   );
 };
 
 const Container = ({ children }: { children: React.ReactNode }) => (
-  <section className={styles.container}>{children}</section>
+  <section className="referenceContainer">{children}</section>
 );
 
 type ReferenceItemProps<T extends ReferenceData> = T & {
@@ -235,7 +251,7 @@ export const UnAttachedReferenceItem = ({
 }: ReferenceItemProps<UnAttachedReferenceData>) => {
   return (
     <Container>
-      <div>
+      <div className="flex items-center justify-between gap-1">
         <Content onClick={onClick}>
           {faviconUrl ? (
             <Favicon faviconUrl={faviconUrl} />
@@ -266,20 +282,19 @@ export const AttachedReferenceItem = ({
 
   return (
     <Container>
-      <div>
+      <div className="flex items-center justify-between gap-1">
         <Content onClick={onClick}>
           {faviconUrl ? (
             <Favicon faviconUrl={faviconUrl} />
           ) : (
             <DefaultFavicon />
           )}
-          <div className={styles.writtenTitleContainer}>
+          <div className="flex flex-grow justify-between gap-1">
             <Title>{title}</Title>
-            <span className={styles.writtenId}>
+            <span className="text-[0.8rem] text-gray-400 flex gap-1">
               <span
-                className={`${styles.check}
-              ${isVelogWritePage && isUsed ? "" : styles.inVisible}
-              `}
+                className={`text-primary
+              ${isVelogWritePage && isUsed ? "" : "hidden"}`}
               >
                 ✔
               </span>

@@ -1,12 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* 기본적으로 존재하는 모든 스타일 제거 */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
   /* 스크롤 눈에 안보이게 제거 하기 */
   scrollbar-width: none;
   -ms-overflow-style: none;
   scroll-behavior: smooth;
+  user-select: none;
 }
 
 @font-face {
@@ -18,41 +20,23 @@
 }
 
 html[data-theme="dark"] {
-  --bg-color: #121212;
-  --text-color: #f0f0f0;
-  --content-hover: #4a4a4a;
-  --content-active: #3a3a3a;
+  --bg-color: theme("colors.bg.dark");
+  --text-color: theme("colors.text.dark");
+  --border-color: theme("colors.border.dark");
 }
 
 html[data-theme="light"] {
-  --bg-color: #fff;
-  --text-color: #212529;
-  --content-hover: #f0f0f0;
-  --content-active: #e0e0e0;
+  --bg-color: theme("colors.bg.light");
+  --text-color: theme("colors.text.light");
+  --border-color: theme("colors.border.light");
 }
 
 body {
   font-family: "Pretendard-Regular", sans-serif;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.5rem;
   color: var(--text-color);
   background-color: var(--bg-color);
 }
 
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-main {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  gap: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
 }
