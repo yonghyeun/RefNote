@@ -4,9 +4,6 @@
 
 /* 기본적으로 존재하는 모든 스타일 제거 */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
   /* 스크롤 눈에 안보이게 제거 하기 */
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -37,21 +34,8 @@ html[data-theme="light"] {
 
 body {
   font-family: "Pretendard-Regular", sans-serif;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.5rem;
   color: var(--text-color);
   background-color: var(--bg-color);
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e0e0e0;
 }
 
 main {
