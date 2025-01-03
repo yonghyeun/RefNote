@@ -4,7 +4,7 @@ import { ChromeStorageProvider } from "./shared/store/chromeStorage";
 import { TabProvider } from "./shared/store";
 import "./styles.css";
 
-ReactDOM.createRoot(document.body).render(
+ReactDOM.createRoot(document.querySelector("#root")!).render(
   <ChromeStorageProvider>
     <TabProvider>
       <SidePanelPage />
