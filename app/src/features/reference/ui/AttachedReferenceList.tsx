@@ -1,7 +1,6 @@
 import { useTab } from "@/shared/store";
 import { AttachedReferenceItem } from "./ReferenceItem";
 import { useEffect, useState } from "react";
-import styles from "./styles.module.css";
 import { sendMessageToBackground } from "@/shared/lib";
 
 interface AttachedReferenceListProps {
@@ -41,7 +40,7 @@ export const AttachedReferenceList = ({
   }, [attachedReferenceList, tab]);
 
   return (
-    <ul className={styles.referenceList}>
+    <ul className="flex-grow overflow-y-auto rounded-md">
       {attachedReferenceList
         .sort((prev, cur) => prev.id - cur.id)
         .map((reference, idx) => (
