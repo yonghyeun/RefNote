@@ -8,10 +8,10 @@ const Favicon = ({
   faviconUrl,
 }: {
   faviconUrl: NonNullable<ReferenceData["faviconUrl"]>;
-}) => <img className="w-4 h-4 object-cover mr-1" src={faviconUrl} />;
+}) => <img className="w-4 h-4 object-cover mr-2" src={faviconUrl} />;
 
 const DefaultFavicon = () => (
-  <img className="w-4 h-4 object-cover mr-1" src="/icon/128.png" />
+  <img className="w-4 h-4 object-cover mr-2" src="/icon/128.png" />
 );
 
 interface ContentProps {
@@ -20,7 +20,7 @@ interface ContentProps {
 }
 const Content = ({ children, onClick }: ContentProps) => (
   <div
-    className="flex-grow cursor-pointer min-h-[2.5rem] flex items-center text-[13px]"
+    className="flex-grow cursor-pointer min-h-[2.5rem] flex items-center text-xs"
     onClick={onClick}
   >
     {children}
@@ -32,7 +32,7 @@ const Title = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <p
-      className={isEllipsis ? styles.ellipsis : ""}
+      className={`indent-1 ${isEllipsis ? styles.ellipsis : ""}`}
       onClick={() => setIsEllipsis((prev) => !prev)}
     >
       {children}
