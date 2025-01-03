@@ -21,15 +21,21 @@
 html[data-theme="dark"] {
   --bg-color: theme("colors.bg.dark");
   --text-color: theme("colors.text.dark");
+  --border-color: theme("colors.border.dark");
 }
 
 html[data-theme="light"] {
   --bg-color: theme("colors.bg.light");
   --text-color: theme("colors.text.light");
+  --border-color: theme("colors.border.light");
 }
 
 body {
   font-family: "Pretendard-Regular", sans-serif;
   color: var(--text-color);
   background-color: var(--bg-color);
+}
+
+header {
+  border-bottom: 1px solid var(--border-color);
 }

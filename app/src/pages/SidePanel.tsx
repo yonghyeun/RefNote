@@ -12,7 +12,7 @@ import {
 export const SidePanelPage = () => {
   return (
     <>
-      <header className="flex justify-between items-center pb-2 border-b-[1px] gap-4 border-gray-200">
+      <header className="flex justify-between items-center pb-2 gap-4 ">
         <ReferenceSaveButton />
         <DarkModeToggle />
       </header>

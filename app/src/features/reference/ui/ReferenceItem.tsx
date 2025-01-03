@@ -234,7 +234,7 @@ const ClickedItem = ({ url, title }: Pick<ReferenceData, "url" | "title">) => {
 };
 
 const Container = ({ children }: { children: React.ReactNode }) => (
-  <section className="border-b-[1px] border-gray-100">{children}</section>
+  <section className="referenceContainer">{children}</section>
 );
 
 type ReferenceItemProps<T extends ReferenceData> = T & {

@@ -33,6 +33,10 @@ export default {
           hover: "#e0e0e0",
           active: "#d0d0d0",
         },
+        border: {
+          light: "#e9ecef",
+          dark: "#495057",
+        },
       },
     },
   },
