@@ -36,7 +36,7 @@ export const CopyReferenceListButton = ({
   };
 
   return (
-    <Button onClick={handleCopyReferenceList} className="flex-grow">
+    <Button onClick={handleCopyReferenceList} className="w-full">
       목록 복사
     </Button>
   );
