@@ -17,7 +17,7 @@ export const UnAttachedReferenceContainer = () => {
       className={`h-1/2 flex flex-col gap-2 transition-[height,margin] duration-300 ${isUnAttachedReferenceVisible ? "" : "h-0 mb-10"}`}
     >
       <div className="flex justify-between items-end gap-4">
-        <h2 className="text-lg">
+        <h2 className="text-base">
           글에 첨부되지 않은 레퍼런스
           <span className="text-[0.8rem] text-[#a0a0a0] ml-1">
             ({unAttachedReferenceList.length})

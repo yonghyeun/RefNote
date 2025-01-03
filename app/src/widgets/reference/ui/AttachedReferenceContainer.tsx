@@ -29,7 +29,7 @@ export const AttachedReferenceContainer = () => {
       }`}
     >
       <div className="flex justify-between items-end gap-4">
-        <h2 className="text-lg">
+        <h2 className="text-base">
           글에 첨부된 레퍼런스
           <span className="text-[0.8rem] text-[#a0a0a0] ml-1">
             ({attachedReferenceList.length})
