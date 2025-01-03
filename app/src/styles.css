@@ -37,10 +37,3 @@ body {
   color: var(--text-color);
   background-color: var(--bg-color);
 }
-
-main {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  gap: 0.5rem;
-}

@@ -16,7 +16,7 @@ export const SidePanelPage = () => {
         <ReferenceSaveButton />
         <DarkModeToggle />
       </header>
-      <main>
+      <main className="flex flex-col h-full gap-2">
         <UnAttachedReferenceContainer />
         <AttachedReferenceContainer />
       </main>
