@@ -5,7 +5,7 @@ import {
   CopyReferenceListButton,
   AttachedReferenceList,
 } from "@/features/reference/ui";
-import { ContentScriptErrorButton } from "@/features/error/ui";
+import { ContentScriptErrorButton } from "@/features/utils/ui";
 
 export const AttachedReferenceContainer = () => {
   const {
