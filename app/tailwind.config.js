@@ -11,6 +11,12 @@ export default {
           darker: "#0ca678",
           disabled: "#38d9a9",
         },
+        red: {
+          DEFAULT: "#f44336",
+          hover: "#d32f2f",
+          active: "#b71c1c",
+          disabled: "#f8d7da",
+        },
         text: {
           DEFAULT: "#fff",
           hover: "#e6f7f1",
