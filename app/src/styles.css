@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* 기본적으로 존재하는 모든 스타일 제거 */
 * {
   margin: 0;
