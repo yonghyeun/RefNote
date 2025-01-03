@@ -207,7 +207,7 @@ const ClickedItemButton = ({ onClick, children }: ClickedItemButtonProps) => (
 
 const ClickedItem = ({ url, title }: Pick<ReferenceData, "url" | "title">) => {
   return (
-    <div className="flex justify-start items-center gap-2 pl-6">
+    <div className="flex justify-start items-center gap-2">
       <ClickedItemButton
         onClick={() => {
           navigator.clipboard.writeText(url);
