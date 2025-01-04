@@ -6,4 +6,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  /* 스크롤 너비 아주 작게*/
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 155, 155, 0.5) rgba(255, 255, 255, 0.5);
 }
