@@ -1,7 +1,7 @@
 import { BorderNavLink, Stack } from "@/shared/ui";
 import { Page } from "@/shared/ui/Page";
-import { Text } from "@geist-ui/core";
 import { Outlet } from "react-router";
+import { Text } from "@geist-ui/core";
 
 export const MainLayout = () => (
   <Page>
@@ -9,7 +9,9 @@ export const MainLayout = () => (
       <Stack className="justify-between">
         <Stack className="items-center">
           <img src="./128.png" className="w-12 h-12" />
-          <Text h1>RefNote</Text>
+          <Text h1 className="font-normal">
+            RefNote
+          </Text>
         </Stack>
         <div>darkMode toggle</div>
       </Stack>
