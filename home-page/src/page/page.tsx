@@ -1,3 +1,12 @@
 export const MainPage = () => {
-  return <div>main page</div>;
+  return (
+    <>
+      <section className="h-96">a</section>
+      <section className="h-96">a</section>
+      <section className="h-96">a</section>
+      <section className="h-96">a</section>
+      <section className="h-96">a</section>
+      <section className="h-96">a</section>
+    </>
+  );
 };

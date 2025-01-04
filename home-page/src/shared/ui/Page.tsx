@@ -3,11 +3,13 @@ interface PageProps {
 }
 
 const PageWrapper = ({ children }: PageProps) => (
-  <section className="min-h-screen min-w-96 flex flex-col gap-4 mx-auto px-4 md:max-w-6xl md:px-4">
+  <section className="h-screen min-w-96 flex flex-col gap-4 mx-auto px-4 md:max-w-6xl md:px-4 ">
     {children}
   </section>
 );
-const Header = ({ children }: PageProps) => <header>{children}</header>;
+const Header = ({ children }: PageProps) => (
+  <header className="sticky top-0">{children}</header>
+);
 const Content = ({ children }: PageProps) => (
   <main className="flex-grow">{children}</main>
 );
