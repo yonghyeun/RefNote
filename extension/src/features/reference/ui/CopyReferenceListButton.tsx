@@ -1,16 +1,15 @@
+import { useChromeStorage } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 
-interface CopyReferenceListButtonProps {
-  attachedReferenceList: AttachedReferenceData[];
-}
+export const CopyReferenceListButton = () => {
+  const {
+    chromeStorage: { reference },
+  } = useChromeStorage();
 
-export const CopyReferenceListButton = ({
-  attachedReferenceList,
-}: CopyReferenceListButtonProps) => {
   const handleCopyReferenceList = () => {
-    const attachedReferences = [...attachedReferenceList].sort(
-      (a, b) => a.id - b.id
-    );
+    const attachedReferences = reference
+      .filter((data) => data.isWritten)
+      .sort((a, b) => a.id - b.id);
 
     const result = attachedReferences.map(
       ({ title, url, id }) => `${id}. [${title}](${url})`
@@ -24,7 +23,7 @@ export const CopyReferenceListButton = ({
         type: "basic",
         iconUrl: "/icon/128.png",
         title: "복사 완료",
-        message: `${attachedReferenceList.length} 개의 레퍼런스 목록이 복사되었습니다.`,
+        message: `${attachedReferences.length} 개의 레퍼런스 목록이 복사되었습니다.`,
         silent: true,
       },
       () => {
@@ -36,7 +35,7 @@ export const CopyReferenceListButton = ({
   };
 
   return (
-    <Button onClick={handleCopyReferenceList} className="w-full">
+    <Button onClick={handleCopyReferenceList} className="flex-grow">
       목록 복사
     </Button>
   );

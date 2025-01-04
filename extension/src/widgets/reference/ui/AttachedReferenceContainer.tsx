@@ -1,7 +1,6 @@
 import { useChromeStorage, useTab } from "@/shared/store";
 import {
   AutoConvertingToggle,
-  CopyReferenceListButton,
   AttachedReferenceList,
 } from "@/features/reference/ui";
 import { ContentScriptErrorButton } from "@/features/utils/ui";
@@ -16,7 +15,8 @@ export const AttachedReferenceContainer = () => {
   } = useChromeStorage();
   const tab = useTab();
 
-  const isVelogWritePage = tab?.url.includes("https://velog.io/write");
+  const isError =
+    tab?.url.includes("https://velog.io/write") && !isContentScriptEnabled;
 
   const attachedReferenceList = reference.filter(
     (data): data is AttachedReferenceData => data.isWritten
@@ -37,15 +37,7 @@ export const AttachedReferenceContainer = () => {
         </h2>
         <AutoConvertingToggle />
       </div>
-      <div>
-        {isVelogWritePage && !isContentScriptEnabled ? (
-          <ContentScriptErrorButton tab={tab} />
-        ) : (
-          <CopyReferenceListButton
-            attachedReferenceList={attachedReferenceList}
-          />
-        )}
-      </div>
+      {isError && <ContentScriptErrorButton tab={tab} />}
       <AttachedReferenceList attachedReferenceList={attachedReferenceList} />
     </section>
   );

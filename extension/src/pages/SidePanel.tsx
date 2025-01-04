@@ -1,5 +1,6 @@
 import {
   ConvertToReferenceButton,
+  CopyReferenceListButton,
   ReferenceSaveButton,
   ResetReferenceButton,
 } from "@/features/reference/ui";
@@ -21,6 +22,7 @@ export const SidePanelPage = () => {
         <AttachedReferenceContainer />
       </main>
       <footer className="flex justify-center items-center gap-4">
+        <CopyReferenceListButton />
         <ConvertToReferenceButton />
         <ResetReferenceButton />
       </footer>
