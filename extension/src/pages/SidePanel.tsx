@@ -8,15 +8,18 @@ import {
   ReferenceSaveButton,
   ResetReferenceButton,
 } from "@/features/reference/ui";
-import { DarkModeToggle } from "@/features/utils/ui";
+import { DarkModeToggle, StorageVolumeBar } from "@/features/utils/ui";
 import { UnExpectedErrorBoundary } from "./errorBoundary";
 
 export const SidePanelPage = () => {
   return (
     <UnExpectedErrorBoundary>
-      <header className="flex justify-between items-center pb-2 gap-4 ">
-        <ReferenceSaveButton />
-        <DarkModeToggle />
+      <header className="flex flex-col pb-2 gap-2 ">
+        <div className="flex gap-4">
+          <ReferenceSaveButton />
+          <DarkModeToggle />
+        </div>
+        <StorageVolumeBar />
       </header>
       <main className="flex flex-col h-full gap-2">
         <UnAttachedReferenceContainer />
