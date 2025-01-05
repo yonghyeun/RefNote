@@ -36,7 +36,7 @@ export const StorageVolumeBar = () => {
           style={{ width: `${percentageOfUsed}%` }}
         />
       </div>
-      <span className="w-8 text-end">{percentageOfUsed} %</span>
+      <span className="w-8 text-end text-primary">{percentageOfUsed} %</span>
     </div>
   );
 };
