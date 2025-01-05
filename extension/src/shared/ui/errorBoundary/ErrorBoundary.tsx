@@ -13,7 +13,7 @@ interface ErrorBoundaryProps {
 
 interface ErrorBoundaryState {
   error: Error | null;
-  hasError: boolean;
+  isErrorHandled: boolean;
 }
 
 /**
@@ -35,26 +35,26 @@ export class ErrorBoundary extends React.Component<
 > {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { error: null, hasError: false };
+    this.state = { error: null, isErrorHandled: false };
   }
 
   componentDidCatch(error: Error) {
     this.setState({
       error,
-      hasError: this.props.shouldHandleError
+      isErrorHandled: this.props.shouldHandleError
         ? this.props.shouldHandleError(error)
         : false,
     });
   }
 
   render() {
-    if (!this.state.hasError && this.state.error) {
+    if (!this.state.isErrorHandled && this.state.error) {
       throw this.state.error;
     }
 
-    return this.state.hasError && this.state.error
+    return this.state.isErrorHandled && this.state.error
       ? this.props.fallback({
-          resolve: () => this.setState({ error: null, hasError: false }),
+          resolve: () => this.setState({ error: null, isErrorHandled: false }),
           error: this.state.error,
         })
       : this.props.children;
