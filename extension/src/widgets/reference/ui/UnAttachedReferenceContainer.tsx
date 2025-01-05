@@ -24,6 +24,7 @@ export const UnAttachedReferenceContainer = () => {
           </span>
         </h2>
         <Button
+          className="py-[2px]"
           onClick={() => {
             setChromeStorage((prev) => ({
               ...prev,
