@@ -22,7 +22,7 @@ interface ErrorBoundaryState {
  * 만약 에러가 캐치 되었으나 shouldHandleError 함수가 없거나 false를 반환하면 에러를 상단 에러 바운더리리로 throw 합니다.
  *
  * fallback 함수는 에러가 발생했을 때 렌더링할 컴포넌트를 반환합니다.
- * fallback 함수는 (resolveError)=> <SComponent someProps = {resolveError}/> 형태로 사용합니다.
+ * fallback 함수는 (fallbackProps)=> <SComponent props= {...fallbackProps}/> 형태로 사용합니다.
  * fallback 으로 인해 렌더링 되는 컴포넌트에서 해당 에러 바운더리의 상태를 조건에 따라 변경할 수 있습니다.
  *
  * @param fallback 에러가 발생했을 때 렌더링할 컴포넌트
