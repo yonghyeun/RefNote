@@ -41,7 +41,7 @@ export const ConvertToReferenceButton = () => {
       className="flex-grow"
       disabled={!(isVelogWritePage && chromeStorage.isContentScriptEnabled)}
     >
-      텍스트 전환
+      텍스트 변환
     </Button>
   );
 };
