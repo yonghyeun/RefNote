@@ -42,8 +42,8 @@ const UnExpectedErrorPage = ({ error }: { error: Error }) => (
       </ErrorPage.Text>
       <ErrorPage.Text>
         깃허브 이슈란에 발생한 버그를 제보해주세요. 후두다닥 해결하겠습니다.
-        (´⌒｀。)
       </ErrorPage.Text>
+      <ErrorPage.Text>(´⌒｀。)</ErrorPage.Text>
     </ErrorPage.Content>
     <ErrorPage.Content>
       <ErrorBlock error={error} />
