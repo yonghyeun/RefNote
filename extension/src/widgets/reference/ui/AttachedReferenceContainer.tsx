@@ -1,9 +1,9 @@
-import { useChromeStorage, useTab } from "@/shared/store";
+import { useEffect } from "react";
 import {
   AutoConvertingToggle,
   AttachedReferenceList,
 } from "@/features/reference/ui";
-import { ContentScriptErrorButton } from "@/features/utils/ui";
+import { useChromeStorage, useTab } from "@/shared/store";
 
 export const AttachedReferenceContainer = () => {
   const {
@@ -15,12 +15,22 @@ export const AttachedReferenceContainer = () => {
   } = useChromeStorage();
   const tab = useTab();
 
-  const isError =
-    tab?.url.includes("https://velog.io/write") && !isContentScriptEnabled;
-
   const attachedReferenceList = reference.filter(
     (data): data is AttachedReferenceData => data.isWritten
   );
+
+  // 만약 글 쓰기 페이지이지만 content script가 올바르게 삽입 되지 않았다면
+  // 페이지를 새로고침하여 content script를 다시 삽입합니다.
+
+  useEffect(() => {
+    if (
+      tab &&
+      tab.url.includes("https://velog.io/write") &&
+      !isContentScriptEnabled
+    ) {
+      chrome.tabs.reload(tab.id);
+    }
+  }, [tab, isContentScriptEnabled]);
 
   return (
     <section
@@ -37,7 +47,6 @@ export const AttachedReferenceContainer = () => {
         </h2>
         <AutoConvertingToggle />
       </div>
-      {isError && <ContentScriptErrorButton tab={tab} />}
       <AttachedReferenceList attachedReferenceList={attachedReferenceList} />
     </section>
   );
