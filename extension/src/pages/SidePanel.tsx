@@ -1,18 +1,19 @@
 import {
+  AttachedReferenceContainer,
+  UnAttachedReferenceContainer,
+} from "@/widgets/reference/ui";
+import {
   ConvertToReferenceButton,
   CopyReferenceListButton,
   ReferenceSaveButton,
   ResetReferenceButton,
 } from "@/features/reference/ui";
 import { DarkModeToggle } from "@/features/utils/ui";
-import {
-  AttachedReferenceContainer,
-  UnAttachedReferenceContainer,
-} from "@/widgets/reference/ui";
+import { UnExpectedErrorBoundary } from "./errorBoundary";
 
 export const SidePanelPage = () => {
   return (
-    <>
+    <UnExpectedErrorBoundary>
       <header className="flex justify-between items-center pb-2 gap-4 ">
         <ReferenceSaveButton />
         <DarkModeToggle />
@@ -26,6 +27,6 @@ export const SidePanelPage = () => {
         <ConvertToReferenceButton />
         <ResetReferenceButton />
       </footer>
-    </>
+    </UnExpectedErrorBoundary>
   );
 };
