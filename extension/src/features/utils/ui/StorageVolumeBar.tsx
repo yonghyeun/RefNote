@@ -32,7 +32,7 @@ export const StorageVolumeBar = () => {
     <div className="flex gap-2 items-center">
       <div className="flex-grow bg-gray-200 h-1 rounded-md ">
         <div
-          className="h-full rounded-md bg-primary"
+          className="h-full rounded-md bg-primary transition-[width] duration-300"
           style={{ width: `${percentageOfUsed}%` }}
         />
       </div>
