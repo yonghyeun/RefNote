@@ -14,7 +14,7 @@ import { UnExpectedErrorBoundary } from "./errorBoundary";
 export const SidePanelPage = () => {
   return (
     <UnExpectedErrorBoundary>
-      <header className="flex flex-col pb-2 gap-2 ">
+      <header className="flex flex-col gap-2 ">
         <div className="flex gap-4">
           <ReferenceSaveButton />
           <DarkModeToggle />
