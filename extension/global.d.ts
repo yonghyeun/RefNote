@@ -32,7 +32,6 @@ declare global {
     reference: ReferenceData[];
     autoConverting: boolean;
     isDarkMode: boolean;
-    isUnAttachedReferenceVisible: boolean;
     isContentScriptEnabled: boolean;
   }
 
