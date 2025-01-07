@@ -22,7 +22,7 @@ export const Button = ({
   return (
     <button
       {...props}
-      className={`${getSize(size)} bg-primary text-text border-none rounded-md font-medium text-center no-underline inline-block cursor-pointer
+      className={`${getSize(size)}  bg-primary text-text border-none rounded-md font-medium text-center no-underline inline-block cursor-pointer
         hover:bg-primary-dark hover:text-text-hover
         focus-visible:bg-primary-dark focus-visible:text-text-hover
         active:bg-primary-darker active:text-text-hover

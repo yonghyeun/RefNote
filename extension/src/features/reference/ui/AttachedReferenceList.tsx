@@ -1,7 +1,7 @@
 import { useTab } from "@/shared/store";
-import { AttachedReferenceItem } from "./ReferenceItem";
 import { useEffect, useState } from "react";
 import { sendMessageToBackground } from "@/shared/lib";
+import { ReferenceItem } from "./ReferenceItem";
 
 interface AttachedReferenceListProps {
   attachedReferenceList: AttachedReferenceData[];
@@ -10,8 +10,13 @@ interface AttachedReferenceListProps {
 export const AttachedReferenceList = ({
   attachedReferenceList,
 }: AttachedReferenceListProps) => {
-  const [activeUrl, setIsActiveUrl] = useState<string>("");
+  const [activeUrl, setActiveUrl] = useState<string>("");
   const tab = useTab();
+  const isVelogWritePage = tab?.url.includes("velog.io/write");
+
+  const handleClick = (url: string) => {
+    setActiveUrl((prev) => (prev === url ? "" : url));
+  };
 
   useEffect(() => {
     (async () => {
@@ -41,21 +46,32 @@ export const AttachedReferenceList = ({
 
   return (
     <ul className="flex-grow overflow-y-auto rounded-md">
-      {attachedReferenceList
-        .sort((prev, cur) => prev.id - cur.id)
-        .map((reference, idx) => (
-          <li key={idx}>
-            <AttachedReferenceItem
-              {...reference}
-              isActive={activeUrl === reference.url}
-              onClick={() => {
-                setIsActiveUrl(
-                  activeUrl === reference.url ? "" : reference.url
-                );
-              }}
-            />
-          </li>
-        ))}
+      {attachedReferenceList.map(({ url, title, faviconUrl, isUsed, id }) => (
+        <ReferenceItem key={url} onClick={() => handleClick(url)}>
+          <ReferenceItem.Align>
+            <ReferenceItem.Favicon faviconUrl={faviconUrl} />
+            <ReferenceItem.Title>{title}</ReferenceItem.Title>
+            <span className="text-[0.8rem] text-gray-400 flex gap-1">
+              <span
+                className={`text-primary
+              ${isVelogWritePage && isUsed ? "" : "hidden"}`}
+              >
+                ✔
+              </span>
+              [{id}]
+            </span>
+            <ReferenceItem.WriteButton title={title} />
+            <ReferenceItem.RemoveButton title={title} />
+          </ReferenceItem.Align>
+          {url === activeUrl && (
+            <ReferenceItem.Align className="gap-2">
+              <ReferenceItem.CopyLinkButton url={url} />
+              <ReferenceItem.CopyLinkWithTextButton url={url} title={title} />
+              <ReferenceItem.MovePageButton url={url} />
+            </ReferenceItem.Align>
+          )}
+        </ReferenceItem>
+      ))}
     </ul>
   );
 };

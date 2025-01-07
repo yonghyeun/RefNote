@@ -7,10 +7,6 @@
   background-color: var(--content-active);
 }
 
-:global(.referenceContainer) {
-  border-bottom: 1px solid var(--border-color);
-}
-
 .ellipsis {
   display: -webkit-box;
   -webkit-line-clamp: 2;

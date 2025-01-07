@@ -1,38 +1,20 @@
 import React, { useState } from "react";
 import styles from "./styles.module.css";
 import { useChromeStorage } from "@/shared/store/chromeStorage";
-import { IconButton } from "@/shared/ui/button";
-import { useTab } from "@/shared/store";
+import { Button, IconButton } from "@/shared/ui/button";
 
 const Favicon = ({
-  faviconUrl,
+  faviconUrl = "/icon/128.png",
 }: {
-  faviconUrl: NonNullable<ReferenceData["faviconUrl"]>;
+  faviconUrl?: ReferenceData["faviconUrl"];
 }) => <img className="w-4 h-4 object-cover mr-2" src={faviconUrl} />;
-
-const DefaultFavicon = () => (
-  <img className="w-4 h-4 object-cover mr-2" src="/icon/128.png" />
-);
-
-interface ContentProps {
-  children: React.ReactNode;
-  onClick: () => void;
-}
-const Content = ({ children, onClick }: ContentProps) => (
-  <div
-    className="flex-grow cursor-pointer min-h-[2.5rem] flex items-center text-xs"
-    onClick={onClick}
-  >
-    {children}
-  </div>
-);
 
 const Title = ({ children }: { children: React.ReactNode }) => {
   const [isEllipsis, setIsEllipsis] = useState<boolean>(true);
 
   return (
     <p
-      className={`indent-1 ${isEllipsis ? styles.ellipsis : ""}`}
+      className={`indent-1 flex-grow ${isEllipsis ? styles.ellipsis : ""}`}
       onClick={() => setIsEllipsis((prev) => !prev)}
     >
       {children}
@@ -40,7 +22,7 @@ const Title = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const WriteButton = ({ title }: Pick<UnAttachedReferenceData, "title">) => {
+const WriteButton = ({ title }: Pick<ReferenceData, "title">) => {
   const { setChromeStorage } = useChromeStorage();
 
   const handleWriteReference = () => {
@@ -186,124 +168,91 @@ const RemoveButton = ({ title }: Pick<ReferenceData, "title">) => {
   );
 };
 
-interface ClickedItemButtonProps {
-  onClick: () => void;
+const CopyLinkButton = ({ url }: Pick<ReferenceData, "url">) => {
+  return (
+    <Button
+      size="sm"
+      className="flex-grow"
+      onClick={() => {
+        navigator.clipboard.writeText(url);
+      }}
+    >
+      링크 복사
+    </Button>
+  );
+};
+
+const CopyLinkWithTextButton = ({
+  url,
+  title,
+}: Pick<ReferenceData, "url" | "title">) => {
+  return (
+    <Button
+      size="sm"
+      className="flex-grow"
+      onClick={() => {
+        navigator.clipboard.writeText(`[${title}](${url})`);
+      }}
+    >
+      [제목](링크) 복사
+    </Button>
+  );
+};
+
+const MovePageButton = ({ url }: Pick<ReferenceData, "url">) => {
+  return (
+    <Button
+      size="sm"
+      className="flex-grow"
+      onClick={() => {
+        window.open(url, "_blank");
+      }}
+    >
+      페이지로 이동
+    </Button>
+  );
+};
+
+interface ReferenceItemProps {
   children: React.ReactNode;
+  className?: string;
 }
 
-const ClickedItemButton = ({ onClick, children }: ClickedItemButtonProps) => (
-  <button
-    onClick={onClick}
-    className="bg-primary text-text border-none rounded-md font-medium py-[4px] px-[0.5rem] mb-2 
-    hover:bg-primary-dark hover:text-text-hover
-    focus-visible:bg-primary-dark focus-visible:text-text-hover
-    active:bg-primary-darker active:text-text-hover"
-  >
-    {children}
-  </button>
-);
-
-const ClickedItem = ({ url, title }: Pick<ReferenceData, "url" | "title">) => {
-  return (
-    <div className="flex justify-start items-center gap-2">
-      <ClickedItemButton
-        onClick={() => {
-          navigator.clipboard.writeText(url);
-        }}
-      >
-        링크 복사
-      </ClickedItemButton>
-      <ClickedItemButton
-        onClick={() => {
-          navigator.clipboard.writeText(`[${title}](${url})`);
-        }}
-      >
-        [제목](링크) 복사
-      </ClickedItemButton>
-      <ClickedItemButton
-        onClick={() => {
-          window.open(url, "_blank");
-        }}
-      >
-        페이지로 이동
-      </ClickedItemButton>
-    </div>
-  );
-};
-
-const Container = ({ children }: { children: React.ReactNode }) => (
-  <section className="referenceContainer">{children}</section>
-);
-
-type ReferenceItemProps<T extends ReferenceData> = T & {
-  isActive: boolean;
+const ReferenceItemWrapper = ({
+  children,
+  onClick,
+}: ReferenceItemProps & {
   onClick: () => void;
-};
-
-export const UnAttachedReferenceItem = ({
-  isActive,
-  onClick,
-  faviconUrl,
-  title,
-  url,
-}: ReferenceItemProps<UnAttachedReferenceData>) => {
+}) => {
   return (
-    <Container>
-      <div className="flex items-center justify-between gap-1">
-        <Content onClick={onClick}>
-          {faviconUrl ? (
-            <Favicon faviconUrl={faviconUrl} />
-          ) : (
-            <DefaultFavicon />
-          )}
-          <Title>{title}</Title>
-        </Content>
-        <WriteButton title={title} />
-        <RemoveButton title={title} />
-      </div>
-      {isActive && <ClickedItem url={url} title={title} />}
-    </Container>
+    <li
+      className="cursor-pointer border-b py-1 flex flex-col justify-center gap-2"
+      onClick={onClick}
+    >
+      {children}
+    </li>
   );
 };
 
-export const AttachedReferenceItem = ({
-  onClick,
-  isActive,
-  faviconUrl,
-  title,
-  url,
-  id,
-  isUsed,
-}: ReferenceItemProps<AttachedReferenceData>) => {
-  const tab = useTab();
-  const isVelogWritePage = tab?.url.includes("velog.io/write");
-
+const Align = ({ children = "", className }: ReferenceItemProps) => {
   return (
-    <Container>
-      <div className="flex items-center justify-between gap-1">
-        <Content onClick={onClick}>
-          {faviconUrl ? (
-            <Favicon faviconUrl={faviconUrl} />
-          ) : (
-            <DefaultFavicon />
-          )}
-          <div className="flex flex-grow justify-between gap-1">
-            <Title>{title}</Title>
-            <span className="text-[0.8rem] text-gray-400 flex gap-1">
-              <span
-                className={`text-primary
-              ${isVelogWritePage && isUsed ? "" : "hidden"}`}
-              >
-                ✔
-              </span>
-              [{id}]
-            </span>
-          </div>
-        </Content>
-        <EraseButton title={title} id={id} />
-        <RemoveButton title={title} />
-      </div>
-      {isActive && <ClickedItem url={url} title={title} />}
-    </Container>
+    <div className={`flex gap-1 items-center ${className}`}>{children}</div>
   );
 };
+
+const Stack = ({ children = "", className }: ReferenceItemProps) => {
+  return <div className={`flex flex-col ${className}`}>{children}</div>;
+};
+
+export const ReferenceItem = Object.assign(ReferenceItemWrapper, {
+  Align,
+  Stack,
+  Favicon,
+  Title,
+  WriteButton,
+  EraseButton,
+  RemoveButton,
+  CopyLinkButton,
+  CopyLinkWithTextButton,
+  MovePageButton,
+});
