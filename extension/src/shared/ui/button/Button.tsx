@@ -1,11 +1,28 @@
+type ButtonSize = "sm" | "md";
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
+  size?: ButtonSize;
 }
-export const Button = ({ children, className = "", ...props }: ButtonProps) => {
+
+const getSize = (size: ButtonSize) => {
+  const sizeMap: Record<ButtonSize, string> = {
+    sm: "text-xs py-[4px] px-[0.5rem]",
+    md: "text-sm px-4 py-2",
+  };
+
+  return sizeMap[size];
+};
+
+export const Button = ({
+  children,
+  className = "",
+  size = "md",
+  ...props
+}: ButtonProps) => {
   return (
     <button
       {...props}
-      className={`bg-primary text-text text-sm border-none rounded-md font-medium px-4 py-2 text-center no-underline inline-block cursor-pointer
+      className={`${getSize(size)} bg-primary text-text border-none rounded-md font-medium text-center no-underline inline-block cursor-pointer
         hover:bg-primary-dark hover:text-text-hover
         focus-visible:bg-primary-dark focus-visible:text-text-hover
         active:bg-primary-darker active:text-text-hover
