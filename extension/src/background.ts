@@ -125,7 +125,7 @@ chrome.action.onClicked.addListener(async (tab) => {
     });
     await chrome.sidePanel.setOptions({
       enabled: true,
-      path: "src/side_panel.html",
+      path: "src/index.html",
       tabId: tab.id,
     });
   } catch (error) {
