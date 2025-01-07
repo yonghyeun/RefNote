@@ -17,6 +17,7 @@ export const Button = ({
   children,
   className = "",
   size = "md",
+  onClick,
   ...props
 }: ButtonProps) => {
   return (
@@ -28,6 +29,12 @@ export const Button = ({
         active:bg-primary-darker active:text-text-hover
         disabled:pointer-events-none disabled:bg-primary-disabled disabled:text-text-disabled
         ${className}`}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (onClick) {
+          onClick(e);
+        }
+      }}
     >
       {children}
     </button>
@@ -37,11 +44,18 @@ export const Button = ({
 export const IconButton = ({
   children,
   className = "",
+  onClick,
   ...props
 }: ButtonProps) => {
   return (
     <button
       {...props}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (onClick) {
+          onClick(e);
+        }
+      }}
       className={`p-2 flex items-center border-none bg-iconButton rounded-md cursor-pointer
         hover:bg-iconButton-hover
         focus-visible:bg-iconButton-hover

@@ -222,7 +222,7 @@ const ReferenceItemWrapper = ({
   children,
   onClick,
 }: ReferenceItemProps & {
-  onClick: () => void;
+  onClick: React.MouseEventHandler<HTMLLIElement>;
 }) => {
   return (
     <li

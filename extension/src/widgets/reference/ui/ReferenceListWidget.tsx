@@ -81,7 +81,12 @@ const AttachedReferenceList = ({
     <ReferenceListContainer>
       {attachedReferenceList.map(({ url, title, faviconUrl, isUsed, id }) => {
         return (
-          <ReferenceItem key={url} onClick={() => handleClickUrl(url)}>
+          <ReferenceItem
+            key={url}
+            onClick={() => {
+              handleClickUrl(url);
+            }}
+          >
             <ReferenceItem.Align>
               <ReferenceItem.Favicon faviconUrl={faviconUrl} />
               <ReferenceItem.Title>{title}</ReferenceItem.Title>
