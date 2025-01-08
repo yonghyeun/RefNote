@@ -23,6 +23,7 @@ export default {
         },
         text: {
           DEFAULT: "#fff",
+          secondary: "#a0a0a0",
           light: "#121212",
           dark: "#f0f0f0",
           hover: "#e6f7f1",

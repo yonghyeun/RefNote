@@ -32,8 +32,8 @@ declare global {
     reference: ReferenceData[];
     autoConverting: boolean;
     isDarkMode: boolean;
-    isUnAttachedReferenceVisible: boolean;
     isContentScriptEnabled: boolean;
+    isUnAttachedReferenceVisible: boolean;
   }
 
   interface Tab extends chrome.tabs.Tab {
