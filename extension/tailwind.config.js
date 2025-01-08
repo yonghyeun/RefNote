@@ -8,6 +8,14 @@ export default {
         bg: {
           light: "#fff",
           dark: "#121212",
+          hover: {
+            light: "#f0f0f0",
+            dark: "#4a4a4a",
+          },
+          active: {
+            light: "#e0e0e0",
+            dark: "#3a3a3a",
+          },
         },
         primary: {
           DEFAULT: "#12b886",

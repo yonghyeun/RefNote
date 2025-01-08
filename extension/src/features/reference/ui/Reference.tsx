@@ -30,12 +30,10 @@ const ReferenceItemWrapper = ({
 }: ReferenceProps) => {
   const { setChromeStorage } = useChromeStorage();
 
-  console.log(reference);
-
   return (
     <ReferenceProvider.Provider value={{ reference, setChromeStorage }}>
       <li
-        className="cursor-pointer border-b py-1 flex flex-col justify-center gap-2"
+        className="reference cursor-pointer border-b py-1 flex flex-col justify-center gap-2"
         onClick={onClick}
       >
         {children}
