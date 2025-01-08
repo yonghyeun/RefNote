@@ -154,11 +154,9 @@ const AttachedReferenceList = ({
 
 export const ReferenceListWidget = () => {
   const {
-    chromeStorage: { reference },
+    chromeStorage: { reference, isUnAttachedReferenceVisible },
+    setChromeStorage,
   } = useChromeStorage();
-
-  const [isUnAttachedReferenceVisible, setIsUnAttachedReferenceVisible] =
-    useState<boolean>(true);
 
   const attachedReferenceList = reference
     .filter((data): data is AttachedReferenceData => data.isWritten)
@@ -182,7 +180,13 @@ export const ReferenceListWidget = () => {
           </div>
           <Button
             className="py-[2px]"
-            onClick={() => setIsUnAttachedReferenceVisible((prev) => !prev)}
+            onClick={() =>
+              setChromeStorage((prev) => ({
+                ...prev,
+                isUnAttachedReferenceVisible:
+                  !prev.isUnAttachedReferenceVisible,
+              }))
+            }
             aria-label={
               isUnAttachedReferenceVisible
                 ? "글에 첨부하지 않은 레퍼런스 리스트 목록 보기"

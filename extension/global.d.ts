@@ -33,6 +33,7 @@ declare global {
     autoConverting: boolean;
     isDarkMode: boolean;
     isContentScriptEnabled: boolean;
+    isUnAttachedReferenceVisible: boolean;
   }
 
   interface Tab extends chrome.tabs.Tab {
