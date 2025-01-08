@@ -20,16 +20,14 @@ const useReferenceContext = () => {
 
 interface ReferenceProps extends Omit<ReferenceContext, "setChromeStorage"> {
   children: React.ReactNode;
-  onClick: React.MouseEventHandler<HTMLLIElement>;
+  onClick?: React.MouseEventHandler<HTMLLIElement>;
 }
 
 const ReferenceItemWrapper = ({
   children,
   onClick,
   reference,
-}: ReferenceProps & {
-  onClick: React.MouseEventHandler<HTMLLIElement>;
-}) => {
+}: ReferenceProps) => {
   const { setChromeStorage } = useChromeStorage();
 
   return (
@@ -48,7 +46,9 @@ const Favicon = ({
   faviconUrl = "/icon/128.png",
 }: {
   faviconUrl?: ReferenceData["faviconUrl"];
-}) => <img className="w-4 h-4 object-cover mr-2" src={faviconUrl} />;
+}) => {
+  return <img className="w-4 h-4 object-cover mr-2" src={faviconUrl} />;
+};
 
 const Title = () => {
   const { reference } = useReferenceContext();

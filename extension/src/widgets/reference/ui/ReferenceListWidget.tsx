@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useChromeStorage } from "@/shared/store";
-import { AutoConvertingToggle, Reference } from "@/features/reference/ui";
+import {
+  AutoConvertingToggle,
+  Reference,
+  ReferenceEdit,
+} from "@/features/reference/ui";
 import { Button } from "@/shared/ui/button";
 import { Heading } from "@/shared/ui/Heading";
 import { Text } from "@/shared/ui/Text";
@@ -27,6 +31,7 @@ const UnAttachedReferenceList = ({
   unAttachedReferenceList: UnAttachedReferenceData[];
 }) => {
   const [clickedUrl, setClickedUrl] = useState<string>("");
+  const [isEditUrl, setEditUrl] = useState<string>("");
 
   const handleClickUrl = (url: string) => {
     setClickedUrl((prev) => (prev === url ? "" : url));
@@ -34,24 +39,33 @@ const UnAttachedReferenceList = ({
 
   return (
     <ReferenceListContainer>
-      {unAttachedReferenceList.map((reference) => (
-        <Reference
-          key={reference.url}
-          onClick={() => handleClickUrl(reference.url)}
-          reference={reference}
-        >
-          <div className="flex gap-1 items-center">
-            <Reference.Favicon />
-            <Reference.Title />
-            <Reference.WriteButton />
-            <Reference.RemoveButton />
-          </div>
-          {reference.url === clickedUrl && (
+      {unAttachedReferenceList.map((reference, idx) =>
+        isEditUrl === reference.url ? (
+          <ReferenceEdit
+            reference={reference}
+            onResolveEdit={() => {
+              setEditUrl("");
+              setClickedUrl("");
+            }}
+          />
+        ) : (
+          <Reference
+            key={idx}
+            onClick={() => handleClickUrl(reference.url)}
+            reference={reference}
+          >
+            <div className="flex gap-1 items-center">
+              <Reference.Favicon />
+              <Reference.Title />
+              <Reference.WriteButton />
+              <Reference.RemoveButton />
+            </div>
+            {reference.url === clickedUrl && (
               <div className="flex flex-col gap-1">
-            <div className="flex gap-2 items-center">
-              <Reference.CopyLinkButton />
-              <Reference.CopyLinkWithTextButton />
-              <Reference.MovePageButton />
+                <div className="flex gap-2 items-center">
+                  <Reference.CopyLinkButton />
+                  <Reference.CopyLinkWithTextButton />
+                  <Reference.MovePageButton />
                 </div>
                 <div className="flex w-full">
                   <Reference.CustomButton
@@ -60,9 +74,9 @@ const UnAttachedReferenceList = ({
                     제목 수정
                   </Reference.CustomButton>
                 </div>
-            </div>
-          )}
-        </Reference>
+              </div>
+            )}
+          </Reference>
         )
       )}
     </ReferenceListContainer>
@@ -82,11 +96,11 @@ const AttachedReferenceList = ({
 
   return (
     <ReferenceListContainer>
-      {attachedReferenceList.map((reference) => {
+      {attachedReferenceList.map((reference, idx) => {
         return (
           <Reference
             reference={reference}
-            key={reference.url}
+            key={idx}
             onClick={() => {
               handleClickUrl(reference.url);
             }}

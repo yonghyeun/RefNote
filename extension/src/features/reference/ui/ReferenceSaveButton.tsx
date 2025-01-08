@@ -12,6 +12,7 @@ export const ReferenceSaveButton = () => {
       active: true,
       currentWindow: true,
     });
+
     const data = {
       title: tab.title,
       url: tab.url,

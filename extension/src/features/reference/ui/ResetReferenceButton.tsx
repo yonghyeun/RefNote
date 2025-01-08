@@ -10,8 +10,6 @@ export const ResetReferenceButton = () => {
     }));
   };
 
-  // 색상으로 약간 주의를 줄 수 있는 빨간색 아이콘 버튼을 만들어주세요.
-
   return (
     <Button
       aria-label="Reset reference"
