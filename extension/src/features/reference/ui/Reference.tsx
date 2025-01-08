@@ -30,6 +30,8 @@ const ReferenceItemWrapper = ({
 }: ReferenceProps) => {
   const { setChromeStorage } = useChromeStorage();
 
+  console.log(reference);
+
   return (
     <ReferenceProvider.Provider value={{ reference, setChromeStorage }}>
       <li
@@ -42,12 +44,12 @@ const ReferenceItemWrapper = ({
   );
 };
 
-const Favicon = ({
-  faviconUrl = "/icon/128.png",
-}: {
-  faviconUrl?: ReferenceData["faviconUrl"];
-}) => {
-  return <img className="w-4 h-4 object-cover mr-2" src={faviconUrl} />;
+const Favicon = () => {
+  const { reference } = useReferenceContext();
+
+  return (
+    <img className="w-4 h-4 object-cover mr-2" src={reference.faviconUrl} />
+  );
 };
 
 const Title = () => {

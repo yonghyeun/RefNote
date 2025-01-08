@@ -36,14 +36,14 @@ export const ReferenceEdit = ({
 
   return (
     <Reference reference={reference}>
-      <div className="flex gap-1 items-center pb-2">
+      <div className="flex gap-1 items-center py-2">
         <Reference.Favicon />
         <div className="flex flex-grow gap-2">
           <input
             placeholder={reference.title}
             type="text"
             value={title}
-            className="bg-transparent flex-grow 
+            className="pb-1 bg-transparent flex-grow 
             border-b
             border-primary  
             focus:outline-none"
