@@ -213,33 +213,38 @@ const RemoveButton = () => {
   );
 };
 
+const CustomButton = ({
+  children,
+  ...props
+}: { children: React.ReactNode } & React.ComponentProps<typeof Button>) => (
+  <Button size="sm" className="flex-grow" {...props}>
+    {children}
+  </Button>
+);
+
 const CopyLinkButton = () => {
   const { reference } = useReferenceContext();
   return (
-    <Button
-      size="sm"
-      className="flex-grow"
+    <CustomButton
       onClick={() => {
         navigator.clipboard.writeText(reference.url);
       }}
     >
       링크 복사
-    </Button>
+    </CustomButton>
   );
 };
 
 const CopyLinkWithTextButton = () => {
   const { reference } = useReferenceContext();
   return (
-    <Button
-      size="sm"
-      className="flex-grow"
+    <CustomButton
       onClick={() => {
         navigator.clipboard.writeText(`[${reference.title}](${reference.url})`);
       }}
     >
       [제목](링크) 복사
-    </Button>
+    </CustomButton>
   );
 };
 
@@ -247,15 +252,13 @@ const MovePageButton = () => {
   const { reference } = useReferenceContext();
 
   return (
-    <Button
-      size="sm"
-      className="flex-grow"
+    <CustomButton
       onClick={() => {
         window.open(reference.url, "_blank");
       }}
     >
       페이지로 이동
-    </Button>
+    </CustomButton>
   );
 };
 
@@ -268,4 +271,5 @@ export const Reference = Object.assign(ReferenceItemWrapper, {
   CopyLinkButton,
   CopyLinkWithTextButton,
   MovePageButton,
+  CustomButton,
 });

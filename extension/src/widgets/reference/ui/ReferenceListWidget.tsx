@@ -47,14 +47,24 @@ const UnAttachedReferenceList = ({
             <Reference.RemoveButton />
           </div>
           {reference.url === clickedUrl && (
+              <div className="flex flex-col gap-1">
             <div className="flex gap-2 items-center">
               <Reference.CopyLinkButton />
               <Reference.CopyLinkWithTextButton />
               <Reference.MovePageButton />
+                </div>
+                <div className="flex w-full">
+                  <Reference.CustomButton
+                    onClick={() => setEditUrl(reference.url)}
+                  >
+                    제목 수정
+                  </Reference.CustomButton>
+                </div>
             </div>
           )}
         </Reference>
-      ))}
+        )
+      )}
     </ReferenceListContainer>
   );
 };
