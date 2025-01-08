@@ -1,7 +1,48 @@
-import React, { useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import styles from "./styles.module.css";
 import { useChromeStorage } from "@/shared/store/chromeStorage";
 import { Button, IconButton } from "@/shared/ui/button";
+
+interface ReferenceContext {
+  reference: ReferenceData;
+  setChromeStorage: ReturnType<typeof useChromeStorage>["setChromeStorage"];
+}
+
+const ReferenceProvider = createContext<ReferenceContext | null>(null);
+
+const useReferenceContext = () => {
+  const context = useContext(ReferenceProvider);
+  if (!context) {
+    return useContext(ReferenceProvider)!;
+  }
+  return context;
+};
+
+interface ReferenceProps extends Omit<ReferenceContext, "setChromeStorage"> {
+  children: React.ReactNode;
+  onClick: React.MouseEventHandler<HTMLLIElement>;
+}
+
+const ReferenceItemWrapper = ({
+  children,
+  onClick,
+  reference,
+}: ReferenceProps & {
+  onClick: React.MouseEventHandler<HTMLLIElement>;
+}) => {
+  const { setChromeStorage } = useChromeStorage();
+
+  return (
+    <ReferenceProvider.Provider value={{ reference, setChromeStorage }}>
+      <li
+        className="cursor-pointer border-b py-1 flex flex-col justify-center gap-2"
+        onClick={onClick}
+      >
+        {children}
+      </li>
+    </ReferenceProvider.Provider>
+  );
+};
 
 const Favicon = ({
   faviconUrl = "/icon/128.png",
@@ -9,7 +50,8 @@ const Favicon = ({
   faviconUrl?: ReferenceData["faviconUrl"];
 }) => <img className="w-4 h-4 object-cover mr-2" src={faviconUrl} />;
 
-const Title = ({ children }: { children: React.ReactNode }) => {
+const Title = () => {
+  const { reference } = useReferenceContext();
   const [isEllipsis, setIsEllipsis] = useState<boolean>(true);
 
   return (
@@ -17,13 +59,13 @@ const Title = ({ children }: { children: React.ReactNode }) => {
       className={`indent-1 flex-grow ${isEllipsis ? styles.ellipsis : ""}`}
       onClick={() => setIsEllipsis((prev) => !prev)}
     >
-      {children}
+      {reference.title}
     </p>
   );
 };
 
-const WriteButton = ({ title }: Pick<ReferenceData, "title">) => {
-  const { setChromeStorage } = useChromeStorage();
+const WriteButton = () => {
+  const { reference, setChromeStorage } = useReferenceContext();
 
   const handleWriteReference = () => {
     setChromeStorage((prev) => {
@@ -31,7 +73,7 @@ const WriteButton = ({ title }: Pick<ReferenceData, "title">) => {
       return {
         ...prev,
         reference: prev.reference.map((data) =>
-          data.title !== title
+          data.title !== reference.title
             ? data
             : { ...data, isWritten: true, id, isUsed: false }
         ),
@@ -41,7 +83,7 @@ const WriteButton = ({ title }: Pick<ReferenceData, "title">) => {
 
   return (
     <IconButton
-      aria-label={`${title}에 대한 레퍼런스 사용하기`}
+      aria-label={`${reference.title}에 대한 레퍼런스 사용하기`}
       onClick={handleWriteReference}
     >
       <svg
@@ -63,23 +105,26 @@ const WriteButton = ({ title }: Pick<ReferenceData, "title">) => {
   );
 };
 
-const EraseButton = ({
-  title,
-  id,
-}: Pick<AttachedReferenceData, "title" | "id">) => {
-  const { setChromeStorage } = useChromeStorage();
+const EraseButton = () => {
+  const { reference, setChromeStorage } = useReferenceContext();
+
+  if (!reference.isWritten) {
+    throw new Error(
+      "Erase Button 은 AttachedReferenceData에서만 사용 가능 합니다."
+    );
+  }
 
   const handleEraseReference = () => {
     setChromeStorage((prev) => {
       return {
         ...prev,
         reference: prev.reference.map((data) => {
-          if (data.title === title) {
+          if (data.title === reference.title) {
             const { id, isUsed, isWritten, ...rest } =
               data as AttachedReferenceData;
             return { ...rest, isWritten: false };
           }
-          if (data.isWritten && data.id > id) {
+          if (data.isWritten && data.id > reference.id) {
             return { ...data, id: data.id - 1 };
           }
           return data;
@@ -90,7 +135,7 @@ const EraseButton = ({
 
   return (
     <IconButton
-      aria-label={`${title}에 대한 레퍼런스 사용하지 않기`}
+      aria-label={`${reference.title}에 대한 레퍼런스 사용하지 않기`}
       onClick={handleEraseReference}
     >
       <svg
@@ -118,19 +163,19 @@ const EraseButton = ({
   );
 };
 
-const RemoveButton = ({ title }: Pick<ReferenceData, "title">) => {
-  const { setChromeStorage } = useChromeStorage();
+const RemoveButton = () => {
+  const { reference, setChromeStorage } = useReferenceContext();
 
   const handleRemoveReference = () => {
     setChromeStorage((prev) => {
       const removeTarget = prev.reference.find(
-        (data) => data.title === title
+        (data) => data.title === reference.title
       ) as ReferenceData;
 
       return {
         ...prev,
         reference: prev.reference
-          .filter((data) => data.title !== title)
+          .filter((data) => data.title !== reference.title)
           .map((data) => {
             if (
               data.isWritten &&
@@ -147,7 +192,7 @@ const RemoveButton = ({ title }: Pick<ReferenceData, "title">) => {
 
   return (
     <IconButton
-      aria-label={`${title}에 대한 레퍼런스 기록 삭제 하기`}
+      aria-label={`${reference.title}에 대한 레퍼런스 기록 삭제 하기`}
       onClick={handleRemoveReference}
     >
       <svg
@@ -168,13 +213,14 @@ const RemoveButton = ({ title }: Pick<ReferenceData, "title">) => {
   );
 };
 
-const CopyLinkButton = ({ url }: Pick<ReferenceData, "url">) => {
+const CopyLinkButton = () => {
+  const { reference } = useReferenceContext();
   return (
     <Button
       size="sm"
       className="flex-grow"
       onClick={() => {
-        navigator.clipboard.writeText(url);
+        navigator.clipboard.writeText(reference.url);
       }}
     >
       링크 복사
@@ -182,16 +228,14 @@ const CopyLinkButton = ({ url }: Pick<ReferenceData, "url">) => {
   );
 };
 
-const CopyLinkWithTextButton = ({
-  url,
-  title,
-}: Pick<ReferenceData, "url" | "title">) => {
+const CopyLinkWithTextButton = () => {
+  const { reference } = useReferenceContext();
   return (
     <Button
       size="sm"
       className="flex-grow"
       onClick={() => {
-        navigator.clipboard.writeText(`[${title}](${url})`);
+        navigator.clipboard.writeText(`[${reference.title}](${reference.url})`);
       }}
     >
       [제목](링크) 복사
@@ -199,13 +243,15 @@ const CopyLinkWithTextButton = ({
   );
 };
 
-const MovePageButton = ({ url }: Pick<ReferenceData, "url">) => {
+const MovePageButton = () => {
+  const { reference } = useReferenceContext();
+
   return (
     <Button
       size="sm"
       className="flex-grow"
       onClick={() => {
-        window.open(url, "_blank");
+        window.open(reference.url, "_blank");
       }}
     >
       페이지로 이동
@@ -213,40 +259,7 @@ const MovePageButton = ({ url }: Pick<ReferenceData, "url">) => {
   );
 };
 
-interface ReferenceItemProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-const ReferenceItemWrapper = ({
-  children,
-  onClick,
-}: ReferenceItemProps & {
-  onClick: React.MouseEventHandler<HTMLLIElement>;
-}) => {
-  return (
-    <li
-      className="cursor-pointer border-b py-1 flex flex-col justify-center gap-2"
-      onClick={onClick}
-    >
-      {children}
-    </li>
-  );
-};
-
-const Align = ({ children = "", className }: ReferenceItemProps) => {
-  return (
-    <div className={`flex gap-1 items-center ${className}`}>{children}</div>
-  );
-};
-
-const Stack = ({ children = "", className }: ReferenceItemProps) => {
-  return <div className={`flex flex-col ${className}`}>{children}</div>;
-};
-
 export const Reference = Object.assign(ReferenceItemWrapper, {
-  Align,
-  Stack,
   Favicon,
   Title,
   WriteButton,

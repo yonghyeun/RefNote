@@ -34,20 +34,24 @@ const UnAttachedReferenceList = ({
 
   return (
     <ReferenceListContainer>
-      {unAttachedReferenceList.map(({ url, title, faviconUrl }) => (
-        <Reference key={url} onClick={() => handleClickUrl(url)}>
-          <Reference.Align>
-            <Reference.Favicon faviconUrl={faviconUrl} />
-            <Reference.Title>{title}</Reference.Title>
-            <Reference.WriteButton title={title} />
-            <Reference.RemoveButton title={title} />
-          </Reference.Align>
-          {url === clickedUrl && (
-            <Reference.Align className="gap-2">
-              <Reference.CopyLinkButton url={url} />
-              <Reference.CopyLinkWithTextButton url={url} title={title} />
-              <Reference.MovePageButton url={url} />
-            </Reference.Align>
+      {unAttachedReferenceList.map((reference) => (
+        <Reference
+          key={reference.url}
+          onClick={() => handleClickUrl(reference.url)}
+          reference={reference}
+        >
+          <div className="flex gap-1 items-center">
+            <Reference.Favicon />
+            <Reference.Title />
+            <Reference.WriteButton />
+            <Reference.RemoveButton />
+          </div>
+          {reference.url === clickedUrl && (
+            <div className="flex gap-2 items-center">
+              <Reference.CopyLinkButton />
+              <Reference.CopyLinkWithTextButton />
+              <Reference.MovePageButton />
+            </div>
           )}
         </Reference>
       ))}
@@ -68,35 +72,36 @@ const AttachedReferenceList = ({
 
   return (
     <ReferenceListContainer>
-      {attachedReferenceList.map(({ url, title, faviconUrl, isUsed, id }) => {
+      {attachedReferenceList.map((reference) => {
         return (
           <Reference
-            key={url}
+            reference={reference}
+            key={reference.url}
             onClick={() => {
-              handleClickUrl(url);
+              handleClickUrl(reference.url);
             }}
           >
-            <Reference.Align>
-              <Reference.Favicon faviconUrl={faviconUrl} />
-              <Reference.Title>{title}</Reference.Title>
+            <div className="flex gap-1 items-center">
+              <Reference.Favicon />
+              <Reference.Title />
               <span className="text-[0.8rem] text-gray-400 flex gap-1">
                 <span
                   className={`text-primary
-              ${isUsed ? "" : "hidden"}`}
+              ${reference.isUsed ? "" : "hidden"}`}
                 >
                   ✔
                 </span>
-                [{id}]
+                [{reference.id}]
               </span>
-              <Reference.EraseButton id={id} title={title} />
-              <Reference.RemoveButton title={title} />
-            </Reference.Align>
-            {url === clickedUrl && (
-              <Reference.Align className="gap-2">
-                <Reference.CopyLinkButton url={url} />
-                <Reference.CopyLinkWithTextButton url={url} title={title} />
-                <Reference.MovePageButton url={url} />
-              </Reference.Align>
+              <Reference.EraseButton />
+              <Reference.RemoveButton />
+            </div>
+            {reference.url === clickedUrl && (
+              <div className="flex gap-2 items-center">
+                <Reference.CopyLinkButton />
+                <Reference.CopyLinkWithTextButton />
+                <Reference.MovePageButton />
+              </div>
             )}
           </Reference>
         );
