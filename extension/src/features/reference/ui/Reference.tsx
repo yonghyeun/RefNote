@@ -244,7 +244,7 @@ const Stack = ({ children = "", className }: ReferenceItemProps) => {
   return <div className={`flex flex-col ${className}`}>{children}</div>;
 };
 
-export const ReferenceItem = Object.assign(ReferenceItemWrapper, {
+export const Reference = Object.assign(ReferenceItemWrapper, {
   Align,
   Stack,
   Favicon,

@@ -1,5 +1,5 @@
 export * from "./ReferenceSaveButton";
-export * from "./ReferenceItem";
+export * from "./Reference";
 export * from "./ResetReferenceButton";
 export * from "./CopyReferenceListButton";
 export * from "./AutoConvertingToggle";
