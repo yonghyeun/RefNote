@@ -22,6 +22,10 @@ export const ReferenceEdit = ({
         (r) => r.url === reference.url
       );
 
+      if (changeTargetReference === -1) {
+        return prev;
+      }
+
       return {
         ...prev,
         reference: [

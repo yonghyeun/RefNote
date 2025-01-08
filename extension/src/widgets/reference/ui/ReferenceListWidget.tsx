@@ -89,6 +89,7 @@ const AttachedReferenceList = ({
   attachedReferenceList: AttachedReferenceData[];
 }) => {
   const [clickedUrl, setClickedUrl] = useState<string>("");
+  const [isEditUrl, setEditUrl] = useState<string>("");
 
   const handleClickUrl = (url: string) => {
     setClickedUrl((prev) => (prev === url ? "" : url));
@@ -97,7 +98,15 @@ const AttachedReferenceList = ({
   return (
     <ReferenceListContainer>
       {attachedReferenceList.map((reference, idx) => {
-        return (
+        return isEditUrl === reference.url ? (
+          <ReferenceEdit
+            reference={reference}
+            onResolveEdit={() => {
+              setEditUrl("");
+              setClickedUrl("");
+            }}
+          />
+        ) : (
           <Reference
             reference={reference}
             key={idx}
@@ -121,10 +130,19 @@ const AttachedReferenceList = ({
               <Reference.RemoveButton />
             </div>
             {reference.url === clickedUrl && (
-              <div className="flex gap-2 items-center">
-                <Reference.CopyLinkButton />
-                <Reference.CopyLinkWithTextButton />
-                <Reference.MovePageButton />
+              <div className="flex flex-col gap-1">
+                <div className="flex gap-2 items-center">
+                  <Reference.CopyLinkButton />
+                  <Reference.CopyLinkWithTextButton />
+                  <Reference.MovePageButton />
+                </div>
+                <div className="flex w-full">
+                  <Reference.CustomButton
+                    onClick={() => setEditUrl(reference.url)}
+                  >
+                    제목 수정
+                  </Reference.CustomButton>
+                </div>
               </div>
             )}
           </Reference>
@@ -138,6 +156,7 @@ export const ReferenceListWidget = () => {
   const {
     chromeStorage: { reference },
   } = useChromeStorage();
+
   const [isUnAttachedReferenceVisible, setIsUnAttachedReferenceVisible] =
     useState<boolean>(true);
 
