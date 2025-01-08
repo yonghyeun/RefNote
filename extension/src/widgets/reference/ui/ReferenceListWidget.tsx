@@ -1,20 +1,9 @@
 import { useState } from "react";
 import { useChromeStorage } from "@/shared/store";
-import { AutoConvertingToggle, ReferenceItem } from "@/features/reference/ui";
+import { AutoConvertingToggle, Reference } from "@/features/reference/ui";
 import { Button } from "@/shared/ui/button";
-
-const ReferenceListWidgetTitle = ({
-  count,
-  children,
-}: {
-  count: number;
-  children: React.ReactNode;
-}) => (
-  <h2 className="text-base">
-    {children}
-    <span className="text-[0.8rem] text-[#a0a0a0] ml-1">({count})</span>
-  </h2>
-);
+import { Heading } from "@/shared/ui/Heading";
+import { Text } from "@/shared/ui/Text";
 
 const ReferenceListContainer = ({
   children,
@@ -46,21 +35,21 @@ const UnAttachedReferenceList = ({
   return (
     <ReferenceListContainer>
       {unAttachedReferenceList.map(({ url, title, faviconUrl }) => (
-        <ReferenceItem key={url} onClick={() => handleClickUrl(url)}>
-          <ReferenceItem.Align>
-            <ReferenceItem.Favicon faviconUrl={faviconUrl} />
-            <ReferenceItem.Title>{title}</ReferenceItem.Title>
-            <ReferenceItem.WriteButton title={title} />
-            <ReferenceItem.RemoveButton title={title} />
-          </ReferenceItem.Align>
+        <Reference key={url} onClick={() => handleClickUrl(url)}>
+          <Reference.Align>
+            <Reference.Favicon faviconUrl={faviconUrl} />
+            <Reference.Title>{title}</Reference.Title>
+            <Reference.WriteButton title={title} />
+            <Reference.RemoveButton title={title} />
+          </Reference.Align>
           {url === clickedUrl && (
-            <ReferenceItem.Align className="gap-2">
-              <ReferenceItem.CopyLinkButton url={url} />
-              <ReferenceItem.CopyLinkWithTextButton url={url} title={title} />
-              <ReferenceItem.MovePageButton url={url} />
-            </ReferenceItem.Align>
+            <Reference.Align className="gap-2">
+              <Reference.CopyLinkButton url={url} />
+              <Reference.CopyLinkWithTextButton url={url} title={title} />
+              <Reference.MovePageButton url={url} />
+            </Reference.Align>
           )}
-        </ReferenceItem>
+        </Reference>
       ))}
     </ReferenceListContainer>
   );
@@ -81,15 +70,15 @@ const AttachedReferenceList = ({
     <ReferenceListContainer>
       {attachedReferenceList.map(({ url, title, faviconUrl, isUsed, id }) => {
         return (
-          <ReferenceItem
+          <Reference
             key={url}
             onClick={() => {
               handleClickUrl(url);
             }}
           >
-            <ReferenceItem.Align>
-              <ReferenceItem.Favicon faviconUrl={faviconUrl} />
-              <ReferenceItem.Title>{title}</ReferenceItem.Title>
+            <Reference.Align>
+              <Reference.Favicon faviconUrl={faviconUrl} />
+              <Reference.Title>{title}</Reference.Title>
               <span className="text-[0.8rem] text-gray-400 flex gap-1">
                 <span
                   className={`text-primary
@@ -99,17 +88,17 @@ const AttachedReferenceList = ({
                 </span>
                 [{id}]
               </span>
-              <ReferenceItem.EraseButton id={id} title={title} />
-              <ReferenceItem.RemoveButton title={title} />
-            </ReferenceItem.Align>
+              <Reference.EraseButton id={id} title={title} />
+              <Reference.RemoveButton title={title} />
+            </Reference.Align>
             {url === clickedUrl && (
-              <ReferenceItem.Align className="gap-2">
-                <ReferenceItem.CopyLinkButton url={url} />
-                <ReferenceItem.CopyLinkWithTextButton url={url} title={title} />
-                <ReferenceItem.MovePageButton url={url} />
-              </ReferenceItem.Align>
+              <Reference.Align className="gap-2">
+                <Reference.CopyLinkButton url={url} />
+                <Reference.CopyLinkWithTextButton url={url} title={title} />
+                <Reference.MovePageButton url={url} />
+              </Reference.Align>
             )}
-          </ReferenceItem>
+          </Reference>
         );
       })}
     </ReferenceListContainer>
@@ -137,9 +126,12 @@ export const ReferenceListWidget = () => {
         className={`flex flex-col gap-2 transition-[height,margin] duration-300 ${isUnAttachedReferenceVisible ? "h-1/2" : "h-0 mb-10"}`}
       >
         <ReferenceListWidgetHeader>
-          <ReferenceListWidgetTitle count={unAttachedReferenceList.length}>
-            글에 첨부되지 않은 레퍼런스
-          </ReferenceListWidgetTitle>
+          <div className="flex gap-1 items-center">
+            <Heading h2>글에 첨부되지 않은 레퍼런스</Heading>
+            <Text span type="secondary">
+              ({unAttachedReferenceList.length})
+            </Text>
+          </div>
           <Button
             className="py-[2px]"
             onClick={() => setIsUnAttachedReferenceVisible((prev) => !prev)}
@@ -162,9 +154,12 @@ export const ReferenceListWidget = () => {
         }`}
       >
         <ReferenceListWidgetHeader>
-          <ReferenceListWidgetTitle count={attachedReferenceList.length}>
-            글에 첨부된 레퍼런스
-          </ReferenceListWidgetTitle>
+          <div className="flex gap-1 items-center">
+            <Heading h2>글에 첨부된 레퍼런스</Heading>
+            <Text span type="secondary">
+              ({attachedReferenceList.length})
+            </Text>
+          </div>
           <AutoConvertingToggle />
         </ReferenceListWidgetHeader>
         <AttachedReferenceList attachedReferenceList={attachedReferenceList} />
