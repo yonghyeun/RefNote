@@ -1,6 +1,7 @@
 import { useChromeStorage, useTab } from "@/shared/store";
 import styles from "./styles.module.css";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { isVelogWritePage } from "@/shared/lib";
 
 export const AutoConvertingToggle = () => {
   const {
@@ -8,24 +9,15 @@ export const AutoConvertingToggle = () => {
     setChromeStorage,
   } = useChromeStorage();
   const tab = useTab();
-  const [isAutoConvertingDisabled, setIsAutoConvertingDisabled] =
-    useState<boolean>(false);
 
   useEffect(() => {
     if (!tab) {
       return;
     }
 
-    if (tab.url.includes("https://velog.io/write") && !isContentScriptEnabled) {
-      setIsAutoConvertingDisabled(true);
-      setChromeStorage((prev) => ({
-        ...prev,
-        autoConverting: false,
-      }));
-      return;
+    if (isVelogWritePage(tab) && !isContentScriptEnabled) {
+      chrome.tabs.reload(tab.id);
     }
-
-    setIsAutoConvertingDisabled(false);
   }, [tab, isContentScriptEnabled]);
 
   return (
@@ -46,7 +38,6 @@ export const AutoConvertingToggle = () => {
               autoConverting: !prev.autoConverting,
             }));
           }}
-          disabled={isAutoConvertingDisabled}
         />
         <span className={styles.toggleSlider} />
       </div>

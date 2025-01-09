@@ -1,12 +1,12 @@
 import { Button } from "@/shared/ui/button";
 import { useChromeStorage, useTab } from "@/shared/store";
-import { sendMessageToBackground } from "@/shared/lib";
+import { isVelogWritePage, sendMessageToBackground } from "@/shared/lib";
 
 export const ConvertToReferenceButton = () => {
-  const { chromeStorage } = useChromeStorage();
+  const {
+    chromeStorage: { isContentScriptEnabled },
+  } = useChromeStorage();
   const tab = useTab();
-
-  const isVelogWritePage = tab?.url.includes("https://velog.io/write");
 
   const handleClick = async () => {
     if (!tab) {
@@ -39,7 +39,7 @@ export const ConvertToReferenceButton = () => {
     <Button
       onClick={handleClick}
       className="flex-grow"
-      disabled={!(isVelogWritePage && chromeStorage.isContentScriptEnabled)}
+      disabled={!(isVelogWritePage(tab) && isContentScriptEnabled)}
     >
       텍스트 변환
     </Button>
