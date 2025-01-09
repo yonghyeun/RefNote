@@ -8,6 +8,14 @@ export default {
         bg: {
           light: "#fff",
           dark: "#121212",
+          hover: {
+            light: "#f0f0f0",
+            dark: "#4a4a4a",
+          },
+          active: {
+            light: "#e0e0e0",
+            dark: "#3a3a3a",
+          },
         },
         primary: {
           DEFAULT: "#12b886",
@@ -15,14 +23,15 @@ export default {
           darker: "#0ca678",
           disabled: "#38d9a9",
         },
-        red: {
+        danger: {
           DEFAULT: "#f44336",
           hover: "#d32f2f",
           active: "#b71c1c",
-          disabled: "#f8d7da",
+          disabled: "#9b1a1a",
         },
         text: {
           DEFAULT: "#fff",
+          secondary: "#a0a0a0",
           light: "#121212",
           dark: "#f0f0f0",
           hover: "#e6f7f1",

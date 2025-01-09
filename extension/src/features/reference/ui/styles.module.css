@@ -1,16 +1,3 @@
-/* TODO global value tailwind content 로 넣고 사용하기 */
-:global(.content:hover) {
-  background-color: var(--content-hover);
-}
-
-:global(.content:active) {
-  background-color: var(--content-active);
-}
-
-:global(.referenceContainer) {
-  border-bottom: 1px solid var(--border-color);
-}
-
 .ellipsis {
   display: -webkit-box;
   -webkit-line-clamp: 2;

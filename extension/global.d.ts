@@ -32,13 +32,14 @@ declare global {
     reference: ReferenceData[];
     autoConverting: boolean;
     isDarkMode: boolean;
-    isUnAttachedReferenceVisible: boolean;
     isContentScriptEnabled: boolean;
+    isUnAttachedReferenceVisible: boolean;
   }
 
   interface Tab extends chrome.tabs.Tab {
     id: NonNullable<chrome.tabs.Tab["id"]>;
     url: NonNullable<chrome.tabs.Tab["url"]>;
+    title: NonNullable<chrome.tabs.Tab["title"]>;
   }
 
   interface CodeMirrorElement extends HTMLElement {

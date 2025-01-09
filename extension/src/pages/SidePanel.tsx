@@ -1,7 +1,4 @@
-import {
-  AttachedReferenceContainer,
-  UnAttachedReferenceContainer,
-} from "@/widgets/reference/ui";
+import { ReferenceListWidget } from "@/widgets/reference/ui";
 import {
   ConvertToReferenceButton,
   CopyReferenceListButton,
@@ -22,8 +19,7 @@ export const SidePanelPage = () => {
         <StorageVolumeBar />
       </header>
       <main className="flex flex-col h-full gap-2">
-        <UnAttachedReferenceContainer />
-        <AttachedReferenceContainer />
+        <ReferenceListWidget />
       </main>
       <footer className="flex justify-center items-center gap-4">
         <CopyReferenceListButton />
