@@ -72,10 +72,6 @@ chrome.runtime.onMessage.addListener(
       case "NotifyError":
         notifyError(message.data as string, sendResponse);
         break;
-      case "ReloadPage":
-        chrome.tabs.reload(tab.id);
-        sendResponse({ status: "ok" });
-        break;
       case "NotifyConvertProcessSuccess":
         const { data } = message as RequestMessage<number[]>;
 
