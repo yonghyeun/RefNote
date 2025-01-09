@@ -1,9 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { sendMessageToBackground } from "../lib";
+import { isTab } from "../lib";
 
 type Tab = chrome.tabs.Tab & {
   id: number;
   url: string;
+  title: string;
 };
 
 const TabContext = createContext<Tab | null>(null);
@@ -17,53 +18,19 @@ export const TabProvider = ({ children }: TabProviderProps) => {
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-      try {
-        if (!tab || !tab.id || !tab.url) {
-          throw new Error("현재 탭의 정보를 가져올 수 없습니다.");
-        }
-        setTab(tab as Tab);
-      } catch (error) {
-        sendMessageToBackground<void, string>({
-          message: "NotifyError",
-          data: (error as Error).message,
-        });
-
-        setTab(null);
-      }
+      setTab(isTab(tab) ? tab : null);
     });
 
     const handleHistoryUpdate = (_tabId: number, changeInfo: any, tab: any) => {
       if (changeInfo.status === "complete") {
-        try {
-          if (!tab || !tab.id || !tab.url) {
-            throw new Error("현재 탭의 정보를 가져올 수 없습니다.");
-          }
-          setTab(tab as Tab);
-        } catch (error) {
-          sendMessageToBackground<void, string>({
-            message: "NotifyError",
-            data: (error as Error).message,
-          });
-          setTab(null);
-        }
+        setTab(isTab(tab) ? tab : null);
       }
     };
 
     const handleWindowUpdate = async ({ tabId }: chrome.tabs.TabActiveInfo) => {
       const tab = await chrome.tabs.get(tabId);
       if (tab.status === "complete") {
-        try {
-          if (!tab || !tab.id || !tab.url) {
-            throw new Error("현재 탭의 정보를 가져올 수 없습니다.");
-          }
-          setTab(tab as Tab);
-        } catch (error) {
-          sendMessageToBackground<void, string>({
-            message: "NotifyError",
-            data: (error as Error).message,
-          });
-          setTab(null);
-        }
+        setTab(isTab(tab) ? tab : null);
       }
     };
 
