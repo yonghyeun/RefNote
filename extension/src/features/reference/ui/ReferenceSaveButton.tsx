@@ -9,7 +9,7 @@ export const ReferenceSaveButton = () => {
     chromeStorage: { reference },
     setChromeStorage,
   } = useChromeStorage();
-  const { setErrorUrl } = useSaveErrorUrl();
+  const { errorUrl, setErrorUrl } = useSaveErrorUrl();
 
   const handleSaveReference = async () => {
     // tabId 를 가져 옵니다.
@@ -46,8 +46,12 @@ export const ReferenceSaveButton = () => {
   };
 
   return (
-    <Button onClick={handleSaveReference} className="flex-grow">
-      저장
+    <Button
+      onClick={handleSaveReference}
+      className="flex-grow"
+      color={errorUrl ? "danger" : "primary"}
+    >
+      {errorUrl ? "이미 저장된 페이지가 존재합니다" : "저장"}
     </Button>
   );
 };
