@@ -29,7 +29,7 @@ export const SaveErrorProvider = ({
 export const useSaveErrorUrl = () => {
   const context = useContext(SaveErrorContext);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const ERROR_DURATION = 1000;
+  const ERROR_DURATION = 1500;
 
   if (!context) {
     throw new Error(

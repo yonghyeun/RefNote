@@ -61,5 +61,5 @@ body {
 }
 
 .blink {
-  animation: blinkAnimation 0.5s linear infinite;
+  animation: blinkAnimation 0.3s linear infinite;
 }
