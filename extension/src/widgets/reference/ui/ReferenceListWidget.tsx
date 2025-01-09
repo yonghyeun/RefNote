@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useChromeStorage } from "@/shared/store";
+import { useChromeStorage, useSaveErrorUrl } from "@/shared/store";
 import {
   AutoConvertingToggle,
   Reference,
@@ -32,6 +32,7 @@ const UnAttachedReferenceList = ({
 }) => {
   const [clickedUrl, setClickedUrl] = useState<string>("");
   const [isEditUrl, setEditUrl] = useState<string>("");
+  const { errorUrl } = useSaveErrorUrl();
 
   const handleClickUrl = (url: string) => {
     setClickedUrl((prev) => (prev === url ? "" : url));
@@ -47,12 +48,14 @@ const UnAttachedReferenceList = ({
               setEditUrl("");
               setClickedUrl("");
             }}
+            className={errorUrl === reference.url ? "blink" : ""}
           />
         ) : (
           <Reference
             key={idx}
             onClick={() => handleClickUrl(reference.url)}
             reference={reference}
+            className={errorUrl === reference.url ? "blink" : ""}
           >
             <div className="flex gap-1 items-center">
               <Reference.Favicon />
@@ -90,6 +93,7 @@ const AttachedReferenceList = ({
 }) => {
   const [clickedUrl, setClickedUrl] = useState<string>("");
   const [isEditUrl, setEditUrl] = useState<string>("");
+  const { errorUrl } = useSaveErrorUrl();
 
   const handleClickUrl = (url: string) => {
     setClickedUrl((prev) => (prev === url ? "" : url));
@@ -105,6 +109,7 @@ const AttachedReferenceList = ({
               setEditUrl("");
               setClickedUrl("");
             }}
+            className={errorUrl === reference.url ? "blink" : ""}
           />
         ) : (
           <Reference
@@ -113,6 +118,7 @@ const AttachedReferenceList = ({
             onClick={() => {
               handleClickUrl(reference.url);
             }}
+            className={errorUrl === reference.url ? "blink" : ""}
           >
             <div className="flex gap-1 items-center">
               <Reference.Favicon />

@@ -21,19 +21,21 @@ const useReferenceContext = () => {
 interface ReferenceProps extends Omit<ReferenceContext, "setChromeStorage"> {
   children: React.ReactNode;
   onClick?: React.MouseEventHandler<HTMLLIElement>;
+  className?: string;
 }
 
 const ReferenceItemWrapper = ({
   children,
   onClick,
   reference,
+  className = "",
 }: ReferenceProps) => {
   const { setChromeStorage } = useChromeStorage();
 
   return (
     <ReferenceProvider.Provider value={{ reference, setChromeStorage }}>
       <li
-        className="reference cursor-pointer border-b py-1 flex flex-col justify-center gap-2"
+        className={`reference cursor-pointer border-b py-1 flex flex-col justify-center gap-2 ${className}`}
         onClick={onClick}
       >
         {children}

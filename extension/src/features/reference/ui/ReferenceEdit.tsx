@@ -6,11 +6,13 @@ import { useChromeStorage } from "@/shared/store";
 interface ReferenceEditProps {
   reference: ReferenceData;
   onResolveEdit: () => void;
+  className?: string;
 }
 
 export const ReferenceEdit = ({
   reference,
   onResolveEdit,
+  className = "",
 }: ReferenceEditProps) => {
   const { setChromeStorage } = useChromeStorage();
   const [title, setTitle] = useState<string>(() => reference.title);
@@ -39,7 +41,7 @@ export const ReferenceEdit = ({
   };
 
   return (
-    <Reference reference={reference}>
+    <Reference reference={reference} className={className}>
       <div className="flex gap-1 items-center py-2">
         <Reference.Favicon />
         <div className="flex flex-grow gap-2">

@@ -47,3 +47,19 @@ body {
 .reference:active {
   background-color: var(--active-color);
 }
+
+@keyframes blinkAnimation {
+  0% {
+    background-color: var(--bg-color);
+  }
+  50% {
+    background-color: var(--active-color);
+  }
+  100% {
+    background-color: var(--bg-color);
+  }
+}
+
+.blink {
+  animation: blinkAnimation 0.5s linear infinite;
+}
