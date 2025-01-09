@@ -23,11 +23,11 @@ const getStyle = (color: ButtonType) => {
         active:bg-primary-darker active:text-text-hover
         disabled:pointer-events-none disabled:bg-primary-disabled disabled:text-text-disabled`,
 
-    danger: `bg-red text-text border-none text-center no-underline inline-block cursor-pointer
-        hover:bg-red-hover hover:text-text-hover
-        focus-visible:bg-red-hover focus-visible:text-text-hover
-        active:bg-red-active active:text-text-hover
-        disabled:pointer-events-none disabled:bg-red-disabled disabled:text-text-disabled`,
+    danger: `bg-danger text-text border-none text-center no-underline inline-block cursor-pointer
+        hover:bg-danger-hover hover:text-text-hover
+        focus-visible:bg-danger-hover focus-visible:text-text-hover
+        active:bg-danger-active active:text-text-hover
+        disabled:pointer-events-none disabled:bg-danger-disabled disabled:text-text-disabled`,
   };
 
   return styleMap[color];
