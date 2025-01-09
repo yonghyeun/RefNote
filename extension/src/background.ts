@@ -1,6 +1,7 @@
 import browser from "webextension-polyfill";
 import { convertNumberToReference } from "./features/reference/model";
 import { chromeStorageInitialValue } from "./shared/store";
+import { isTab } from "./shared/lib";
 
 browser.runtime.onInstalled.addListener(async (details) => {
   if (process.env.NODE_ENV === "development") {
@@ -48,9 +49,6 @@ const notifyError = (
     }
   );
 };
-
-const isTab = (tab: chrome.tabs.Tab | undefined): tab is Tab =>
-  !!tab && !!tab.id && !!tab.url;
 
 // NotifyConvertProcessSuccess에서 사용할 이전에 사용된 referenceData의 id를 담은 배열입니다.
 let prevUsedReferenceIds: number[] = [];
