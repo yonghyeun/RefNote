@@ -75,7 +75,7 @@ const WriteButton = () => {
       return {
         ...prev,
         reference: prev.reference.map((data) =>
-          data.title !== reference.title
+          data.url !== reference.url
             ? data
             : { ...data, isWritten: true, id, isUsed: false }
         ),
@@ -121,7 +121,7 @@ const EraseButton = () => {
       return {
         ...prev,
         reference: prev.reference.map((data) => {
-          if (data.title === reference.title) {
+          if (data.url === reference.url) {
             const { id, isUsed, isWritten, ...rest } =
               data as AttachedReferenceData;
             return { ...rest, isWritten: false };
@@ -171,13 +171,13 @@ const RemoveButton = () => {
   const handleRemoveReference = () => {
     setChromeStorage((prev) => {
       const removeTarget = prev.reference.find(
-        (data) => data.title === reference.title
+        (data) => data.url === reference.url
       ) as ReferenceData;
 
       return {
         ...prev,
         reference: prev.reference
-          .filter((data) => data.title !== reference.title)
+          .filter((data) => data.url !== reference.url)
           .map((data) => {
             if (
               data.isWritten &&

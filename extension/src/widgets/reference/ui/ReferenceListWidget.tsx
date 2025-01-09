@@ -40,7 +40,7 @@ const UnAttachedReferenceList = ({
 
   return (
     <ReferenceListContainer>
-      {unAttachedReferenceList.map((reference, idx) =>
+      {unAttachedReferenceList.map((reference) =>
         isEditUrl === reference.url ? (
           <ReferenceEdit
             reference={reference}
@@ -52,7 +52,7 @@ const UnAttachedReferenceList = ({
           />
         ) : (
           <Reference
-            key={idx}
+            key={reference.url}
             onClick={() => handleClickUrl(reference.url)}
             reference={reference}
             className={errorUrl === reference.url ? "blink" : ""}
@@ -101,7 +101,7 @@ const AttachedReferenceList = ({
 
   return (
     <ReferenceListContainer>
-      {attachedReferenceList.map((reference, idx) => {
+      {attachedReferenceList.map((reference) => {
         return isEditUrl === reference.url ? (
           <ReferenceEdit
             reference={reference}
@@ -114,7 +114,7 @@ const AttachedReferenceList = ({
         ) : (
           <Reference
             reference={reference}
-            key={idx}
+            key={reference.url}
             onClick={() => {
               handleClickUrl(reference.url);
             }}
