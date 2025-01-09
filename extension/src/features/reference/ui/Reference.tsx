@@ -21,21 +21,21 @@ const useReferenceContext = () => {
 interface ReferenceProps extends Omit<ReferenceContext, "setChromeStorage"> {
   children: React.ReactNode;
   onClick?: React.MouseEventHandler<HTMLLIElement>;
+  className?: string;
 }
 
 const ReferenceItemWrapper = ({
   children,
   onClick,
   reference,
+  className = "",
 }: ReferenceProps) => {
   const { setChromeStorage } = useChromeStorage();
-
-  console.log(reference);
 
   return (
     <ReferenceProvider.Provider value={{ reference, setChromeStorage }}>
       <li
-        className="cursor-pointer border-b py-1 flex flex-col justify-center gap-2"
+        className={`reference cursor-pointer border-b py-1 flex flex-col justify-center gap-2 ${className}`}
         onClick={onClick}
       >
         {children}
@@ -75,7 +75,7 @@ const WriteButton = () => {
       return {
         ...prev,
         reference: prev.reference.map((data) =>
-          data.title !== reference.title
+          data.url !== reference.url
             ? data
             : { ...data, isWritten: true, id, isUsed: false }
         ),
@@ -121,7 +121,7 @@ const EraseButton = () => {
       return {
         ...prev,
         reference: prev.reference.map((data) => {
-          if (data.title === reference.title) {
+          if (data.url === reference.url) {
             const { id, isUsed, isWritten, ...rest } =
               data as AttachedReferenceData;
             return { ...rest, isWritten: false };
@@ -171,13 +171,13 @@ const RemoveButton = () => {
   const handleRemoveReference = () => {
     setChromeStorage((prev) => {
       const removeTarget = prev.reference.find(
-        (data) => data.title === reference.title
+        (data) => data.url === reference.url
       ) as ReferenceData;
 
       return {
         ...prev,
         reference: prev.reference
-          .filter((data) => data.title !== reference.title)
+          .filter((data) => data.url !== reference.url)
           .map((data) => {
             if (
               data.isWritten &&

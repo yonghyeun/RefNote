@@ -23,16 +23,43 @@ html[data-theme="dark"] {
   --bg-color: theme("colors.bg.dark");
   --text-color: theme("colors.text.dark");
   --border-color: theme("colors.border.dark");
+  --hover-color: theme("colors.bg.hover.dark");
+  --active-color: theme("colors.bg.active.dark");
 }
 
 html[data-theme="light"] {
   --bg-color: theme("colors.bg.light");
   --text-color: theme("colors.text.light");
   --border-color: theme("colors.border.light");
+  --hover-color: theme("colors.bg.hover.light");
+  --active-color: theme("colors.bg.active.light");
 }
 
 body {
   font-family: "Pretendard-Regular", sans-serif;
   color: var(--text-color);
   background-color: var(--bg-color);
+}
+
+.reference:hover {
+  background-color: var(--hover-color);
+}
+.reference:active {
+  background-color: var(--active-color);
+}
+
+@keyframes blinkAnimation {
+  0% {
+    background-color: var(--bg-color);
+  }
+  50% {
+    background-color: var(--active-color);
+  }
+  100% {
+    background-color: var(--bg-color);
+  }
+}
+
+.blink {
+  animation: blinkAnimation 0.3s linear infinite;
 }
