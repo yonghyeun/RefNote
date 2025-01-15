@@ -5,7 +5,7 @@ import { Button, IconButton } from "@/shared/ui/button";
 
 interface ReferenceContext {
   reference: ReferenceData;
-  setChromeStorage: ReturnType<typeof useChromeStorage>["setChromeStorage"];
+  setChromeStorage: typeof useChromeStorage.setState;
 }
 
 const ReferenceProvider = createContext<ReferenceContext | null>(null);
@@ -30,10 +30,10 @@ const ReferenceItemWrapper = ({
   reference,
   className = "",
 }: ReferenceProps) => {
-  const { setChromeStorage } = useChromeStorage();
-
   return (
-    <ReferenceProvider.Provider value={{ reference, setChromeStorage }}>
+    <ReferenceProvider.Provider
+      value={{ reference, setChromeStorage: useChromeStorage.setState }}
+    >
       <li
         className={`reference cursor-pointer border-b py-1 flex flex-col justify-center gap-2 ${className}`}
         onClick={onClick}

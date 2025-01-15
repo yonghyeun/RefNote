@@ -5,10 +5,8 @@ import { Button } from "@/shared/ui/button";
 
 // TODO : 로딩 처리 하기
 export const ReferenceSaveButton = () => {
-  const {
-    chromeStorage: { reference },
-    setChromeStorage,
-  } = useChromeStorage();
+  const reference = useChromeStorage((state) => state.reference);
+  const setChromeStorage = useChromeStorage.setState;
   const { errorUrl, setErrorUrl } = useSaveErrorUrl();
 
   const handleSaveReference = async () => {

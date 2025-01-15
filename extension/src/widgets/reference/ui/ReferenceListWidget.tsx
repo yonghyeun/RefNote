@@ -159,10 +159,11 @@ const AttachedReferenceList = ({
 };
 
 export const ReferenceListWidget = () => {
-  const {
-    chromeStorage: { reference, isUnAttachedReferenceVisible },
-    setChromeStorage,
-  } = useChromeStorage();
+  const reference = useChromeStorage((state) => state.reference);
+  const isUnAttachedReferenceVisible = useChromeStorage(
+    (state) => state.isUnAttachedReferenceVisible
+  );
+  const setChromeStorage = useChromeStorage.setState;
 
   const attachedReferenceList = reference
     .filter((data): data is AttachedReferenceData => data.isWritten)
