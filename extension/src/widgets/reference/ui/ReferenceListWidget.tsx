@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { useChromeStorage, useSaveErrorUrl } from "@/shared/store";
 import {
   AutoConvertingToggle,
@@ -86,6 +86,32 @@ const UnAttachedReferenceList = ({
   );
 };
 
+const UnAttachedReferenceListFoldButton = memo(() => {
+  const isUnAttachedReferenceVisible = useChromeStorage(
+    (state) => state.isUnAttachedReferenceVisible
+  );
+  const setChromeStorage = useChromeStorage.setState;
+
+  return (
+    <Button
+      className="py-[2px]"
+      onClick={() =>
+        setChromeStorage((prev) => ({
+          ...prev,
+          isUnAttachedReferenceVisible: !prev.isUnAttachedReferenceVisible,
+        }))
+      }
+      aria-label={
+        isUnAttachedReferenceVisible
+          ? "글에 첨부하지 않은 레퍼런스 리스트 목록 보기"
+          : "글에 첨부하지 않은 레퍼런스 리스트 목록 숨기기"
+      }
+    >
+      {isUnAttachedReferenceVisible ? "▲" : "▼"}
+    </Button>
+  );
+});
+
 const AttachedReferenceList = ({
   attachedReferenceList,
 }: {
@@ -163,7 +189,6 @@ export const ReferenceListWidget = () => {
   const isUnAttachedReferenceVisible = useChromeStorage(
     (state) => state.isUnAttachedReferenceVisible
   );
-  const setChromeStorage = useChromeStorage.setState;
 
   const attachedReferenceList = reference
     .filter((data): data is AttachedReferenceData => data.isWritten)
@@ -185,23 +210,8 @@ export const ReferenceListWidget = () => {
               ({unAttachedReferenceList.length})
             </Text>
           </div>
-          <Button
-            className="py-[2px]"
-            onClick={() =>
-              setChromeStorage((prev) => ({
-                ...prev,
-                isUnAttachedReferenceVisible:
-                  !prev.isUnAttachedReferenceVisible,
-              }))
-            }
-            aria-label={
-              isUnAttachedReferenceVisible
-                ? "글에 첨부하지 않은 레퍼런스 리스트 목록 보기"
-                : "글에 첨부하지 않은 레퍼런스 리스트 목록 숨기기"
-            }
-          >
-            {isUnAttachedReferenceVisible ? "▲" : "▼"}
-          </Button>
+          {/* memoized Component */}
+          <UnAttachedReferenceListFoldButton />
         </ReferenceListWidgetHeader>
         <UnAttachedReferenceList
           unAttachedReferenceList={unAttachedReferenceList}
@@ -219,7 +229,7 @@ export const ReferenceListWidget = () => {
               ({attachedReferenceList.length})
             </Text>
           </div>
-          {/* AutoConvertingToggle 의 경우엔 memoized */}
+          {/* memoized Component */}
           <AutoConvertingToggle />
         </ReferenceListWidgetHeader>
         <AttachedReferenceList attachedReferenceList={attachedReferenceList} />
