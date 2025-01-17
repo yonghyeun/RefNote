@@ -219,6 +219,7 @@ export const ReferenceListWidget = () => {
               ({attachedReferenceList.length})
             </Text>
           </div>
+          {/* AutoConvertingToggle 의 경우엔 memoized */}
           <AutoConvertingToggle />
         </ReferenceListWidgetHeader>
         <AttachedReferenceList attachedReferenceList={attachedReferenceList} />

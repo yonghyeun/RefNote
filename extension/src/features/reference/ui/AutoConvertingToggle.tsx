@@ -1,9 +1,9 @@
 import { useChromeStorage, useTab } from "@/shared/store";
 import styles from "./styles.module.css";
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 import { isVelogWritePage } from "@/shared/lib";
 
-export const AutoConvertingToggle = () => {
+export const AutoConvertingToggle = memo(() => {
   const autoConverting = useChromeStorage((state) => state.autoConverting);
   const isContentScriptEnabled = useChromeStorage(
     (state) => state.isContentScriptEnabled
@@ -40,4 +40,4 @@ export const AutoConvertingToggle = () => {
       </div>
     </label>
   );
-};
+});
