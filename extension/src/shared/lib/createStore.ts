@@ -10,12 +10,13 @@ export const createStore = <Store extends object>(
 
   const callbacks = new Set<() => void>();
 
-  const getState = () => store;
+  const getState = () => ({ ...store });
 
   const setState = (
     action: Partial<Store> | ((state: Store) => Partial<Store>)
   ) => {
-    const newState = typeof action === "function" ? action(store) : action;
+    const newState =
+      typeof action === "function" ? action({ ...store }) : action;
 
     store = {
       ...store,
@@ -31,11 +32,11 @@ export const createStore = <Store extends object>(
   };
 
   const useStore = <R>(selector: Selector<Store, R>) => {
-    const [state, _setState] = useState(() => selector(getState()));
+    const [state, _setState] = useState(() => selector(store));
 
     useEffect(() => {
       const unsubscribe = subscribe(() => {
-        _setState(selector(getState()));
+        _setState(selector(store));
       });
 
       return unsubscribe;
