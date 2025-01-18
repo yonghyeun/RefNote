@@ -10,6 +10,11 @@ export const createStore = <Store extends object>(
 
   const callbacks = new Set<() => void>();
 
+  const subscribe = (callback: () => void): (() => void) => {
+    callbacks.add(callback);
+    return () => callbacks.delete(callback);
+  };
+
   const getState = () => ({ ...store });
 
   const setState = (
@@ -24,11 +29,6 @@ export const createStore = <Store extends object>(
     };
 
     callbacks.forEach((callback) => callback());
-  };
-
-  const subscribe = (callback: () => void): (() => void) => {
-    callbacks.add(callback);
-    return () => callbacks.delete(callback);
   };
 
   const useStore = <R>(selector: Selector<Store, R>) => {
