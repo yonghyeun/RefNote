@@ -18,6 +18,7 @@ export const useChromeStorage = createStore(chromeStorageInitialValue);
 
 export const ChromeStorageUpdater = () => {
   const store = useChromeStorage((state) => state);
+  const initializeFlag = useRef<boolean>(false);
   const synchronizeFlag = useRef<boolean>(false);
 
   useEffect(() => {
@@ -53,6 +54,12 @@ export const ChromeStorageUpdater = () => {
   }, []);
 
   useEffect(() => {
+    // 초기 마운트 시에는 chrome.storage.sync에 저장하지 않음
+    if (!initializeFlag.current) {
+      initializeFlag.current = true;
+      return;
+    }
+
     // synchronizeFlag가 true일 경우에는 chrome.storage.sync에 저장하지 않음
 
     if (synchronizeFlag.current) {
