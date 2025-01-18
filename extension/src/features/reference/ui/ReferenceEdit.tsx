@@ -14,7 +14,8 @@ export const ReferenceEdit = ({
   onResolveEdit,
   className = "",
 }: ReferenceEditProps) => {
-  const { setChromeStorage } = useChromeStorage();
+  const setChromeStorage = useChromeStorage.setState;
+
   const [title, setTitle] = useState<string>(() => reference.title);
 
   const handleSaveReference = () => {

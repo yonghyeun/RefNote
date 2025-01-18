@@ -3,8 +3,8 @@ import styles from "./styles.module.css";
 import { useEffect } from "react";
 
 export const DarkModeToggle = () => {
-  const { chromeStorage, setChromeStorage } = useChromeStorage();
-  const { isDarkMode } = chromeStorage;
+  const isDarkMode = useChromeStorage((state) => state.isDarkMode);
+  const setChromeStorage = useChromeStorage.setState;
 
   const handleToggle = () => {
     setChromeStorage((prevStorage) => ({

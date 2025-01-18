@@ -1,4 +1,10 @@
-import { useState, useEffect, createContext, useContext } from "react";
+import { useEffect, useRef } from "react";
+import { createStore } from "../lib/createStore";
+
+type Synchronize = (
+  changes: chrome.storage.StorageChange,
+  namespace: chrome.storage.AreaName
+) => void;
 
 export const chromeStorageInitialValue: ChromeStorage = {
   reference: [],
@@ -8,70 +14,54 @@ export const chromeStorageInitialValue: ChromeStorage = {
   isUnAttachedReferenceVisible: true,
 };
 
-const ChromeStorageContext = createContext<{
-  chromeStorage: ChromeStorage;
-  setChromeStorage: (
-    updater: (prevStorage: ChromeStorage) => ChromeStorage
-  ) => Promise<void>;
-} | null>(null);
+export const useChromeStorage = createStore(chromeStorageInitialValue);
 
-// ChromeStorageProvider 는 오로지 readonly 형태인 chrome.storage.sync 데이터를 메모리에 저장한 chromeStorage 객체만을 반환합니다.
-// 상태 변경 흐름의 통일성을 위해 모든 상태 변경은 chromeStorage 객체를 통해 이루어집니다.
-export const ChromeStorageProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
-  const [chromeStorage, _syncChromeStorage] = useState<ChromeStorage>(
-    chromeStorageInitialValue
-  );
-
-  const setChromeStorage = async (
-    updater: (prevStorage: ChromeStorage) => ChromeStorage
-  ) => {
-    const prevChromeStorage = (await chrome.storage.sync.get(
-      null
-    )) as ChromeStorage;
-
-    const updatedChromeStorage = updater(prevChromeStorage);
-    chrome.storage.sync.set(updatedChromeStorage);
-  };
+export const ChromeStorageUpdater = () => {
+  const store = useChromeStorage((state) => state);
+  const synchronizeFlag = useRef<boolean>(false);
 
   useEffect(() => {
-    /**
-     * chrome.storage.sync 와 메모리상의 chromeStorage 를 동기화 하는 이벤트 리스너 등록
-     */
+    // 초기 마운트 시 chrome storage에서 값을 가져와서 store에 저장
 
-    // chrome.storage.onChanged.addListener 를 통해 chrome.storage.sync 의 데이터를 실시간으로 감지합니다.
-    const synchronizeChromeStorage = async () => {
-      const updatedChromeStorage = await chrome.storage.sync.get(null);
-      _syncChromeStorage(updatedChromeStorage as ChromeStorage);
+    chrome.storage.sync.get(null, (store) => {
+      useChromeStorage.setState(store as ChromeStorage);
+    });
+
+    // 서로 다른 컨텍스트를 가진 탭에서 chrome.storage.sync 의 변화에 맞춰
+    // 리액트의 메모리도 업데이트 될 수 있도록 onChangeHandler 등록
+
+    const onSynchronize: Synchronize = (changes, namespace) => {
+      if (namespace !== "sync") {
+        return;
+      }
+
+      const newState = Object.entries(changes).reduce(
+        (newState, [key, { newValue }]) => {
+          newState[key as keyof ChromeStorage] = newValue;
+          return newState;
+        },
+        {} as Partial<ChromeStorage>
+      );
+
+      useChromeStorage.setState(newState);
+      synchronizeFlag.current = true;
     };
 
-    chrome.storage.sync.get(null, (chromeStorage) =>
-      _syncChromeStorage(chromeStorage as ChromeStorage)
-    );
+    chrome.storage.onChanged.addListener(onSynchronize);
 
-    chrome.storage.onChanged.addListener(synchronizeChromeStorage);
-
-    return () => {
-      chrome.storage.onChanged.removeListener(synchronizeChromeStorage);
-    };
+    return () => chrome.storage.onChanged.removeListener(onSynchronize);
   }, []);
 
-  return (
-    <ChromeStorageContext.Provider
-      value={{
-        chromeStorage,
-        setChromeStorage,
-      }}
-    >
-      {children}
-    </ChromeStorageContext.Provider>
-  );
-};
+  useEffect(() => {
+    // synchronizeFlag가 true일 경우에는 chrome.storage.sync에 저장하지 않음
 
-export const useChromeStorage = () => {
-  const context = useContext(ChromeStorageContext)!;
-  return context;
+    if (synchronizeFlag.current) {
+      synchronizeFlag.current = false;
+      return;
+    }
+
+    chrome.storage.sync.set(store);
+  }, [store]);
+
+  return null;
 };
