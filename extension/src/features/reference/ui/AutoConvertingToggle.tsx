@@ -9,8 +9,6 @@ export const AutoConvertingToggle = memo(() => {
     (state) => state.isContentScriptEnabled
   );
 
-  console.log("autoConverting re render");
-
   const tab = useTab();
 
   useEffect(() => {
