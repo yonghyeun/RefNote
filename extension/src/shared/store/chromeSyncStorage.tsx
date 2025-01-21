@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { createStore } from "../lib/createStore";
+import { createSyncStore } from "../lib";
 
 type Synchronize = (
   changes: chrome.storage.StorageChange,
@@ -14,7 +14,9 @@ export const chromeSyncStorageInitialValue: ChromeSyncStorage = {
   isUnAttachedReferenceVisible: true,
 };
 
-export const useChromeSyncStorage = createStore(chromeSyncStorageInitialValue);
+export const useChromeSyncStorage = createSyncStore(
+  chromeSyncStorageInitialValue
+);
 
 export const ChromeSyncStorageUpdater = () => {
   const store = useChromeSyncStorage((state) => state);

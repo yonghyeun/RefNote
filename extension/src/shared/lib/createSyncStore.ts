@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 type Selector<T, R> = (state: T) => R;
 
-export const createStore = <Store extends object>(
+export const createSyncStore = <Store extends object>(
   initialState: Store | (() => Store)
 ) => {
   let store =
