@@ -271,25 +271,17 @@ const MemoArea = () => {
   const handleChange = ({ target }: ChangeEvent<HTMLTextAreaElement>) => {
     setText(target.value);
   };
-  const maxLength = 500; // TODO 한 키 당 저장 가능한 text 구하기
 
   return (
-    <div className="flex flex-col items-end">
-      <textarea
-        name={`${reference.url}-memo`}
-        id={reference.url}
-        onClick={(event) => {
-          event.stopPropagation();
-        }}
-        onChange={handleChange}
-        className="w-full text-[0.9rem] focus:outline-none bg-transparent rounded-lg p-2 h-24"
-      />
-      <Text p type="secondary" className="flex gap-1 text-[0.7rem]">
-        <span>{text.length}</span>
-        <span>/</span>
-        <span>{maxLength}</span>
-      </Text>
-    </div>
+    <textarea
+      name={`${reference.url}-memo`}
+      id={reference.url}
+      onClick={(event) => {
+        event.stopPropagation();
+      }}
+      onChange={handleChange}
+      className="w-full text-[0.9rem] focus:outline-none bg-transparent rounded-lg p-2 h-24"
+    />
   );
 };
 
