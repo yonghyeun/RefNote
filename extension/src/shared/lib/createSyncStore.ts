@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-
-type Selector<T, R> = (state: T) => R;
+import type { Selector } from "./types";
 
 export const createSyncStore = <Store extends object>(
   initialState: Store | (() => Store)

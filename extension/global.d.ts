@@ -36,6 +36,10 @@ declare global {
     isUnAttachedReferenceVisible: boolean;
   }
 
+  interface ChromeLocalStorage {
+    [key in string]: string;
+  }
+
   interface Tab extends chrome.tabs.Tab {
     id: NonNullable<chrome.tabs.Tab["id"]>;
     url: NonNullable<chrome.tabs.Tab["url"]>;

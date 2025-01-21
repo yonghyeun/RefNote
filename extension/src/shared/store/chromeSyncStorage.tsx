@@ -1,11 +1,6 @@
 import { useEffect, useRef } from "react";
 import { createSyncStore } from "../lib";
 
-type Synchronize = (
-  changes: chrome.storage.StorageChange,
-  namespace: chrome.storage.AreaName
-) => void;
-
 export const chromeSyncStorageInitialValue: ChromeSyncStorage = {
   reference: [],
   autoConverting: false,
@@ -33,7 +28,10 @@ export const ChromeSyncStorageUpdater = () => {
     // 서로 다른 컨텍스트를 가진 탭에서 chrome.storage.sync 의 변화에 맞춰
     // 리액트의 메모리도 업데이트 될 수 있도록 onChangeHandler 등록
 
-    const onSynchronize: Synchronize = (changes, namespace) => {
+    const onSynchronize = (
+      changes: chrome.storage.StorageChange,
+      namespace: chrome.storage.AreaName
+    ) => {
       if (namespace !== "sync") {
         return;
       }
