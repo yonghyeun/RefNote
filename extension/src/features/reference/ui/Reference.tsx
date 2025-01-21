@@ -191,6 +191,11 @@ const RemoveButton = () => {
           }),
       };
     });
+
+    useChromeLocalStorage.dispatchAction({
+      type: "remove",
+      key: reference.url,
+    });
   };
 
   return (
