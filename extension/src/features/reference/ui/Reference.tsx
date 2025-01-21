@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import styles from "./styles.module.css";
 import { useChromeSyncStorage } from "@/shared/store/chromeSyncStorage";
 import { Button, IconButton } from "@/shared/ui/button";
@@ -275,9 +281,24 @@ const MemoArea = () => {
     reference: { url },
   } = useReferenceContext();
   const text = useChromeLocalStorage((state) => state[url] || "");
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    const synchronizeText = () => {
+      if (textAreaRef.current) {
+        textAreaRef.current.value = useChromeLocalStorage.getState()[url] || "";
+      }
+    };
+
+    window.addEventListener("focus", synchronizeText);
+    return () => {
+      window.removeEventListener("focus", synchronizeText);
+    };
+  }, []);
 
   return (
     <textarea
+      ref={textAreaRef}
       name={`${url}-memo`}
       id={url}
       onClick={(event) => {
