@@ -45,7 +45,7 @@ export const createLocalStore = <Store extends object>(
 
     switch (action.type) {
       case "clear":
-        chrome.storage.local.clear();
+        chrome.storage.local.set(initialState);
         break;
       case "set":
         chrome.storage.local.set({ [action.key]: action.value });
