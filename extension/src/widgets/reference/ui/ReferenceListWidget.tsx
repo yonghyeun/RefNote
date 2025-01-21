@@ -32,6 +32,8 @@ const UnAttachedReferenceList = ({
 }) => {
   const [clickedUrl, setClickedUrl] = useState<string>("");
   const [isEditUrl, setEditUrl] = useState<string>("");
+  const [isMemoOpen, setIsMemoOpen] = useState<boolean>(false);
+
   const { errorUrl } = useSaveErrorUrl();
 
   const handleClickUrl = (url: string) => {
@@ -64,19 +66,27 @@ const UnAttachedReferenceList = ({
               <Reference.RemoveButton />
             </div>
             {reference.url === clickedUrl && (
-              <div className="flex flex-col gap-1">
-                <div className="flex gap-2 items-center">
-                  <Reference.CopyLinkButton />
-                  <Reference.CopyLinkWithTextButton />
-                  <Reference.MovePageButton />
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-1">
+                  <div className="flex gap-2 items-center">
+                    <Reference.CopyLinkButton />
+                    <Reference.CopyLinkWithTextButton />
+                    <Reference.MovePageButton />
+                  </div>
+                  <div className="flex w-full gap-2">
+                    <Reference.CustomButton
+                      onClick={() => setEditUrl(reference.url)}
+                    >
+                      제목 수정
+                    </Reference.CustomButton>
+                    <Reference.CustomButton
+                      onClick={() => setIsMemoOpen((prev) => !prev)}
+                    >
+                      {isMemoOpen ? "메모 닫기" : "메모 열기"}
+                    </Reference.CustomButton>
+                  </div>
                 </div>
-                <div className="flex w-full">
-                  <Reference.CustomButton
-                    onClick={() => setEditUrl(reference.url)}
-                  >
-                    제목 수정
-                  </Reference.CustomButton>
-                </div>
+                {isMemoOpen && <Reference.MemoArea />}
               </div>
             )}
           </Reference>
@@ -119,6 +129,7 @@ const AttachedReferenceList = ({
 }) => {
   const [clickedUrl, setClickedUrl] = useState<string>("");
   const [isEditUrl, setEditUrl] = useState<string>("");
+  const [isMemoOpen, setIsMemoOpen] = useState<boolean>(false);
   const { errorUrl } = useSaveErrorUrl();
 
   const handleClickUrl = (url: string) => {
@@ -162,19 +173,27 @@ const AttachedReferenceList = ({
               <Reference.RemoveButton />
             </div>
             {reference.url === clickedUrl && (
-              <div className="flex flex-col gap-1">
-                <div className="flex gap-2 items-center">
-                  <Reference.CopyLinkButton />
-                  <Reference.CopyLinkWithTextButton />
-                  <Reference.MovePageButton />
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-1">
+                  <div className="flex gap-2 items-center">
+                    <Reference.CopyLinkButton />
+                    <Reference.CopyLinkWithTextButton />
+                    <Reference.MovePageButton />
+                  </div>
+                  <div className="flex w-full gap-2">
+                    <Reference.CustomButton
+                      onClick={() => setEditUrl(reference.url)}
+                    >
+                      제목 수정
+                    </Reference.CustomButton>
+                    <Reference.CustomButton
+                      onClick={() => setIsMemoOpen((prev) => !prev)}
+                    >
+                      {isMemoOpen ? "메모 닫기" : "메모 열기"}
+                    </Reference.CustomButton>
+                  </div>
                 </div>
-                <div className="flex w-full">
-                  <Reference.CustomButton
-                    onClick={() => setEditUrl(reference.url)}
-                  >
-                    제목 수정
-                  </Reference.CustomButton>
-                </div>
+                {isMemoOpen && <Reference.MemoArea />}
               </div>
             )}
           </Reference>

@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { ChangeEvent, createContext, useContext, useState } from "react";
 import styles from "./styles.module.css";
 import { useChromeStorage } from "@/shared/store/chromeStorage";
 import { Button, IconButton } from "@/shared/ui/button";
+import { Text } from "@/shared/ui/Text";
 
 interface ReferenceContext {
   reference: ReferenceData;
@@ -35,7 +36,7 @@ const ReferenceItemWrapper = ({
       value={{ reference, setChromeStorage: useChromeStorage.setState }}
     >
       <li
-        className={`reference cursor-pointer border-b py-1 flex flex-col justify-center gap-2 ${className}`}
+        className={`reference cursor-pointer py-1 flex flex-col justify-center gap-2 ${className}`}
         onClick={onClick}
       >
         {children}
@@ -264,6 +265,34 @@ const MovePageButton = () => {
   );
 };
 
+const MemoArea = () => {
+  const { reference } = useReferenceContext();
+  const [text, setText] = useState<string>("");
+  const handleChange = ({ target }: ChangeEvent<HTMLTextAreaElement>) => {
+    setText(target.value);
+  };
+  const maxLength = 500; // TODO 한 키 당 저장 가능한 text 구하기
+
+  return (
+    <div className="flex flex-col items-end">
+      <textarea
+        name={`${reference.url}-memo`}
+        id={reference.url}
+        onClick={(event) => {
+          event.stopPropagation();
+        }}
+        onChange={handleChange}
+        className="w-full text-[0.9rem] focus:outline-none bg-transparent rounded-lg p-2 h-24"
+      />
+      <Text p type="secondary" className="flex gap-1 text-[0.7rem]">
+        <span>{text.length}</span>
+        <span>/</span>
+        <span>{maxLength}</span>
+      </Text>
+    </div>
+  );
+};
+
 export const Reference = Object.assign(ReferenceItemWrapper, {
   Favicon,
   Title,
@@ -274,4 +303,5 @@ export const Reference = Object.assign(ReferenceItemWrapper, {
   CopyLinkWithTextButton,
   MovePageButton,
   CustomButton,
+  MemoArea,
 });
