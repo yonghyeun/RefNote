@@ -1,8 +1,8 @@
-import React, { ChangeEvent, createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import styles from "./styles.module.css";
 import { useChromeSyncStorage } from "@/shared/store/chromeSyncStorage";
 import { Button, IconButton } from "@/shared/ui/button";
-import { Text } from "@/shared/ui/Text";
+import { useChromeLocalStorage } from "@/shared/store";
 
 interface ReferenceContext {
   reference: ReferenceData;
@@ -266,20 +266,26 @@ const MovePageButton = () => {
 };
 
 const MemoArea = () => {
-  const { reference } = useReferenceContext();
-  const [text, setText] = useState<string>("");
-  const handleChange = ({ target }: ChangeEvent<HTMLTextAreaElement>) => {
-    setText(target.value);
-  };
+  const {
+    reference: { url },
+  } = useReferenceContext();
+  const text = useChromeLocalStorage((state) => state[url] || "");
 
   return (
     <textarea
-      name={`${reference.url}-memo`}
-      id={reference.url}
+      name={`${url}-memo`}
+      id={url}
       onClick={(event) => {
         event.stopPropagation();
       }}
-      onChange={handleChange}
+      onChange={({ target }) => {
+        useChromeLocalStorage.dispatchAction({
+          type: "set",
+          key: url,
+          value: target.value,
+        });
+      }}
+      defaultValue={text}
       className="w-full text-[0.9rem] focus:outline-none bg-transparent rounded-lg p-2 h-24"
     />
   );

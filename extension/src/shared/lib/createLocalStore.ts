@@ -22,8 +22,8 @@ export const createLocalStore = <Store extends object>(
 
   // 초기 호출 시 store 는 chrome.storage.local 의 값으로 초기화 됨
 
-  chrome.storage.local.get(null, (store) => {
-    Object.assign(store, store);
+  chrome.storage.local.get(null, (localStorage) => {
+    Object.assign(store, localStorage);
     callbacks.forEach((callback) => callback());
   });
 
