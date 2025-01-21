@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 
-type ChromeLocalStorageAction<T, K extends keyof T = keyof T> =
+type ChromeLocalStorageAction<T> =
   | {
       type: "clear";
     }
   | {
       type: "set";
-      key: K;
-      value: T[K];
+      data: {
+        [key in keyof T]: T[key];
+      };
     }
   | {
       type: "remove";
-      key: K;
+      key: keyof T;
     };
 
 export const createLocalStore = <Store extends object>(
@@ -54,7 +55,7 @@ export const createLocalStore = <Store extends object>(
         chrome.storage.local.set(initialState);
         break;
       case "set":
-        chrome.storage.local.set({ [action.key]: action.value });
+        chrome.storage.local.set(action.data);
         break;
       case "remove":
         chrome.storage.local.remove(action.key);
