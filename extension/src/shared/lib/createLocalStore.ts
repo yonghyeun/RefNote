@@ -37,6 +37,12 @@ export const createLocalStore = <Store extends object>(
   const getState = () => ({ ...store });
 
   const dispatchAction = (action: ChromeLocalStorageAction<Store>) => {
+    if (import.meta.env.DEV) {
+      console.group("ChromeLocalStorage Action Dispatched");
+      console.log(action);
+      console.groupEnd();
+    }
+
     switch (action.type) {
       case "clear":
         chrome.storage.local.clear();
@@ -65,11 +71,14 @@ export const createLocalStore = <Store extends object>(
     );
 
     changeEntries.forEach(({ key, newValue }) => {
-      if (!newValue) {
-        delete store[key as keyof Store];
-      }
       store[key as keyof Store] = newValue;
     });
+
+    if (import.meta.env.DEV) {
+      console.group("변경 이후 chromeLocalStorage");
+      console.table(store);
+      console.groupEnd();
+    }
 
     callbacks.forEach((callback) => callback());
   });
