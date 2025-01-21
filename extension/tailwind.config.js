@@ -43,8 +43,8 @@ export default {
           active: "#d0d0d0",
         },
         border: {
-          light: "#e9ecef",
-          dark: "#495057",
+          light: "#d1d6db",
+          dark: "#a0a0a0",
         },
       },
     },
