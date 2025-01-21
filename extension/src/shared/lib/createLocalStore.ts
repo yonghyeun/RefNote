@@ -20,12 +20,18 @@ export const createLocalStore = <Store extends object>(
   let store =
     typeof initialState === "function" ? initialState() : initialState;
 
-  // 초기 호출 시 store 는 chrome.storage.local 의 값으로 초기화 됨
+  const synchronizeStore = () => {
+    chrome.storage.local.get(null, (storage) => {
+      if (import.meta.env.DEV) {
+        console.group("동기화를 시행 할 chromeLocalStorage 값");
+        console.table(store);
+        console.groupEnd();
+      }
 
-  chrome.storage.local.get(null, (localStorage) => {
-    Object.assign(store, localStorage);
-    callbacks.forEach((callback) => callback());
-  });
+      Object.assign(store, storage);
+      callbacks.forEach((callback) => callback());
+    });
+  };
 
   const callbacks = new Set<() => void>();
 
@@ -99,6 +105,9 @@ export const createLocalStore = <Store extends object>(
 
   useStore.dispatchAction = dispatchAction;
   useStore.getState = getState;
+  useStore.synchronizeStore = synchronizeStore;
+
+  synchronizeStore();
 
   return useStore;
 };
