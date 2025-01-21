@@ -1,12 +1,12 @@
 import React, { ChangeEvent, createContext, useContext, useState } from "react";
 import styles from "./styles.module.css";
-import { useChromeStorage } from "@/shared/store/chromeStorage";
+import { useChromeSyncStorage } from "@/shared/store/chromeSyncStorage";
 import { Button, IconButton } from "@/shared/ui/button";
 import { Text } from "@/shared/ui/Text";
 
 interface ReferenceContext {
   reference: ReferenceData;
-  setChromeStorage: typeof useChromeStorage.setState;
+  setChromeStorage: typeof useChromeSyncStorage.setState;
 }
 
 const ReferenceProvider = createContext<ReferenceContext | null>(null);
@@ -33,7 +33,7 @@ const ReferenceItemWrapper = ({
 }: ReferenceProps) => {
   return (
     <ReferenceProvider.Provider
-      value={{ reference, setChromeStorage: useChromeStorage.setState }}
+      value={{ reference, setChromeStorage: useChromeSyncStorage.setState }}
     >
       <li
         className={`reference cursor-pointer py-1 flex flex-col justify-center gap-2 ${className}`}

@@ -1,9 +1,9 @@
 import { Button } from "@/shared/ui/button";
-import { useChromeStorage, useTab } from "@/shared/store";
+import { useChromeSyncStorage, useTab } from "@/shared/store";
 import { isVelogWritePage, sendMessageToBackground } from "@/shared/lib";
 
 export const ConvertToReferenceButton = () => {
-  const isContentScriptEnabled = useChromeStorage(
+  const isContentScriptEnabled = useChromeSyncStorage(
     (state) => state.isContentScriptEnabled
   );
   const tab = useTab();

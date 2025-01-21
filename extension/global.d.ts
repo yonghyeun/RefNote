@@ -28,7 +28,7 @@ declare global {
 
   type ReferenceData = UnAttachedReferenceData | AttachedReferenceData;
 
-  interface ChromeStorage {
+  interface ChromeSyncStorage {
     reference: ReferenceData[];
     autoConverting: boolean;
     isDarkMode: boolean;

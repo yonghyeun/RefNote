@@ -1,12 +1,12 @@
 import { isTab, sendMessageToBackground } from "@/shared/lib";
 import { useSaveErrorUrl } from "@/shared/store";
-import { useChromeStorage } from "@/shared/store/chromeStorage";
+import { useChromeSyncStorage } from "@/shared/store/chromeSyncStorage";
 import { Button } from "@/shared/ui/button";
 
 // TODO : 로딩 처리 하기
 export const ReferenceSaveButton = () => {
-  const reference = useChromeStorage((state) => state.reference);
-  const setChromeStorage = useChromeStorage.setState;
+  const reference = useChromeSyncStorage((state) => state.reference);
+  const setChromeStorage = useChromeSyncStorage.setState;
   const { errorUrl, setErrorUrl } = useSaveErrorUrl();
 
   const handleSaveReference = async () => {

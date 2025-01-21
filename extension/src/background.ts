@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 import { convertNumberToReference } from "./features/reference/model";
-import { chromeStorageInitialValue } from "./shared/store";
+import { chromeSyncStorageInitialValue } from "./shared/store";
 import { isTab } from "./shared/lib";
 
 browser.runtime.onInstalled.addListener(async (details) => {
@@ -19,7 +19,7 @@ browser.runtime.onInstalled.addListener(async (details) => {
 
   const prevStorageValue = await chrome.storage.sync.get(null);
   chrome.storage.sync.set({
-    ...chromeStorageInitialValue,
+    ...chromeSyncStorageInitialValue,
     ...prevStorageValue,
   });
 });
@@ -85,7 +85,7 @@ chrome.runtime.onMessage.addListener(
 
         prevUsedReferenceIds = data;
 
-        chrome.storage.sync.get<ChromeStorage>("reference", (storage) => {
+        chrome.storage.sync.get<ChromeSyncStorage>("reference", (storage) => {
           const { reference } = storage;
           const updatedReference = reference.map((referenceData) =>
             referenceData.isWritten

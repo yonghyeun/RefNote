@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import { useChromeStorage, useSaveErrorUrl } from "@/shared/store";
+import { useChromeSyncStorage, useSaveErrorUrl } from "@/shared/store";
 import {
   AutoConvertingToggle,
   Reference,
@@ -97,10 +97,10 @@ const UnAttachedReferenceList = ({
 };
 
 const UnAttachedReferenceListFoldButton = memo(() => {
-  const isUnAttachedReferenceVisible = useChromeStorage(
+  const isUnAttachedReferenceVisible = useChromeSyncStorage(
     (state) => state.isUnAttachedReferenceVisible
   );
-  const setChromeStorage = useChromeStorage.setState;
+  const setChromeStorage = useChromeSyncStorage.setState;
 
   return (
     <Button
@@ -204,8 +204,8 @@ const AttachedReferenceList = ({
 };
 
 export const ReferenceListWidget = () => {
-  const reference = useChromeStorage((state) => state.reference);
-  const isUnAttachedReferenceVisible = useChromeStorage(
+  const reference = useChromeSyncStorage((state) => state.reference);
+  const isUnAttachedReferenceVisible = useChromeSyncStorage(
     (state) => state.isUnAttachedReferenceVisible
   );
 

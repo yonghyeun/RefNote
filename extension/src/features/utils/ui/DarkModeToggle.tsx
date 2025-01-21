@@ -1,10 +1,10 @@
-import { useChromeStorage } from "@/shared/store";
+import { useChromeSyncStorage } from "@/shared/store";
 import styles from "./styles.module.css";
 import { useEffect } from "react";
 
 export const DarkModeToggle = () => {
-  const isDarkMode = useChromeStorage((state) => state.isDarkMode);
-  const setChromeStorage = useChromeStorage.setState;
+  const isDarkMode = useChromeSyncStorage((state) => state.isDarkMode);
+  const setChromeStorage = useChromeSyncStorage.setState;
 
   const handleToggle = () => {
     setChromeStorage((prevStorage) => ({

@@ -1,11 +1,11 @@
-import { useChromeStorage, useTab } from "@/shared/store";
+import { useChromeSyncStorage, useTab } from "@/shared/store";
 import styles from "./styles.module.css";
 import { memo, useEffect } from "react";
 import { isVelogWritePage } from "@/shared/lib";
 
 export const AutoConvertingToggle = memo(() => {
-  const autoConverting = useChromeStorage((state) => state.autoConverting);
-  const isContentScriptEnabled = useChromeStorage(
+  const autoConverting = useChromeSyncStorage((state) => state.autoConverting);
+  const isContentScriptEnabled = useChromeSyncStorage(
     (state) => state.isContentScriptEnabled
   );
 
@@ -34,7 +34,7 @@ export const AutoConvertingToggle = memo(() => {
           className={styles.checkBox}
           checked={autoConverting}
           onChange={() => {
-            useChromeStorage.setState({ autoConverting: !autoConverting });
+            useChromeSyncStorage.setState({ autoConverting: !autoConverting });
           }}
         />
         <span className={styles.toggleSlider} />

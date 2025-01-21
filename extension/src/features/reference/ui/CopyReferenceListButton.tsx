@@ -1,8 +1,8 @@
-import { useChromeStorage } from "@/shared/store";
+import { useChromeSyncStorage } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 
 export const CopyReferenceListButton = () => {
-  const reference = useChromeStorage((state) => state.reference);
+  const reference = useChromeSyncStorage((state) => state.reference);
 
   const handleCopyReferenceList = () => {
     const attachedReferences = reference
