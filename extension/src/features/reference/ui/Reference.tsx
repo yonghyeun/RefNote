@@ -12,7 +12,7 @@ import { useChromeLocalStorage } from "@/shared/store";
 
 interface ReferenceContext {
   reference: ReferenceData;
-  setChromeStorage: typeof useChromeSyncStorage.setState;
+  dispatchAction: typeof useChromeSyncStorage.dispatchAction;
 }
 
 const ReferenceProvider = createContext<ReferenceContext | null>(null);
@@ -25,7 +25,7 @@ const useReferenceContext = () => {
   return context;
 };
 
-interface ReferenceProps extends Omit<ReferenceContext, "setChromeStorage"> {
+interface ReferenceProps extends Omit<ReferenceContext, "dispatchAction"> {
   children: React.ReactNode;
   onClick?: React.MouseEventHandler<HTMLLIElement>;
   className?: string;
@@ -39,7 +39,7 @@ const ReferenceItemWrapper = ({
 }: ReferenceProps) => {
   return (
     <ReferenceProvider.Provider
-      value={{ reference, setChromeStorage: useChromeSyncStorage.setState }}
+      value={{ reference, dispatchAction: useChromeSyncStorage.dispatchAction }}
     >
       <li
         className={`reference cursor-pointer py-1 flex flex-col justify-center gap-2 ${className}`}
@@ -74,19 +74,22 @@ const Title = () => {
 };
 
 const WriteButton = () => {
-  const { reference, setChromeStorage } = useReferenceContext();
+  const { reference, dispatchAction } = useReferenceContext();
 
   const handleWriteReference = () => {
-    setChromeStorage((prev) => {
-      const id = prev.reference.filter(({ isWritten }) => isWritten).length + 1;
-      return {
-        ...prev,
-        reference: prev.reference.map((data) =>
-          data.url !== reference.url
-            ? data
-            : { ...data, isWritten: true, id, isUsed: false }
-        ),
-      };
+    dispatchAction({
+      type: "set",
+      setter: ({ reference: prevReference }) => {
+        const id =
+          prevReference.filter(({ isWritten }) => isWritten).length + 1;
+        return {
+          reference: prevReference.map((data) =>
+            data.url !== reference.url
+              ? data
+              : { ...data, isWritten: true, id, isUsed: false }
+          ),
+        };
+      },
     });
   };
 
@@ -115,7 +118,7 @@ const WriteButton = () => {
 };
 
 const EraseButton = () => {
-  const { reference, setChromeStorage } = useReferenceContext();
+  const { reference, dispatchAction } = useReferenceContext();
 
   if (!reference.isWritten) {
     throw new Error(
@@ -124,21 +127,23 @@ const EraseButton = () => {
   }
 
   const handleEraseReference = () => {
-    setChromeStorage((prev) => {
-      return {
-        ...prev,
-        reference: prev.reference.map((data) => {
-          if (data.url === reference.url) {
-            const { id, isUsed, isWritten, ...rest } =
-              data as AttachedReferenceData;
-            return { ...rest, isWritten: false };
-          }
-          if (data.isWritten && data.id > reference.id) {
-            return { ...data, id: data.id - 1 };
-          }
-          return data;
-        }),
-      };
+    dispatchAction({
+      type: "set",
+      setter: ({ reference: prevReference }) => {
+        return {
+          reference: prevReference.map((data) => {
+            if (data.url === reference.url) {
+              const { id, isUsed, isWritten, ...rest } =
+                data as AttachedReferenceData;
+              return { ...rest, isWritten: false };
+            }
+            if (data.isWritten && data.id > reference.id) {
+              return { ...data, id: data.id - 1 };
+            }
+            return data;
+          }),
+        };
+      },
     });
   };
 
@@ -173,29 +178,31 @@ const EraseButton = () => {
 };
 
 const RemoveButton = () => {
-  const { reference, setChromeStorage } = useReferenceContext();
+  const { reference, dispatchAction } = useReferenceContext();
 
   const handleRemoveReference = () => {
-    setChromeStorage((prev) => {
-      const removeTarget = prev.reference.find(
-        (data) => data.url === reference.url
-      ) as ReferenceData;
+    dispatchAction({
+      type: "set",
+      setter: ({ reference: prevReference }) => {
+        const removeTarget = prevReference.find(
+          (data) => data.url === reference.url
+        ) as ReferenceData;
 
-      return {
-        ...prev,
-        reference: prev.reference
-          .filter((data) => data.url !== reference.url)
-          .map((data) => {
-            if (
-              data.isWritten &&
-              removeTarget.isWritten &&
-              data.id > removeTarget.id
-            ) {
-              return { ...data, id: data.id - 1 };
-            }
-            return data;
-          }),
-      };
+        return {
+          reference: prevReference
+            .filter((data) => data.url !== reference.url)
+            .map((data) => {
+              if (
+                data.isWritten &&
+                removeTarget.isWritten &&
+                data.id > removeTarget.id
+              ) {
+                return { ...data, id: data.id - 1 };
+              }
+              return data;
+            }),
+        };
+      },
     });
 
     useChromeLocalStorage.dispatchAction({

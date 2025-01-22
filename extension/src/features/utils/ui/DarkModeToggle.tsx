@@ -4,13 +4,14 @@ import { useEffect } from "react";
 
 export const DarkModeToggle = () => {
   const isDarkMode = useChromeSyncStorage((state) => state.isDarkMode);
-  const setChromeStorage = useChromeSyncStorage.setState;
 
   const handleToggle = () => {
-    setChromeStorage((prevStorage) => ({
-      ...prevStorage,
-      isDarkMode: !isDarkMode,
-    }));
+    useChromeSyncStorage.dispatchAction({
+      type: "set",
+      setter: ({ isDarkMode }) => ({
+        isDarkMode: !isDarkMode,
+      }),
+    });
   };
 
   useEffect(() => {

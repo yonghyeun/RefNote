@@ -34,7 +34,13 @@ export const AutoConvertingToggle = memo(() => {
           className={styles.checkBox}
           checked={autoConverting}
           onChange={() => {
-            useChromeSyncStorage.setState({ autoConverting: !autoConverting });
+            useChromeSyncStorage.dispatchAction({
+              type: "set",
+              setter: (state) => ({
+                ...state,
+                autoConverting: !autoConverting,
+              }),
+            });
           }}
         />
         <span className={styles.toggleSlider} />

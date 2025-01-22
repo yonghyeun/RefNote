@@ -14,29 +14,30 @@ export const ReferenceEdit = ({
   onResolveEdit,
   className = "",
 }: ReferenceEditProps) => {
-  const setChromeStorage = useChromeSyncStorage.setState;
-
   const [title, setTitle] = useState<string>(() => reference.title);
 
   const handleSaveReference = () => {
-    setChromeStorage((prev) => {
-      const prevReference = prev.reference;
-      const changeTargetReference = prevReference.findIndex(
-        (r) => r.url === reference.url
-      );
+    useChromeSyncStorage.dispatchAction({
+      type: "set",
+      setter: (prev) => {
+        const prevReference = prev.reference;
+        const changeTargetReference = prevReference.findIndex(
+          (r) => r.url === reference.url
+        );
 
-      if (changeTargetReference === -1) {
-        return prev;
-      }
+        if (changeTargetReference === -1) {
+          return prev;
+        }
 
-      return {
-        ...prev,
-        reference: [
-          ...prevReference.slice(0, changeTargetReference),
-          { ...reference, title },
-          ...prevReference.slice(changeTargetReference + 1),
-        ],
-      };
+        return {
+          ...prev,
+          reference: [
+            ...prevReference.slice(0, changeTargetReference),
+            { ...reference, title },
+            ...prevReference.slice(changeTargetReference + 1),
+          ],
+        };
+      },
     });
     onResolveEdit();
   };
