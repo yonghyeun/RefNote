@@ -20,17 +20,19 @@ export const createStore = <Store extends object>(
   let store =
     typeof initialState === "function" ? initialState() : initialState;
 
-  const synchronizeStore = () => {
-    chrome.storage[namespace].get(null, (storage) => {
-      if (import.meta.env.DEV) {
-        console.group(`동기화를 시행 : (${namespace})`);
-        console.table(store);
-        console.groupEnd();
-      }
+  const synchronizeStore = async () => {
+    const storage = await chrome.storage[namespace].get(null);
 
-      Object.assign(store, storage);
-      callbacks.forEach((callback) => callback());
-    });
+    if (import.meta.env.DEV) {
+      console.group(`동기화를 시행 : (${namespace})`);
+      console.table(store);
+      console.groupEnd();
+    }
+
+    Object.assign(store, storage);
+    callbacks.forEach((callback) => callback());
+
+    return storage;
   };
 
   const callbacks = new Set<() => void>();

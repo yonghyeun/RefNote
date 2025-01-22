@@ -291,9 +291,10 @@ const MemoArea = () => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    const synchronizeText = () => {
+    const synchronizeText = async () => {
       if (textAreaRef.current) {
-        textAreaRef.current.value = useChromeLocalStorage.getState()[url] || "";
+        const storage = await useChromeLocalStorage.synchronizeStore();
+        textAreaRef.current.value = storage[url] || "";
       }
     };
 
