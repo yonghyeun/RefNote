@@ -307,8 +307,8 @@ const MemoArea = () => {
       onChange={({ target }) => {
         useChromeLocalStorage.dispatchAction({
           type: "set",
-          data: {
-            [url]: target.value,
+          setter: () => {
+            return { [url]: target.value };
           },
         });
       }}

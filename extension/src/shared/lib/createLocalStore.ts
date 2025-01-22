@@ -6,9 +6,7 @@ type ChromeLocalStorageAction<T> =
     }
   | {
       type: "set";
-      data: {
-        [key in keyof T]: T[key];
-      };
+      setter: (storage: T) => Partial<T>;
     }
   | {
       type: "remove";
@@ -55,7 +53,7 @@ export const createLocalStore = <Store extends object>(
         chrome.storage.local.set(initialState);
         break;
       case "set":
-        chrome.storage.local.set(action.data);
+        chrome.storage.local.set(action.setter(store));
         break;
       case "remove":
         chrome.storage.local.remove(action.key);
