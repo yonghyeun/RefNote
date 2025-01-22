@@ -23,12 +23,6 @@ export const createStore = <Store extends object>(
   const synchronizeStore = async () => {
     const storage = await chrome.storage[namespace].get(null);
 
-    if (import.meta.env.DEV) {
-      console.group(`동기화를 시행 : (${namespace})`);
-      console.table(store);
-      console.groupEnd();
-    }
-
     Object.assign(store, storage);
     callbacks.forEach((callback) => callback());
 
@@ -45,12 +39,6 @@ export const createStore = <Store extends object>(
   const getState = () => ({ ...store });
 
   const dispatchAction = (action: ChromeLocalStorageAction<Store>) => {
-    if (import.meta.env.DEV) {
-      console.group(`${namespace} Action Dispatched`);
-      console.log(action);
-      console.groupEnd();
-    }
-
     switch (action.type) {
       case "clear":
         chrome.storage[namespace].set(initialState);
@@ -79,12 +67,6 @@ export const createStore = <Store extends object>(
     changeEntries.forEach(({ key, newValue }) => {
       store[key as keyof Store] = newValue;
     });
-
-    if (import.meta.env.DEV) {
-      console.group(`변경 이후의 ${namespace} 스토어`);
-      console.table(store);
-      console.groupEnd();
-    }
 
     callbacks.forEach((callback) => callback());
   });
