@@ -10,12 +10,7 @@ import { useChromeSyncStorage } from "@/shared/store/chromeSyncStorage";
 import { Button, IconButton } from "@/shared/ui/button";
 import { useChromeLocalStorage } from "@/shared/store";
 
-interface ReferenceContext {
-  reference: ReferenceData;
-  dispatchAction: typeof useChromeSyncStorage.dispatchAction;
-}
-
-const ReferenceProvider = createContext<ReferenceContext | null>(null);
+const ReferenceProvider = createContext<ReferenceData | null>(null);
 
 const useReferenceContext = () => {
   const context = useContext(ReferenceProvider);
@@ -25,10 +20,11 @@ const useReferenceContext = () => {
   return context;
 };
 
-interface ReferenceProps extends Omit<ReferenceContext, "dispatchAction"> {
+interface ReferenceProps {
   children: React.ReactNode;
   onClick?: React.MouseEventHandler<HTMLLIElement>;
   className?: string;
+  reference: ReferenceData;
 }
 
 const ReferenceItemWrapper = ({
@@ -38,9 +34,7 @@ const ReferenceItemWrapper = ({
   className = "",
 }: ReferenceProps) => {
   return (
-    <ReferenceProvider.Provider
-      value={{ reference, dispatchAction: useChromeSyncStorage.dispatchAction }}
-    >
+    <ReferenceProvider.Provider value={reference}>
       <li
         className={`reference cursor-pointer py-1 flex flex-col justify-center gap-2 ${className}`}
         onClick={onClick}
@@ -52,7 +46,7 @@ const ReferenceItemWrapper = ({
 };
 
 const Favicon = () => {
-  const { reference } = useReferenceContext();
+  const reference = useReferenceContext();
 
   return (
     <img className="w-4 h-4 object-cover mr-2" src={reference.faviconUrl} />
@@ -60,7 +54,7 @@ const Favicon = () => {
 };
 
 const Title = () => {
-  const { reference } = useReferenceContext();
+  const reference = useReferenceContext();
   const [isEllipsis, setIsEllipsis] = useState<boolean>(true);
 
   return (
@@ -74,10 +68,10 @@ const Title = () => {
 };
 
 const WriteButton = () => {
-  const { reference, dispatchAction } = useReferenceContext();
+  const reference = useReferenceContext();
 
   const handleWriteReference = () => {
-    dispatchAction({
+    useChromeSyncStorage.dispatchAction({
       type: "set",
       setter: ({ reference: prevReference }) => {
         const id =
@@ -118,7 +112,7 @@ const WriteButton = () => {
 };
 
 const EraseButton = () => {
-  const { reference, dispatchAction } = useReferenceContext();
+  const reference = useReferenceContext();
 
   if (!reference.isWritten) {
     throw new Error(
@@ -127,7 +121,7 @@ const EraseButton = () => {
   }
 
   const handleEraseReference = () => {
-    dispatchAction({
+    useChromeSyncStorage.dispatchAction({
       type: "set",
       setter: ({ reference: prevReference }) => {
         return {
@@ -178,10 +172,10 @@ const EraseButton = () => {
 };
 
 const RemoveButton = () => {
-  const { reference, dispatchAction } = useReferenceContext();
+  const reference = useReferenceContext();
 
   const handleRemoveReference = () => {
-    dispatchAction({
+    useChromeSyncStorage.dispatchAction({
       type: "set",
       setter: ({ reference: prevReference }) => {
         const removeTarget = prevReference.find(
@@ -244,7 +238,7 @@ const CustomButton = ({
 );
 
 const CopyLinkButton = () => {
-  const { reference } = useReferenceContext();
+  const reference = useReferenceContext();
   return (
     <CustomButton
       onClick={() => {
@@ -257,7 +251,7 @@ const CopyLinkButton = () => {
 };
 
 const CopyLinkWithTextButton = () => {
-  const { reference } = useReferenceContext();
+  const reference = useReferenceContext();
   return (
     <CustomButton
       onClick={() => {
@@ -270,7 +264,7 @@ const CopyLinkWithTextButton = () => {
 };
 
 const MovePageButton = () => {
-  const { reference } = useReferenceContext();
+  const reference = useReferenceContext();
 
   return (
     <CustomButton
@@ -284,9 +278,7 @@ const MovePageButton = () => {
 };
 
 const MemoArea = () => {
-  const {
-    reference: { url },
-  } = useReferenceContext();
+  const { url } = useReferenceContext();
   const text = useChromeLocalStorage((state) => state[url] || "");
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
