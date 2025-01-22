@@ -1,11 +1,12 @@
 import { useChromeSyncStorage } from "@/shared/store";
-import styles from "./styles.module.css";
-import { useEffect } from "react";
 
 export const DarkModeToggle = () => {
   const isDarkMode = useChromeSyncStorage((state) => state.isDarkMode);
 
   const handleToggle = () => {
+    const html = document.querySelector("html")!;
+    html.setAttribute("data-theme", isDarkMode ? "light" : "dark");
+
     useChromeSyncStorage.dispatchAction({
       type: "set",
       setter: ({ isDarkMode }) => ({
@@ -14,26 +15,12 @@ export const DarkModeToggle = () => {
     });
   };
 
-  useEffect(() => {
-    if (isDarkMode === undefined) {
-      return;
-    }
-
-    const html = document.querySelector("html")!;
-    html.setAttribute("data-theme", isDarkMode ? "dark" : "light");
-  }, [isDarkMode]);
-
   return (
-    <label className={styles.toggleLabel}>
-      <div className={styles.toggleSwitch}>
-        <input
-          type="checkbox"
-          className={styles.checkBox}
-          checked={!isDarkMode}
-          onChange={handleToggle}
-        />
-        <span className={styles.toggleSlider} />
-      </div>
-    </label>
+    <button onClick={handleToggle}>
+      <img
+        src={isDarkMode ? "/dark-mode.png" : "/light-mode.png"}
+        className="w-6 h-6"
+      />
+    </button>
   );
 };
