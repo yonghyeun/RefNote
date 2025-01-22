@@ -321,7 +321,7 @@ const MemoArea = () => {
         });
       }}
       defaultValue={text}
-      className="w-full text-[0.9rem] focus:outline-none bg-transparent rounded-lg p-2 h-24"
+      className="w-full text-[0.8rem] focus:outline-none bg-transparent rounded-lg p-2 h-24"
     />
   );
 };
