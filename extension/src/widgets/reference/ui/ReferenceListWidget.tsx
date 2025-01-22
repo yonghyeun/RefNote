@@ -100,16 +100,17 @@ const UnAttachedReferenceListFoldButton = memo(() => {
   const isUnAttachedReferenceVisible = useChromeSyncStorage(
     (state) => state.isUnAttachedReferenceVisible
   );
-  const setChromeStorage = useChromeSyncStorage.setState;
 
   return (
     <Button
       className="py-[2px]"
       onClick={() =>
-        setChromeStorage((prev) => ({
-          ...prev,
-          isUnAttachedReferenceVisible: !prev.isUnAttachedReferenceVisible,
-        }))
+        useChromeSyncStorage.dispatchAction({
+          type: "set",
+          setter: ({ isUnAttachedReferenceVisible }) => ({
+            isUnAttachedReferenceVisible: !isUnAttachedReferenceVisible,
+          }),
+        })
       }
       aria-label={
         isUnAttachedReferenceVisible

@@ -6,7 +6,6 @@ import { Button } from "@/shared/ui/button";
 // TODO : 로딩 처리 하기
 export const ReferenceSaveButton = () => {
   const reference = useChromeSyncStorage((state) => state.reference);
-  const setChromeStorage = useChromeSyncStorage.setState;
   const { errorUrl, setErrorUrl } = useSaveErrorUrl();
 
   const handleSaveReference = async () => {
@@ -37,10 +36,12 @@ export const ReferenceSaveButton = () => {
       isWritten: false,
     };
 
-    setChromeStorage((prevStorage) => ({
-      ...prevStorage,
-      reference: [...prevStorage.reference, data],
-    }));
+    useChromeSyncStorage.dispatchAction({
+      type: "set",
+      setter: ({ reference }) => ({
+        reference: [...reference, data],
+      }),
+    });
   };
 
   return (

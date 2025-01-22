@@ -1,3 +1,6 @@
-import { createLocalStore } from "../lib";
+import { createStore } from "../lib";
 
-export const useChromeLocalStorage = createLocalStore<ChromeLocalStorage>({});
+export const useChromeLocalStorage = createStore<ChromeLocalStorage>(
+  {},
+  "local"
+);

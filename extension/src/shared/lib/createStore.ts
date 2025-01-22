@@ -13,23 +13,20 @@ type ChromeLocalStorageAction<T> =
       key: keyof T;
     };
 
-export const createLocalStore = <Store extends object>(
-  initialState: Store | (() => Store)
+export const createStore = <Store extends object>(
+  initialState: Store | (() => Store),
+  namespace: chrome.storage.AreaName
 ) => {
   let store =
     typeof initialState === "function" ? initialState() : initialState;
 
-  const synchronizeStore = () => {
-    chrome.storage.local.get(null, (storage) => {
-      if (import.meta.env.DEV) {
-        console.group("동기화를 시행 할 chromeLocalStorage 값");
-        console.table(store);
-        console.groupEnd();
-      }
+  const synchronizeStore = async () => {
+    const storage = await chrome.storage[namespace].get(null);
 
-      Object.assign(store, storage);
-      callbacks.forEach((callback) => callback());
-    });
+    Object.assign(store, storage);
+    callbacks.forEach((callback) => callback());
+
+    return storage;
   };
 
   const callbacks = new Set<() => void>();
@@ -42,29 +39,21 @@ export const createLocalStore = <Store extends object>(
   const getState = () => ({ ...store });
 
   const dispatchAction = (action: ChromeLocalStorageAction<Store>) => {
-    if (import.meta.env.DEV) {
-      console.group("ChromeLocalStorage Action Dispatched");
-      console.log(action);
-      console.groupEnd();
-    }
-
     switch (action.type) {
       case "clear":
-        chrome.storage.local.set(initialState);
+        chrome.storage[namespace].set(initialState);
         break;
       case "set":
-        chrome.storage.local.set(action.setter(store));
+        chrome.storage[namespace].set(action.setter(store));
         break;
       case "remove":
-        chrome.storage.local.remove(action.key);
+        chrome.storage[namespace].remove(action.key);
         break;
     }
   };
 
-  // chrome.storage.local 의 값에 따라 store 가 변경 되도록 함
-
-  chrome.storage.onChanged.addListener((changes, namespace) => {
-    if (namespace !== "local") {
+  chrome.storage.onChanged.addListener((changes, changedNameSpace) => {
+    if (changedNameSpace !== namespace) {
       return;
     }
 
@@ -78,12 +67,6 @@ export const createLocalStore = <Store extends object>(
     changeEntries.forEach(({ key, newValue }) => {
       store[key as keyof Store] = newValue;
     });
-
-    if (import.meta.env.DEV) {
-      console.group("변경 이후 chromeLocalStorage");
-      console.table(store);
-      console.groupEnd();
-    }
 
     callbacks.forEach((callback) => callback());
   });

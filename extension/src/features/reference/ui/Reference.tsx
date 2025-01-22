@@ -10,12 +10,7 @@ import { useChromeSyncStorage } from "@/shared/store/chromeSyncStorage";
 import { Button, IconButton } from "@/shared/ui/button";
 import { useChromeLocalStorage } from "@/shared/store";
 
-interface ReferenceContext {
-  reference: ReferenceData;
-  setChromeStorage: typeof useChromeSyncStorage.setState;
-}
-
-const ReferenceProvider = createContext<ReferenceContext | null>(null);
+const ReferenceProvider = createContext<ReferenceData | null>(null);
 
 const useReferenceContext = () => {
   const context = useContext(ReferenceProvider);
@@ -25,10 +20,11 @@ const useReferenceContext = () => {
   return context;
 };
 
-interface ReferenceProps extends Omit<ReferenceContext, "setChromeStorage"> {
+interface ReferenceProps {
   children: React.ReactNode;
   onClick?: React.MouseEventHandler<HTMLLIElement>;
   className?: string;
+  reference: ReferenceData;
 }
 
 const ReferenceItemWrapper = ({
@@ -38,9 +34,7 @@ const ReferenceItemWrapper = ({
   className = "",
 }: ReferenceProps) => {
   return (
-    <ReferenceProvider.Provider
-      value={{ reference, setChromeStorage: useChromeSyncStorage.setState }}
-    >
+    <ReferenceProvider.Provider value={reference}>
       <li
         className={`reference cursor-pointer py-1 flex flex-col justify-center gap-2 ${className}`}
         onClick={onClick}
@@ -52,7 +46,7 @@ const ReferenceItemWrapper = ({
 };
 
 const Favicon = () => {
-  const { reference } = useReferenceContext();
+  const reference = useReferenceContext();
 
   return (
     <img className="w-4 h-4 object-cover mr-2" src={reference.faviconUrl} />
@@ -60,7 +54,7 @@ const Favicon = () => {
 };
 
 const Title = () => {
-  const { reference } = useReferenceContext();
+  const reference = useReferenceContext();
   const [isEllipsis, setIsEllipsis] = useState<boolean>(true);
 
   return (
@@ -74,19 +68,22 @@ const Title = () => {
 };
 
 const WriteButton = () => {
-  const { reference, setChromeStorage } = useReferenceContext();
+  const reference = useReferenceContext();
 
   const handleWriteReference = () => {
-    setChromeStorage((prev) => {
-      const id = prev.reference.filter(({ isWritten }) => isWritten).length + 1;
-      return {
-        ...prev,
-        reference: prev.reference.map((data) =>
-          data.url !== reference.url
-            ? data
-            : { ...data, isWritten: true, id, isUsed: false }
-        ),
-      };
+    useChromeSyncStorage.dispatchAction({
+      type: "set",
+      setter: ({ reference: prevReference }) => {
+        const id =
+          prevReference.filter(({ isWritten }) => isWritten).length + 1;
+        return {
+          reference: prevReference.map((data) =>
+            data.url !== reference.url
+              ? data
+              : { ...data, isWritten: true, id, isUsed: false }
+          ),
+        };
+      },
     });
   };
 
@@ -115,7 +112,7 @@ const WriteButton = () => {
 };
 
 const EraseButton = () => {
-  const { reference, setChromeStorage } = useReferenceContext();
+  const reference = useReferenceContext();
 
   if (!reference.isWritten) {
     throw new Error(
@@ -124,21 +121,23 @@ const EraseButton = () => {
   }
 
   const handleEraseReference = () => {
-    setChromeStorage((prev) => {
-      return {
-        ...prev,
-        reference: prev.reference.map((data) => {
-          if (data.url === reference.url) {
-            const { id, isUsed, isWritten, ...rest } =
-              data as AttachedReferenceData;
-            return { ...rest, isWritten: false };
-          }
-          if (data.isWritten && data.id > reference.id) {
-            return { ...data, id: data.id - 1 };
-          }
-          return data;
-        }),
-      };
+    useChromeSyncStorage.dispatchAction({
+      type: "set",
+      setter: ({ reference: prevReference }) => {
+        return {
+          reference: prevReference.map((data) => {
+            if (data.url === reference.url) {
+              const { id, isUsed, isWritten, ...rest } =
+                data as AttachedReferenceData;
+              return { ...rest, isWritten: false };
+            }
+            if (data.isWritten && data.id > reference.id) {
+              return { ...data, id: data.id - 1 };
+            }
+            return data;
+          }),
+        };
+      },
     });
   };
 
@@ -173,29 +172,31 @@ const EraseButton = () => {
 };
 
 const RemoveButton = () => {
-  const { reference, setChromeStorage } = useReferenceContext();
+  const reference = useReferenceContext();
 
   const handleRemoveReference = () => {
-    setChromeStorage((prev) => {
-      const removeTarget = prev.reference.find(
-        (data) => data.url === reference.url
-      ) as ReferenceData;
+    useChromeSyncStorage.dispatchAction({
+      type: "set",
+      setter: ({ reference: prevReference }) => {
+        const removeTarget = prevReference.find(
+          (data) => data.url === reference.url
+        ) as ReferenceData;
 
-      return {
-        ...prev,
-        reference: prev.reference
-          .filter((data) => data.url !== reference.url)
-          .map((data) => {
-            if (
-              data.isWritten &&
-              removeTarget.isWritten &&
-              data.id > removeTarget.id
-            ) {
-              return { ...data, id: data.id - 1 };
-            }
-            return data;
-          }),
-      };
+        return {
+          reference: prevReference
+            .filter((data) => data.url !== reference.url)
+            .map((data) => {
+              if (
+                data.isWritten &&
+                removeTarget.isWritten &&
+                data.id > removeTarget.id
+              ) {
+                return { ...data, id: data.id - 1 };
+              }
+              return data;
+            }),
+        };
+      },
     });
 
     useChromeLocalStorage.dispatchAction({
@@ -237,7 +238,7 @@ const CustomButton = ({
 );
 
 const CopyLinkButton = () => {
-  const { reference } = useReferenceContext();
+  const reference = useReferenceContext();
   return (
     <CustomButton
       onClick={() => {
@@ -250,7 +251,7 @@ const CopyLinkButton = () => {
 };
 
 const CopyLinkWithTextButton = () => {
-  const { reference } = useReferenceContext();
+  const reference = useReferenceContext();
   return (
     <CustomButton
       onClick={() => {
@@ -263,7 +264,7 @@ const CopyLinkWithTextButton = () => {
 };
 
 const MovePageButton = () => {
-  const { reference } = useReferenceContext();
+  const reference = useReferenceContext();
 
   return (
     <CustomButton
@@ -277,16 +278,15 @@ const MovePageButton = () => {
 };
 
 const MemoArea = () => {
-  const {
-    reference: { url },
-  } = useReferenceContext();
+  const { url } = useReferenceContext();
   const text = useChromeLocalStorage((state) => state[url] || "");
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    const synchronizeText = () => {
+    const synchronizeText = async () => {
       if (textAreaRef.current) {
-        textAreaRef.current.value = useChromeLocalStorage.getState()[url] || "";
+        const storage = await useChromeLocalStorage.synchronizeStore();
+        textAreaRef.current.value = storage[url] || "";
       }
     };
 
@@ -313,7 +313,7 @@ const MemoArea = () => {
         });
       }}
       defaultValue={text}
-      className="w-full text-[0.9rem] focus:outline-none bg-transparent rounded-lg p-2 h-24"
+      className="w-full text-[0.8rem] focus:outline-none bg-transparent rounded-lg p-2 h-24"
     />
   );
 };
