@@ -6,7 +6,7 @@ export const convertNumberToReference = async (
   sendResponse: (response: ResponseMessage) => void
 ) => {
   const { reference } =
-    await chrome.storage.sync.get<ChromeStorage>("reference");
+    await chrome.storage.sync.get<ChromeSyncStorage>("reference");
 
   const [result] = await chrome.scripting.executeScript({
     target: { tabId },

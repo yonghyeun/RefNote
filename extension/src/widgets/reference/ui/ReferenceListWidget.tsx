@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import { useChromeStorage, useSaveErrorUrl } from "@/shared/store";
+import { useChromeSyncStorage, useSaveErrorUrl } from "@/shared/store";
 import {
   AutoConvertingToggle,
   Reference,
@@ -32,6 +32,8 @@ const UnAttachedReferenceList = ({
 }) => {
   const [clickedUrl, setClickedUrl] = useState<string>("");
   const [isEditUrl, setEditUrl] = useState<string>("");
+  const [isMemoOpen, setIsMemoOpen] = useState<boolean>(false);
+
   const { errorUrl } = useSaveErrorUrl();
 
   const handleClickUrl = (url: string) => {
@@ -64,19 +66,27 @@ const UnAttachedReferenceList = ({
               <Reference.RemoveButton />
             </div>
             {reference.url === clickedUrl && (
-              <div className="flex flex-col gap-1">
-                <div className="flex gap-2 items-center">
-                  <Reference.CopyLinkButton />
-                  <Reference.CopyLinkWithTextButton />
-                  <Reference.MovePageButton />
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-1">
+                  <div className="flex gap-2 items-center">
+                    <Reference.CopyLinkButton />
+                    <Reference.CopyLinkWithTextButton />
+                    <Reference.MovePageButton />
+                  </div>
+                  <div className="flex w-full gap-2">
+                    <Reference.CustomButton
+                      onClick={() => setEditUrl(reference.url)}
+                    >
+                      제목 수정
+                    </Reference.CustomButton>
+                    <Reference.CustomButton
+                      onClick={() => setIsMemoOpen((prev) => !prev)}
+                    >
+                      {isMemoOpen ? "메모 닫기" : "메모 열기"}
+                    </Reference.CustomButton>
+                  </div>
                 </div>
-                <div className="flex w-full">
-                  <Reference.CustomButton
-                    onClick={() => setEditUrl(reference.url)}
-                  >
-                    제목 수정
-                  </Reference.CustomButton>
-                </div>
+                {isMemoOpen && <Reference.MemoArea />}
               </div>
             )}
           </Reference>
@@ -87,10 +97,10 @@ const UnAttachedReferenceList = ({
 };
 
 const UnAttachedReferenceListFoldButton = memo(() => {
-  const isUnAttachedReferenceVisible = useChromeStorage(
+  const isUnAttachedReferenceVisible = useChromeSyncStorage(
     (state) => state.isUnAttachedReferenceVisible
   );
-  const setChromeStorage = useChromeStorage.setState;
+  const setChromeStorage = useChromeSyncStorage.setState;
 
   return (
     <Button
@@ -119,6 +129,7 @@ const AttachedReferenceList = ({
 }) => {
   const [clickedUrl, setClickedUrl] = useState<string>("");
   const [isEditUrl, setEditUrl] = useState<string>("");
+  const [isMemoOpen, setIsMemoOpen] = useState<boolean>(false);
   const { errorUrl } = useSaveErrorUrl();
 
   const handleClickUrl = (url: string) => {
@@ -162,19 +173,27 @@ const AttachedReferenceList = ({
               <Reference.RemoveButton />
             </div>
             {reference.url === clickedUrl && (
-              <div className="flex flex-col gap-1">
-                <div className="flex gap-2 items-center">
-                  <Reference.CopyLinkButton />
-                  <Reference.CopyLinkWithTextButton />
-                  <Reference.MovePageButton />
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-1">
+                  <div className="flex gap-2 items-center">
+                    <Reference.CopyLinkButton />
+                    <Reference.CopyLinkWithTextButton />
+                    <Reference.MovePageButton />
+                  </div>
+                  <div className="flex w-full gap-2">
+                    <Reference.CustomButton
+                      onClick={() => setEditUrl(reference.url)}
+                    >
+                      제목 수정
+                    </Reference.CustomButton>
+                    <Reference.CustomButton
+                      onClick={() => setIsMemoOpen((prev) => !prev)}
+                    >
+                      {isMemoOpen ? "메모 닫기" : "메모 열기"}
+                    </Reference.CustomButton>
+                  </div>
                 </div>
-                <div className="flex w-full">
-                  <Reference.CustomButton
-                    onClick={() => setEditUrl(reference.url)}
-                  >
-                    제목 수정
-                  </Reference.CustomButton>
-                </div>
+                {isMemoOpen && <Reference.MemoArea />}
               </div>
             )}
           </Reference>
@@ -185,8 +204,8 @@ const AttachedReferenceList = ({
 };
 
 export const ReferenceListWidget = () => {
-  const reference = useChromeStorage((state) => state.reference);
-  const isUnAttachedReferenceVisible = useChromeStorage(
+  const reference = useChromeSyncStorage((state) => state.reference);
+  const isUnAttachedReferenceVisible = useChromeSyncStorage(
     (state) => state.isUnAttachedReferenceVisible
   );
 

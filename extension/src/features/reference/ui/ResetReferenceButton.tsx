@@ -1,8 +1,8 @@
-import { useChromeStorage } from "@/shared/store/chromeStorage";
+import { useChromeSyncStorage } from "@/shared/store/chromeSyncStorage";
 import { Button } from "@/shared/ui/button";
 
 export const ResetReferenceButton = () => {
-  const setChromeStorage = useChromeStorage.setState;
+  const setChromeStorage = useChromeSyncStorage.setState;
 
   const handleResetReference = () => {
     setChromeStorage((prev) => ({

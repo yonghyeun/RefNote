@@ -28,13 +28,15 @@ declare global {
 
   type ReferenceData = UnAttachedReferenceData | AttachedReferenceData;
 
-  interface ChromeStorage {
+  interface ChromeSyncStorage {
     reference: ReferenceData[];
     autoConverting: boolean;
     isDarkMode: boolean;
     isContentScriptEnabled: boolean;
     isUnAttachedReferenceVisible: boolean;
   }
+
+  type ChromeLocalStorage = Record<string, string>;
 
   interface Tab extends chrome.tabs.Tab {
     id: NonNullable<chrome.tabs.Tab["id"]>;

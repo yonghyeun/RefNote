@@ -1,11 +1,18 @@
-import React, { createContext, useContext, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import styles from "./styles.module.css";
-import { useChromeStorage } from "@/shared/store/chromeStorage";
+import { useChromeSyncStorage } from "@/shared/store/chromeSyncStorage";
 import { Button, IconButton } from "@/shared/ui/button";
+import { useChromeLocalStorage } from "@/shared/store";
 
 interface ReferenceContext {
   reference: ReferenceData;
-  setChromeStorage: typeof useChromeStorage.setState;
+  setChromeStorage: typeof useChromeSyncStorage.setState;
 }
 
 const ReferenceProvider = createContext<ReferenceContext | null>(null);
@@ -32,10 +39,10 @@ const ReferenceItemWrapper = ({
 }: ReferenceProps) => {
   return (
     <ReferenceProvider.Provider
-      value={{ reference, setChromeStorage: useChromeStorage.setState }}
+      value={{ reference, setChromeStorage: useChromeSyncStorage.setState }}
     >
       <li
-        className={`reference cursor-pointer border-b py-1 flex flex-col justify-center gap-2 ${className}`}
+        className={`reference cursor-pointer py-1 flex flex-col justify-center gap-2 ${className}`}
         onClick={onClick}
       >
         {children}
@@ -190,6 +197,11 @@ const RemoveButton = () => {
           }),
       };
     });
+
+    useChromeLocalStorage.dispatchAction({
+      type: "remove",
+      key: reference.url,
+    });
   };
 
   return (
@@ -264,6 +276,48 @@ const MovePageButton = () => {
   );
 };
 
+const MemoArea = () => {
+  const {
+    reference: { url },
+  } = useReferenceContext();
+  const text = useChromeLocalStorage((state) => state[url] || "");
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    const synchronizeText = () => {
+      if (textAreaRef.current) {
+        textAreaRef.current.value = useChromeLocalStorage.getState()[url] || "";
+      }
+    };
+
+    window.addEventListener("focus", synchronizeText);
+    return () => {
+      window.removeEventListener("focus", synchronizeText);
+    };
+  }, []);
+
+  return (
+    <textarea
+      ref={textAreaRef}
+      name={`${url}-memo`}
+      id={url}
+      onClick={(event) => {
+        event.stopPropagation();
+      }}
+      onChange={({ target }) => {
+        useChromeLocalStorage.dispatchAction({
+          type: "set",
+          setter: () => {
+            return { [url]: target.value };
+          },
+        });
+      }}
+      defaultValue={text}
+      className="w-full text-[0.9rem] focus:outline-none bg-transparent rounded-lg p-2 h-24"
+    />
+  );
+};
+
 export const Reference = Object.assign(ReferenceItemWrapper, {
   Favicon,
   Title,
@@ -274,4 +328,5 @@ export const Reference = Object.assign(ReferenceItemWrapper, {
   CopyLinkWithTextButton,
   MovePageButton,
   CustomButton,
+  MemoArea,
 });

@@ -1,7 +1,7 @@
 import { Button } from "@/shared/ui/button";
 import { Reference } from "./Reference";
 import { useState } from "react";
-import { useChromeStorage } from "@/shared/store";
+import { useChromeSyncStorage } from "@/shared/store";
 
 interface ReferenceEditProps {
   reference: ReferenceData;
@@ -14,7 +14,7 @@ export const ReferenceEdit = ({
   onResolveEdit,
   className = "",
 }: ReferenceEditProps) => {
-  const setChromeStorage = useChromeStorage.setState;
+  const setChromeStorage = useChromeSyncStorage.setState;
 
   const [title, setTitle] = useState<string>(() => reference.title);
 

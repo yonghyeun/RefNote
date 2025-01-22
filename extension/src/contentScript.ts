@@ -52,7 +52,7 @@ const handleAutoConverting = (changes: chrome.storage.StorageChange) => {
   }
 };
 
-let chromeStorage: ChromeStorage | null = null;
+let chromeStorage: ChromeSyncStorage | null = null;
 
 const syncChromeStorage = (changes: chrome.storage.StorageChange) => {
   const [[key, value]] = Object.entries(changes);
@@ -61,7 +61,7 @@ const syncChromeStorage = (changes: chrome.storage.StorageChange) => {
   console.table({ key, value });
 
   if (!chromeStorage) {
-    chrome.storage.sync.get<ChromeStorage>(null, (data) => {
+    chrome.storage.sync.get<ChromeSyncStorage>(null, (data) => {
       chromeStorage = data;
       console.log("chromeStorage 동기화 완료", chromeStorage);
     });
@@ -79,7 +79,7 @@ const syncChromeStorage = (changes: chrome.storage.StorageChange) => {
   console.groupEnd();
 };
 
-chrome.storage.sync.get<ChromeStorage>(null, (data) => {
+chrome.storage.sync.get<ChromeSyncStorage>(null, (data) => {
   chrome.storage.sync.onChanged.addListener(syncChromeStorage);
   chrome.storage.sync.onChanged.addListener(handleAutoConverting);
 
@@ -116,7 +116,7 @@ window.addEventListener("unload", () => {
   }));
 
   const { reference } =
-    await chrome.storage.sync.get<ChromeStorage>("reference");
+    await chrome.storage.sync.get<ChromeSyncStorage>("reference");
 
   // 만약 사용 된 데이터가 없고 attachedReferenceData 모두 isUsed가 false 라면
   // 상태를 변경하지 않고 early return 합니다.

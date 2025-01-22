@@ -41,11 +41,20 @@ body {
   background-color: var(--bg-color);
 }
 
-.reference:hover {
+.reference {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.reference:hover:not(:has(textarea:hover)) {
   background-color: var(--hover-color);
 }
-.reference:active {
+
+.reference:active:not(:has(textarea:active)) {
   background-color: var(--active-color);
+}
+
+textarea {
+  border: 1px solid var(--border-color);
 }
 
 @keyframes blinkAnimation {
