@@ -13,16 +13,17 @@ type ChromeLocalStorageAction<T> =
       key: keyof T;
     };
 
-export const createLocalStore = <Store extends object>(
-  initialState: Store | (() => Store)
+export const createStore = <Store extends object>(
+  initialState: Store | (() => Store),
+  namespace: chrome.storage.AreaName
 ) => {
   let store =
     typeof initialState === "function" ? initialState() : initialState;
 
   const synchronizeStore = () => {
-    chrome.storage.local.get(null, (storage) => {
+    chrome.storage[namespace].get(null, (storage) => {
       if (import.meta.env.DEV) {
-        console.group("동기화를 시행 할 chromeLocalStorage 값");
+        console.group(`동기화를 시행 : (${namespace})`);
         console.table(store);
         console.groupEnd();
       }
@@ -43,28 +44,26 @@ export const createLocalStore = <Store extends object>(
 
   const dispatchAction = (action: ChromeLocalStorageAction<Store>) => {
     if (import.meta.env.DEV) {
-      console.group("ChromeLocalStorage Action Dispatched");
+      console.group(`${namespace} Action Dispatched`);
       console.log(action);
       console.groupEnd();
     }
 
     switch (action.type) {
       case "clear":
-        chrome.storage.local.set(initialState);
+        chrome.storage[namespace].set(initialState);
         break;
       case "set":
-        chrome.storage.local.set(action.setter(store));
+        chrome.storage[namespace].set(action.setter(store));
         break;
       case "remove":
-        chrome.storage.local.remove(action.key);
+        chrome.storage[namespace].remove(action.key);
         break;
     }
   };
 
-  // chrome.storage.local 의 값에 따라 store 가 변경 되도록 함
-
-  chrome.storage.onChanged.addListener((changes, namespace) => {
-    if (namespace !== "local") {
+  chrome.storage.onChanged.addListener((changes, changedNameSpace) => {
+    if (changedNameSpace !== namespace) {
       return;
     }
 
@@ -80,7 +79,7 @@ export const createLocalStore = <Store extends object>(
     });
 
     if (import.meta.env.DEV) {
-      console.group("변경 이후 chromeLocalStorage");
+      console.group(`변경 이후의 ${namespace} 스토어`);
       console.table(store);
       console.groupEnd();
     }
