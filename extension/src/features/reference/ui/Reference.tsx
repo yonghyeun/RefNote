@@ -74,14 +74,18 @@ const WriteButton = () => {
     useChromeSyncStorage.dispatchAction({
       type: "set",
       setter: ({ reference: prevReference }) => {
-        const id =
+        const nextWrittenId =
           prevReference.filter(({ isWritten }) => isWritten).length + 1;
+
         return {
-          reference: prevReference.map((data) =>
-            data.url !== reference.url
-              ? data
-              : { ...data, isWritten: true, id, isUsed: false }
-          ),
+          reference: prevReference
+            .filter(({ url }) => url !== reference.url)
+            .concat({
+              ...reference,
+              isWritten: true,
+              isUsed: false,
+              id: nextWrittenId,
+            }),
         };
       },
     });
