@@ -5,13 +5,13 @@ type ToastMessage = (
     title: string;
     type?: chrome.notifications.TemplateType;
   },
-  duration: number,
+  duration?: number,
   callback?: (notificationId: string) => void
 ) => void;
 
 export const toastMessage: ToastMessage = (
   { toastKey, message, title, type },
-  duration,
+  duration = 1500,
   callback
 ) => {
   chrome.notifications.create(
