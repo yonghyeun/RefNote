@@ -19,18 +19,16 @@ export const ReferenceEdit = ({
   const handleSaveReference = () => {
     useChromeSyncStorage.dispatchAction({
       type: "set",
-      setter: (prev) => {
-        const prevReference = prev.reference;
+      setter: ({ reference: prevReference }) => {
         const changeTargetReference = prevReference.findIndex(
           (r) => r.url === reference.url
         );
 
         if (changeTargetReference === -1) {
-          return prev;
+          return { reference: prevReference };
         }
 
         return {
-          ...prev,
           reference: [
             ...prevReference.slice(0, changeTargetReference),
             { ...reference, title },
