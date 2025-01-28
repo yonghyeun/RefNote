@@ -1,25 +1,24 @@
-import { isTab, sendMessageToBackground } from "@/shared/lib";
+import { isTab, toastMessage } from "@/shared/lib";
 import { useSaveErrorUrl } from "@/shared/store";
 import { useChromeSyncStorage } from "@/shared/store/chromeSyncStorage";
 import { Button } from "@/shared/ui/button";
 
-// TODO : 로딩 처리 하기
 export const ReferenceSaveButton = () => {
   const reference = useChromeSyncStorage((state) => state.reference);
   const { errorUrl, setErrorUrl } = useSaveErrorUrl();
 
   const handleSaveReference = async () => {
-    // tabId 를 가져 옵니다.
-    // 해당 tabId를 이용해 document 정보를 받아 옵니다.
     const [tab] = await chrome.tabs.query({
       active: true,
       currentWindow: true,
     });
 
     if (!isTab(tab)) {
-      sendMessageToBackground({
-        message: "NotifyError",
-        data: "탭 정보가 유효하지 않아 저장에 실패했습니다. 다시 시도해 주세요",
+      toastMessage({
+        toastKey: "error",
+        message:
+          "탭 정보가 유효하지 않아 저장에 실패했습니다. 다시 시도해 주세요",
+        title: "오류",
       });
       return;
     }
@@ -29,17 +28,15 @@ export const ReferenceSaveButton = () => {
       return;
     }
 
-    const data: UnAttachedReferenceData = {
-      title: tab.title,
-      url: tab.url,
-      faviconUrl: tab.favIconUrl,
-      isWritten: false,
-    };
-
     useChromeSyncStorage.dispatchAction({
       type: "set",
       setter: ({ reference }) => ({
-        reference: [...reference, data],
+        reference: reference.concat({
+          title: tab.title,
+          url: tab.url,
+          faviconUrl: tab.favIconUrl,
+          isWritten: false,
+        }),
       }),
     });
   };

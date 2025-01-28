@@ -1,5 +1,5 @@
-const loggingError = <K = undefined>(
-  errorOriginMessage: RequestMessage<K>,
+const loggingError = (
+  errorOriginMessage: RequestMessage,
   errorMessage: string
 ) => {
   console.group("error occur in message handler");
@@ -10,10 +10,10 @@ const loggingError = <K = undefined>(
   console.groupEnd();
 };
 
-export const sendMessageToBackground = async <T = void, K = undefined>(
-  message: RequestMessage<K>
+export const sendMessageToBackground = async <Response = unknown>(
+  message: RequestMessage
 ) => {
-  return new Promise<T>((resolve, reject) => {
+  return new Promise<Response>((resolve, reject) => {
     chrome.runtime.sendMessage(message, (response) => {
       if (chrome.runtime.lastError || !response) {
         const errorMessage =

@@ -1,9 +1,26 @@
 export {};
 
 declare global {
-  type RequestMessage<T = undefined> = T extends undefined
-    ? { message: string; tab?: Tab }
-    : { message: string; tab?: Tab; data: T };
+  type ConvertToReferenceMessage = {
+    message: "ConvertToReference";
+    tab: Tab;
+  };
+
+  type NotifyErrorMessage = {
+    message: "NotifyError";
+    data: string;
+  };
+
+  type NotifyConvertProcessSuccessMessage = {
+    message: "NotifyConvertProcessSuccess";
+    data: number[];
+    tab: Tab;
+  };
+
+  type RequestMessage =
+    | ConvertToReferenceMessage
+    | NotifyErrorMessage
+    | NotifyConvertProcessSuccessMessage;
 
   interface ResponseMessage<R = unknown> {
     status: "ok" | "error";
@@ -47,6 +64,11 @@ declare global {
   interface CodeMirrorElement extends HTMLElement {
     CodeMirror: CodeMirror;
   }
+
+  type BackgroundMessageHandler<T extends RequestMessage> = (
+    message: T,
+    sendResponse: (response: any) => void
+  ) => void;
 
   interface Window {
     autoConvertingInjected: boolean;

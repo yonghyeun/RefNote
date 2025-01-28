@@ -15,13 +15,13 @@ export const ConvertToReferenceButton = () => {
 
     try {
       const attachedReferenceList = await sendMessageToBackground<
-        AttachedReferenceData[]
+        AttachedReferenceData["id"][]
       >({
         message: "ConvertToReference",
         tab,
       });
 
-      sendMessageToBackground<void, AttachedReferenceData[]>({
+      sendMessageToBackground({
         message: "NotifyConvertProcessSuccess",
         data: attachedReferenceList,
         tab,
@@ -30,7 +30,6 @@ export const ConvertToReferenceButton = () => {
       sendMessageToBackground({
         message: "NotifyError",
         data: (error as Error).message,
-        tab,
       });
     }
   };

@@ -1,34 +1,27 @@
 import { useChromeSyncStorage } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
+import { toastMessage } from "@/shared/lib";
 
 export const CopyReferenceListButton = () => {
-  const reference = useChromeSyncStorage((state) => state.reference);
+  const attachedReferences = useChromeSyncStorage((state) =>
+    state.reference.filter((data) => data.isWritten)
+  );
 
   const handleCopyReferenceList = () => {
-    const attachedReferences = reference
-      .filter((data) => data.isWritten)
-      .sort((a, b) => a.id - b.id);
-
-    const result = attachedReferences.map(
-      ({ title, url, id }) => `${id}. [${title}](${url})`
+    navigator.clipboard.writeText(
+      attachedReferences
+        .sort((a, b) => a.id - b.id)
+        .map(({ title, url, id }) => `${id}. [${title}](${url})`)
+        .join("\n")
     );
 
-    // 클립보드에 복사합니다.
-    navigator.clipboard.writeText(result.join("\n"));
-    chrome.notifications.create(
-      "codeMirror",
+    toastMessage(
       {
-        type: "basic",
-        iconUrl: "/icon/128.png",
-        title: "복사 완료",
+        toastKey: "copyReferenceList",
         message: `${attachedReferences.length} 개의 레퍼런스 목록이 복사되었습니다.`,
-        silent: true,
+        title: "복사 완료",
       },
-      () => {
-        setTimeout(() => {
-          chrome.notifications.clear("codeMirror");
-        }, 1000);
-      }
+      1500
     );
   };
 

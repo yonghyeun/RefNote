@@ -1,7 +1,10 @@
 import browser from "webextension-polyfill";
-import { convertNumberToReference } from "./features/reference/model";
+import {
+  convertNumberToReference,
+  notifyConvertProcessSuccess,
+} from "./features/reference/lib";
 import { chromeSyncStorageInitialValue } from "./shared/store";
-import { isTab } from "./shared/lib";
+import { toastMessage } from "./shared/lib";
 
 browser.runtime.onInstalled.addListener(async (details) => {
   if (process.env.NODE_ENV === "development") {
@@ -24,82 +27,45 @@ browser.runtime.onInstalled.addListener(async (details) => {
   });
 });
 
-const notifyError = (
-  message: string,
-  sendResponse: (response: any) => void
+const notifyError: BackgroundMessageHandler<NotifyErrorMessage> = (
+  { data },
+  sendResponse
 ) => {
-  chrome.notifications.create(
-    "alarm",
+  toastMessage(
     {
-      type: "basic",
-      iconUrl: "/icon/128.png",
+      toastKey: "error",
+      message: data,
       title: "오류",
-      message: message,
-      silent: true,
+      type: "basic",
     },
+    3000,
     () => {
       const { lastError } = chrome.runtime;
       sendResponse({
         status: lastError ? "error" : "ok",
         data: lastError ? lastError.message : null,
       });
-      setTimeout(() => {
-        chrome.notifications.clear("alarm");
-      }, 3000);
     }
   );
 };
 
-// NotifyConvertProcessSuccess에서 사용할 이전에 사용된 referenceData의 id를 담은 배열입니다.
-let prevUsedReferenceIds: number[] = [];
-
 chrome.runtime.onMessage.addListener(
-  (message: RequestMessage<unknown>, sender, sendResponse) => {
-    const tab = sender.tab || message.tab;
-
-    if (!isTab(tab)) {
-      notifyError(
-        "탭의 정보가 유효하지 않습니다. 다시 시도해 주세요",
-        sendResponse
-      );
-      return true;
-    }
-
+  (message: RequestMessage, sender, sendResponse) => {
     switch (message.message) {
       case "ConvertToReference":
-        convertNumberToReference(tab, sendResponse);
+        convertNumberToReference(
+          {
+            ...message,
+            tab: sender.tab as Tab,
+          },
+          sendResponse
+        );
         break;
       case "NotifyError":
-        notifyError(message.data as string, sendResponse);
+        notifyError(message, sendResponse);
         break;
       case "NotifyConvertProcessSuccess":
-        const { data } = message as RequestMessage<number[]>;
-
-        if (
-          data.length === prevUsedReferenceIds.length &&
-          data.every((id) => prevUsedReferenceIds.includes(id))
-        ) {
-          sendResponse({ status: "ok" });
-          break;
-        }
-
-        prevUsedReferenceIds = data;
-
-        chrome.storage.sync.get<ChromeSyncStorage>("reference", (storage) => {
-          const { reference } = storage;
-          const updatedReference = reference.map((referenceData) =>
-            referenceData.isWritten
-              ? {
-                  ...referenceData,
-                  isUsed: data.includes(referenceData.id),
-                }
-              : referenceData
-          );
-
-          chrome.storage.sync.set({ reference: updatedReference }, () => {
-            sendResponse({ status: "ok" });
-          });
-        });
+        notifyConvertProcessSuccess(message, sendResponse);
         break;
       default:
         break;
@@ -108,7 +74,7 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
-chrome.action.onClicked.addListener(async (tab) => {
+const openSidePanel = async (tab: chrome.tabs.Tab) => {
   try {
     if (!tab || !tab.id || !tab.url) {
       throw new Error("현재 탭 정보를 가져올 수 없습니다.");
@@ -139,4 +105,6 @@ chrome.action.onClicked.addListener(async (tab) => {
       }
     );
   }
-});
+};
+
+chrome.action.onClicked.addListener(openSidePanel);

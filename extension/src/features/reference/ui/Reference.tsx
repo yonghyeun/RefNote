@@ -74,14 +74,18 @@ const WriteButton = () => {
     useChromeSyncStorage.dispatchAction({
       type: "set",
       setter: ({ reference: prevReference }) => {
-        const id =
+        const nextWrittenId =
           prevReference.filter(({ isWritten }) => isWritten).length + 1;
+
         return {
-          reference: prevReference.map((data) =>
-            data.url !== reference.url
-              ? data
-              : { ...data, isWritten: true, id, isUsed: false }
-          ),
+          reference: prevReference
+            .filter(({ url }) => url !== reference.url)
+            .concat({
+              ...reference,
+              isWritten: true,
+              isUsed: false,
+              id: nextWrittenId,
+            }),
         };
       },
     });
@@ -124,18 +128,21 @@ const EraseButton = () => {
     useChromeSyncStorage.dispatchAction({
       type: "set",
       setter: ({ reference: prevReference }) => {
+        const { isUsed, id, isWritten, ...data } = reference;
+
         return {
-          reference: prevReference.map((data) => {
-            if (data.url === reference.url) {
-              const { id, isUsed, isWritten, ...rest } =
-                data as AttachedReferenceData;
-              return { ...rest, isWritten: false };
-            }
-            if (data.isWritten && data.id > reference.id) {
-              return { ...data, id: data.id - 1 };
-            }
-            return data;
-          }),
+          reference: prevReference
+            .filter(({ url }) => url !== reference.url)
+            .map((data) => {
+              if (data.isWritten) {
+                return { ...data, id: data.id > id ? data.id - 1 : data.id };
+              }
+              return data;
+            })
+            .concat({
+              ...data,
+              isWritten: false,
+            }),
         };
       },
     });

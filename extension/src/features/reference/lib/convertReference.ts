@@ -1,15 +1,14 @@
 type BracketOnly = `[${number}]` | `[[${number}]]`;
 type BracketWithUrl = `[[${number}]](${string})`;
 
-export const convertNumberToReference = async (
-  { id: tabId }: Tab,
-  sendResponse: (response: ResponseMessage) => void
-) => {
+export const convertNumberToReference: BackgroundMessageHandler<
+  ConvertToReferenceMessage
+> = async ({ tab }, sendResponse) => {
   const { reference } =
     await chrome.storage.sync.get<ChromeSyncStorage>("reference");
 
   const [result] = await chrome.scripting.executeScript({
-    target: { tabId },
+    target: { tabId: tab.id },
     world: "MAIN",
     func: async (attachedReferenceArray) => {
       const codeMirror = (
