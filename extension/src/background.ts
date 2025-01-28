@@ -4,6 +4,7 @@ import {
   notifyConvertProcessSuccess,
 } from "./features/reference/lib";
 import { chromeSyncStorageInitialValue } from "./shared/store";
+import { toastMessage } from "./shared/lib";
 
 browser.runtime.onInstalled.addListener(async (details) => {
   if (process.env.NODE_ENV === "development") {
@@ -30,15 +31,14 @@ const notifyError: BackgroundMessageHandler<NotifyErrorMessage> = (
   { data },
   sendResponse
 ) => {
-  chrome.notifications.create(
-    "alarm",
+  toastMessage(
     {
-      type: "basic",
-      iconUrl: "/icon/128.png",
-      title: "오류",
+      toastKey: "error",
       message: data,
-      silent: true,
+      title: "오류",
+      type: "basic",
     },
+    3000,
     () => {
       const { lastError } = chrome.runtime;
       sendResponse({
