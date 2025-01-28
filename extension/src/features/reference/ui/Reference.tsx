@@ -128,17 +128,22 @@ const EraseButton = () => {
     useChromeSyncStorage.dispatchAction({
       type: "set",
       setter: ({ reference: prevReference }) => {
+        const editedReference = prevReference
+          .filter(({ url }) => {
+            url !== reference.url;
+          })
+          .map((data) =>
+            data.isWritten
+              ? { ...data, id: data.id > reference.id ? data.id - 1 : data.id }
+              : data
+          );
+
+        const { isUsed, id, isWritten, ...data } = reference;
+
         return {
-          reference: prevReference.map((data) => {
-            if (data.url === reference.url) {
-              const { id, isUsed, isWritten, ...rest } =
-                data as AttachedReferenceData;
-              return { ...rest, isWritten: false };
-            }
-            if (data.isWritten && data.id > reference.id) {
-              return { ...data, id: data.id - 1 };
-            }
-            return data;
+          reference: editedReference.concat({
+            ...data,
+            isWritten: false,
           }),
         };
       },
