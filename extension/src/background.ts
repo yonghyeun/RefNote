@@ -45,9 +45,6 @@ const notifyError: BackgroundMessageHandler<NotifyErrorMessage> = (
         status: lastError ? "error" : "ok",
         data: lastError ? lastError.message : null,
       });
-      setTimeout(() => {
-        chrome.notifications.clear("alarm");
-      }, 3000);
     }
   );
 };
