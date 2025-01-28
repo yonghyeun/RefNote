@@ -65,6 +65,11 @@ declare global {
     CodeMirror: CodeMirror;
   }
 
+  type BackgroundMessageHandler<T extends RequestMessage> = (
+    message: T,
+    sendResponse: (response: any) => void
+  ) => void;
+
   interface Window {
     autoConvertingInjected: boolean;
   }
