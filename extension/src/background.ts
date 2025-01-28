@@ -2,7 +2,7 @@ import browser from "webextension-polyfill";
 import {
   convertNumberToReference,
   notifyConvertProcessSuccess,
-} from "./features/reference/model";
+} from "./features/reference/lib";
 import { chromeSyncStorageInitialValue } from "./shared/store";
 
 browser.runtime.onInstalled.addListener(async (details) => {
