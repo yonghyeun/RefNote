@@ -133,14 +133,12 @@ const EraseButton = () => {
         return {
           reference: prevReference
             .filter(({ url }) => url !== reference.url)
-            .map((data) =>
-              data.isWritten
-                ? {
-                    ...data,
-                    id: data.id > reference.id ? data.id - 1 : data.id,
-                  }
-                : data
-            )
+            .map((data) => {
+              if (data.isWritten) {
+                return { ...data, id: data.id > id ? data.id - 1 : data.id };
+              }
+              return data;
+            })
             .concat({
               ...data,
               isWritten: false,
