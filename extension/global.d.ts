@@ -1,9 +1,26 @@
 export {};
 
 declare global {
-  type RequestMessage<T = undefined> = T extends undefined
-    ? { message: string; tab?: Tab }
-    : { message: string; tab?: Tab; data: T };
+  type ConvertToReferenceMessage = {
+    message: "ConvertToReference";
+    tab: Tab;
+  };
+
+  type NotifyErrorMessage = {
+    message: "NotifyError";
+    data: string;
+  };
+
+  type NotifyConvertProcessSuccessMessage = {
+    message: "NotifyConvertProcessSuccess";
+    data: number[];
+    tab: Tab;
+  };
+
+  type RequestMessage =
+    | ConvertToReferenceMessage
+    | NotifyErrorMessage
+    | NotifyConvertProcessSuccessMessage;
 
   interface ResponseMessage<R = unknown> {
     status: "ok" | "error";
